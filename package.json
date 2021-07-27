@@ -1,0 +1,18 @@
+{
+  "name": "v13",
+  "version": "1.0.0",
+  "description": "NodeBot using discord.js v13",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "CarelessInternet",
+  "license": "ISC",
+  "dependencies": {
+    "@discordjs/voice": "^0.5.5",
+    "dateformat": "^4.5.1",
+    "discord.js": "^13.0.0-dev.30a58dc.1627387368",
+    "dotenv": "^10.0.0",
+    "random-hex-color": "^1.0.1"
+  }
+}

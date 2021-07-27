@@ -1,0 +1,12 @@
+Plays videos/music in user's voice channel
+
+play (*required parameter*): Plays a video with the search query as parameter
+volume (*required parameter*): Changes volume to the parameter, must be between 0-2, default is 0.1
+queue: Shows the queue
+skip: Skips the current video
+remove: Removes a specified video from the queue
+loop: Loops through current video
+unloop: Removes the loop of the current video
+pause: Pauses current video
+resume/unpause: Resumes current video
+leave: Leaves user's voice channel
