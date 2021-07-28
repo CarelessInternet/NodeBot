@@ -6,7 +6,7 @@ function getInfo(stat, top = false) {
     // example: K/D (new line) 1.31 (new line) Top 17%
     inline: true,
     name: stat.displayName,
-    ...(!top ? {value: stat.displayValue} : {value: `**${stat.displayValue}**\nTop ${Math.ceil(100 - stat.percentile)}%`})
+    value: top ? `**${stat.displayValue}**\nTop ${Math.ceil(100 - stat.percentile)}%` : stat.displayValue
   };
 }
 
