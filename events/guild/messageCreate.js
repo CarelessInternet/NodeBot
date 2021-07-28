@@ -21,7 +21,7 @@ function message(client, Discord, prefix, msg) {
 function cooldown(msg, Discord, cmd, command) {
   if (!cooldowns.has(cmd)) cooldowns.set(cmd, new Discord.Collection());
 
-  // third const: if the cooldown is a number and exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
+  // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
   const currentTime = Date.now();
   const timestamps = cooldowns.get(cmd);
   const amount = (command?.cooldown || 3) * 1000;
