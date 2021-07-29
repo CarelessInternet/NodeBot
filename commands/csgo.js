@@ -14,7 +14,7 @@ module.exports = {
   name: 'csgo',
   description: 'Returns CS:GO stats info about a player. Use the Steam ID as the username, and the profle must be public for it to work.',
   async execute(msg, args, Discord) {
-    if (!args[0]) return msg.channel.send('Please include the Steam ID').catch(console.error);
+    if (!args[0]) return msg.reply('Please include the Steam ID').catch(console.error);
     try {
       const username = encodeURIComponent(args.join(' '));
       const key = process.env.trackerGGAPIKey;
@@ -48,7 +48,7 @@ module.exports = {
       .setTimestamp()
       .setFooter(`Steam User ID: ${platform.platformUserId}`);
 
-      msg.channel.send({embeds: [embed]}).catch(console.error);
+      msg.reply({embeds: [embed]}).catch(console.error);
     } catch(err) {
       msg.channel.send(err || 'An unknown error occured, please try again later').catch(console.error);
     }

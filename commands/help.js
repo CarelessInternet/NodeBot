@@ -29,12 +29,12 @@ module.exports = {
     const json = await JSON.parse(fs.readFileSync('./txt/help.json', 'utf8'));
     if (args[0]) {
       const command = json.find(val => val.command == args[0].toLowerCase());
-      if (!command) return msg.channel.send('Requested command does not exist').catch(console.error);
+      if (!command) return msg.reply('Requested command does not exist').catch(console.error);
 
       const categoryName = command.category.charAt(0).toUpperCase() + command.category.slice(1);
       const embed = new Discord.MessageEmbed()
       .setColor('#38d946')
-      .setTitle(`Command: \'${prefix}${command.command}\'`)
+      .setTitle(`Command: \`${prefix}${command.command}\``)
       .addField('Category', categoryName);
       const categories = [
         {name: 'Parameters', value: parameters(command)},
@@ -69,7 +69,7 @@ module.exports = {
       ];
 
       categories.forEach(curr => embed.addField(curr.name, curr.value, true));
-      msg.channel.send({embeds: [embed]}).catch(console.error);
+      msg.reply({embeds: [embed]}).catch(console.error);
     }
   }
 };

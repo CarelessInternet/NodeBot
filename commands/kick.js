@@ -22,7 +22,7 @@ module.exports = {
       .setLabel('❌')
       .setStyle('DANGER')
     );
-    const confirmation = await msg.channel.send({content: 'Are you sure you want to kick this member?', components: [row]}).catch(console.error);
+    const confirmation = await msg.reply({content: 'Are you sure you want to kick this member?', components: [row]}).catch(console.error);
     const collector = confirmation.createMessageComponentCollector({filter, max: 1, time: 7 * 1000});
     
     collector.on('collect', async i => {

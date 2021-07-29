@@ -9,6 +9,6 @@ module.exports = {
 
     if (!fs.existsSync(`./commands/${arg}.js`)) return msg.reply('Requested command does not exist').catch(console.error);
     const {name, description} = require(`./${arg}.js`);
-    msg.channel.send(`${name}${arg === 'music' ? ' (not a command)' : ''}: ${description}`).catch(console.error);
+    msg.reply(`${name}${arg === 'music' ? ' (not a command)' : ''}: ${description}`).catch(console.error);
   }
 };
