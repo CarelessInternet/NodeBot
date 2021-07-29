@@ -14,6 +14,7 @@
     "discord.js": "^13.0.0-dev.5e433b5.1627473836",
     "dotenv": "^10.0.0",
     "lorem-ipsum": "^2.0.3",
+    "minecraft-server-util": "^3.5.2",
     "node-fetch": "^2.6.1",
     "random-hex-color": "^1.0.1"
   }
