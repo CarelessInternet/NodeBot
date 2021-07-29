@@ -30,6 +30,7 @@ module.exports = {
       if (reaction === 'Kick_Confirm') {
         const target = msg.guild.members.cache.get(member.id);
         const reason = args.slice(1).join(' ') ?? '';
+        if (target == msg.author.id) return i.update({content: 'You cannot kick yourself', components: []}).catch(console.error);
 
         target.kick(reason)
         .then(user => i.update({content: `👍 ${user.id ? '<@' + user.id + '>' : user.user.username} has been kicked from ${msg.guild.name}`, components: []}))
