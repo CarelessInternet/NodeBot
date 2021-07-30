@@ -1,7 +1,7 @@
 Plays videos/music in user's voice channel
 
 play (*required parameter*): Plays a video with the search query as parameter
-volume (*required parameter*): Changes volume to the parameter, must be between 0-2, default is 0.1
+volume (*required parameter*): Changes volume to the parameter, must be between 0-2, default is 0.5
 queue: Shows the queue
 skip: Skips the current video
 remove: Removes a specified video from the queue
