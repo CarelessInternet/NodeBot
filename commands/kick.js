@@ -45,6 +45,10 @@ module.exports = {
           return confirmation.edit({content: 'Kick aborted due to no response', components: []}).catch(console.error);
         case 'messageDelete':
           return msg.channel.send('Kick aborted because the message was deleted').catch(console.error);
+        case 'channelDelete':
+          return;
+        case 'guildDelete':
+          return;
         case 'limit':
           return;
         default:
