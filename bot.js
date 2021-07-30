@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
+const flags = Discord.Intents.FLAGS;
 const client = new Discord.Client({
-  intents: [Discord.Intents.FLAGS.GUILDS, Discord.Intents.FLAGS.GUILD_MESSAGES, Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS]
+  intents: [flags.GUILDS, flags.GUILD_MESSAGES, flags.GUILD_MESSAGE_REACTIONS, flags.GUILD_VOICE_STATES]
 });
 const token = process.env.token;
 
