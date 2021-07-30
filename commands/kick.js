@@ -31,10 +31,11 @@ module.exports = {
         const target = msg.guild.members.cache.get(member.id);
         const reason = args.slice(1).join(' ') ?? '';
         if (target == msg.author.id) return i.update({content: 'You cannot kick yourself', components: []}).catch(console.error);
+        if (target.permissions.has('KICK_MEMBERS')) return i.update({content: 'Failed to kick because the user has kick members permission', components: []}).catch(console.error);
 
         target.kick(reason)
         .then(user => i.update({content: `👍 ${user.id ? '<@' + user.id + '>' : user.user.username} has been kicked from ${msg.guild.name}`, components: []}))
-        .catch(err => i.update({content: '👎 Failed to kick, usually because the user has some form of mod/admin on this server', components: []}));
+        .catch(err => i.update({content: '👎 Failed to kick, usually because the user has some form of mod/admin on this server, or my highest role is listed lower than the requested user\'s roles', components: []}));
       } else if (reaction === 'Kick_Abort') {
         i.update({content: 'Kick has been aborted', components: []});
       }
