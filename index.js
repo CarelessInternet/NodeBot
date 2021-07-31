@@ -8,10 +8,7 @@ const dateFormat = require('dateformat');
 const token = process.env.token;
 // const topGGToken = process.env.topGGToken;
 
-const shards = new ShardingManager('./bot.js', {
-  token: token,
-  totalShards: 'auto'
-});
+const shards = new ShardingManager('./bot.js', {token: token});
 shards.on('shardCreate', shard => {
   console.log(`Created shard #${shard.id} at ${dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss')}`);
 });
