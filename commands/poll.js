@@ -17,6 +17,8 @@ module.exports = {
     // all info for the embed
     const title = content[0];
     const duration = !isNaN(content[1]) ? parseFloat(content[1]) : 1;
+    if (duration * 60 * 60 * 1000 > 2147483647) return msg.reply('Hours must be smaller than 596.5 hours, or 24.85 days');
+
     const color = randomHexColor();
     const embed = new Discord.MessageEmbed()
     .setColor(color)
@@ -45,7 +47,7 @@ module.exports = {
     content.splice(0, 2);
     content.forEach((val, index) => {
       amount.push(0);
-      embed.addField(`${index + 1}:`, `${val} | Votes: 0`);
+      embed.addField(`${index + 1}:`, `${val} | **Votes**: 0`);
       row.addComponents(
         new Discord.MessageButton()
         .setCustomId((index + 1).toString())
@@ -73,15 +75,12 @@ module.exports = {
         case 'time': {
           // display bar and update description
           for (let i = 0; i < embed.fields.length; i++) {
-            const total = amount.reduce((acc, curr) => acc + curr, 0);
+            const total = amount.reduce((acc, curr) => acc + curr, 0) || 1;
             const bar = await progressBar.filledBar(total, amount[i]);
-            embed.fields[i] = {
-              name: `${i + 1}:`,
-              value: `${content[i]} | **Votes**: ${amount[i]}\n${bar[0]}`
-            }
+            embed.fields[i].value += `\n${bar[0]}`;
           }
 
-          embed.description = 'Result:';
+          embed.description = `Amount of Votes: ${collected.size}`;
           return message.edit({embeds: [embed], components: []}).catch(console.error);
         }
         case 'messageDelete':
