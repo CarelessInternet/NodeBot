@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 // sharding is required for multiple instances of the bot running at the same time for maximum efficiency and performance
-// uncommented lines are for production where you can see server count and shard count in top.gg
+// commented lines are for production where you can see server count and shard count in top.gg
 const {ShardingManager} = require('discord.js');
 // const {AutoPoster} = require('topgg-autoposter');
 const dateFormat = require('dateformat');
