@@ -7,6 +7,7 @@ const {ShardingManager} = require('discord.js');
 const dateFormat = require('dateformat');
 const token = process.env.token;
 // const topGGToken = process.env.topGGToken;
+// test commit + push
 
 const shards = new ShardingManager('./bot.js', {
   token: token,
