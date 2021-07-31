@@ -22,6 +22,7 @@
     "node-fetch": "^2.6.1",
     "random-hex-color": "^1.0.1",
     "string-progressbar": "^1.0.4",
+    "topgg-autoposter": "^2.0.0",
     "tweetnacl": "^1.0.3",
     "utf-8-validate": "^5.0.5",
     "validator": "^13.6.0",
