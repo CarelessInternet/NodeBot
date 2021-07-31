@@ -16,4 +16,4 @@ shards.on('shardCreate', shard => {
 // const poster = AutoPoster(topGGToken, shards);
 // poster.on('error', console.error);
 
-shards.spawn(shards.totalShards);
+shards.spawn();
