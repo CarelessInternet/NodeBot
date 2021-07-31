@@ -12,7 +12,7 @@ const shards = new ShardingManager('./bot.js', {token: token});
 shards.on('shardCreate', shard => {
   console.log(`Created shard #${shard.id} at ${dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss')}`);
 });
-
+console.log('test');
 // const poster = AutoPoster(topGGToken, shards);
 // poster.on('error', console.error);
 
