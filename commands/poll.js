@@ -75,14 +75,13 @@ module.exports = {
           for (let i = 0; i < embed.fields.length; i++) {
             const total = amount.reduce((acc, curr) => acc + curr, 0);
             const bar = await progressBar.filledBar(total, amount[i]);
-  
             embed.fields[i] = {
               name: `${i + 1}:`,
               value: `${content[i]} | **Votes**: ${amount[i]}\n${bar[0]}`
             }
           }
-          embed.description = 'Result:';
 
+          embed.description = 'Result:';
           return message.edit({embeds: [embed], components: []}).catch(console.error);
         }
         case 'messageDelete':
