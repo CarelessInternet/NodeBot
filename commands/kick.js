@@ -52,7 +52,7 @@ module.exports = {
         case 'limit':
           return;
         default:
-          return msg.channel.send({content: 'Kick aborted due to an unknown reason', components: []}).catch(console.error);
+          return msg.channel.send('Kick aborted due to an unknown reason').catch(console.error);
       }
     });
   }
