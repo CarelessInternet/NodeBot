@@ -16,6 +16,7 @@
     "discord-tictactoe": "^2.1.1",
     "discord.js": "^13.0.0-dev.t1627732975.331a9d3",
     "dotenv": "^10.0.0",
+    "erlpack": "github:discord/erlpack",
     "ffmpeg-static": "^4.4.0",
     "lorem-ipsum": "^2.0.3",
     "memer-api": "^3.0.6",
