@@ -1,0 +1,14 @@
+[
+  {
+    "name": "ping",
+    "description": "Sends pongs back",
+    "options": [
+      {
+        "name": "amount",
+        "type": "NUMBER",
+        "description": "Amount of times to ping back. Must be between 1 and 5",
+        "required": false
+      }
+    ]
+  }
+]
