@@ -1,5 +1,14 @@
 [
   {
+    "name": "amogus",
+    "description": "among us haha impostor sus! joins vc if the message author is in one and plays among us drip theme",
+    "category": "memes",
+    "options": [],
+    "examples": [
+      "amogus"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends pongs back",
     "category": "utility",
