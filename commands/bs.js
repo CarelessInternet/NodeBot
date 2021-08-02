@@ -1,8 +1,9 @@
 const fs = require('fs');
+const {MessageAttachment, MessageEmbed} = require('discord.js');
 
 module.exports = {
   name: 'bs',
-  execute(interaction, Discord) {
+  execute(interaction) {
     // how to add a local image to an embed:
     // 1: make an attachment
     // 2: add setImage method to embed with the string: 'attachment://imagePath'
@@ -10,8 +11,8 @@ module.exports = {
 
     const files = fs.readdirSync('./pictures/bs');
     const image = files[Math.floor(Math.random() * files.length)];
-    const attachment = new Discord.MessageAttachment(`pictures/bs/${image}`);
-    const embed = new Discord.MessageEmbed()
+    const attachment = new MessageAttachment(`pictures/bs/${image}`);
+    const embed = new MessageEmbed()
     .setColor('#52fa5c')
     .setTitle('Bullshit')
     .setDescription('Look at that bullshit')
