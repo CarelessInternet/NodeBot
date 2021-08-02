@@ -63,11 +63,11 @@
 
 // module.exports = message;
 
-async function interaction(client, Discord, interaction) {
+async function interaction(client, Discord, prefix, interaction) {
   if (!interaction.isCommand()) return;
 
   try {
-    await client.commands.get(interaction.commandName).execute(interaction);
+    await client.commands.get(interaction.commandName).execute(interaction, Discord, prefix);
   } catch(err) {
     console.error(err);
     await interaction.reply({content: 'error occured'}).catch(console.error);

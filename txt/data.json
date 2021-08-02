@@ -9,6 +9,15 @@
     ]
   },
   {
+    "name": "bs",
+    "description": "Damn, some bullshit that we have to stare at",
+    "category": "memes",
+    "options": [],
+    "examples": [
+      "bs"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends pongs back",
     "category": "utility",
