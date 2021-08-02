@@ -5,7 +5,7 @@ async function message(client, Discord, msg) {
 
   if (msg.content.toLowerCase() === '..deploy' && msg.author.id === client.application?.owner.id) {
     const data = await JSON.parse(fs.readFileSync('./txt/data.json', 'utf8'));
-    const commands = await client.application?.commands.set(data);
+    await client.application?.commands.set(data);
   }
 }
 
