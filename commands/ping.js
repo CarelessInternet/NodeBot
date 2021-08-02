@@ -1,6 +1,6 @@
 module.exports = {
   name: 'ping',
   execute(interaction) {
-    interaction.reply({content: 'pong блядь'}).catch(console.error);
+    interaction.reply({content: `🏓 My time to respond is roughly ${interaction.client.ws.ping}ms`}).catch(console.error);
   }
 }
