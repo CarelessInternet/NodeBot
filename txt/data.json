@@ -24,7 +24,7 @@
     "options": [
       {
         "name": "id",
-        "description": "ID, as in Steam ID, the last part of the URL when looking at a steam profile",
+        "description": "The Steam ID, the last part of the URL when looking at a steam profile",
         "type": "STRING",
         "required": true
       }
