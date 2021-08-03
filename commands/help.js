@@ -7,8 +7,8 @@ function description(command) {
 function options(command) {
   if (!command.options[0]) return 'None';
   return command.options.reduce((acc, curr) => {
-    return acc + `[*${curr.required ? 'required' : 'optional'} option ${curr.type}*]\n**${curr.description}** `;
-  }, '').slice(0, -1);
+    return acc + `[*${curr.required ? 'required' : 'optional'} option ${curr.type}*]\n**${curr.description}**\n`;
+  }, '');
 }
 function examples(command, prefix) {
   return command.examples.reduce((acc, curr) => {
