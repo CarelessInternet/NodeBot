@@ -18,6 +18,25 @@
     ]
   },
   {
+    "name": "csgo",
+    "description": "Returns CS:GO stats about a player. Use the Steam ID, and the profile must be public for it to work",
+    "category": "game related",
+    "options": [
+      {
+        "name": "id",
+        "description": "ID, as in Steam ID, the last part of the URL when looking at a steam profile",
+        "type": "STRING",
+        "required": true
+      }
+    ],
+    "examples": [
+      "csgo noprofilephoto",
+      "csgo anomaly",
+      "csgo LindisXd",
+      "csgo dev1ce"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends pongs back",
     "category": "utility",
