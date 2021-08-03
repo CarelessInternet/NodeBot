@@ -81,6 +81,15 @@
     ]
   },
   {
+    "name": "lorem",
+    "description": "Spits out some lorem ipsum text",
+    "category": "other",
+    "options": [],
+    "examples": [
+      "lorem"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends a pong back with the bot's current average response time",
     "category": "utility",
