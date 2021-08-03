@@ -38,7 +38,7 @@
   },
   {
     "name": "ping",
-    "description": "Sends pongs back",
+    "description": "Sends a pong back with the bot's current average response time",
     "category": "utility",
     "options": [],
     "examples": [
