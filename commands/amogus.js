@@ -34,4 +34,4 @@ module.exports = {
     message.react('😮');
     message.react('😂');
   }
-};
+}
