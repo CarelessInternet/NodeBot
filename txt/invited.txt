@@ -1,6 +1,6 @@
 Thanks for inviting me into the server!
 To view all of the commands, use `{prefix}help`
 To view the description of a command, use `{prefix}desc CommandName`, e.g `{prefix}desc rps` or `{prefix}desc amogus`
-Example of commands: `{prefix}help`, `{prefix}mc hypixel.net`, `{prefix}meme`, `{prefix}lorem`
+Example of commands: `{prefix}help`, `{prefix}mc hypixel.net 25565`, `{prefix}meme`, `{prefix}lorem`
 
 - NodeBot
