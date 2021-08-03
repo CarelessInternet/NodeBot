@@ -20,7 +20,7 @@
   {
     "name": "csgo",
     "description": "Returns CS:GO stats about a player. Use the Steam ID, and the profile must be public for it to work",
-    "category": "game related",
+    "category": "game",
     "options": [
       {
         "name": "id",
@@ -34,6 +34,25 @@
       "csgo anomaly",
       "csgo LindisXd",
       "csgo dev1ce"
+    ]
+  },
+  {
+    "name": "help",
+    "description": "Shows all available commands, or information about a specified command",
+    "category": "utility",
+    "options": [
+      {
+        "name": "command",
+        "description": "A specific command to get inforamation about",
+        "type": "STRING",
+        "required": false
+      }
+    ],
+    "examples": [
+      "help",
+      "help mc",
+      "help rps",
+      "help help"
     ]
   },
   {
