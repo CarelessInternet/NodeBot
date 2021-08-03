@@ -19,6 +19,9 @@ module.exports = {
     .setImage(`attachment://${image}`)
     .setFooter('Damn, that\'s crazy');
 
-    interaction.reply({embeds: [embed], files: [attachment]}).catch(console.error);
+    interaction.reply({
+      embeds: [embed],
+      files: [attachment]
+    }).catch(console.error);
   }
 }

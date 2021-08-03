@@ -25,7 +25,10 @@ module.exports = {
     ⢀⢂⢑⠀⡂⡃⠅⠊⢄⢑⠠⠑⢕⢕⢝⢮⢺⢕⢟⢮⢊⢢⢱⢄⠃⣇⣞⢞⣞⢾
     ⢀⠢⡑⡀⢂⢊⠠⠁⡂⡐⠀⠅⡈⠪⠪⠪⠣⠫⠑⡁⢔⠕⣜⣜⢦⡰⡎⡯⡾⡽
     `;
-    const message = await interaction.reply({content: text, fetchReply: true}).catch(console.error);
+    const message = await interaction.reply({
+      content: text,
+      fetchReply: true
+    }).catch(console.error);
     
     message.react('😳');
     message.react('😮');
