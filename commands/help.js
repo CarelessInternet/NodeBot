@@ -16,7 +16,7 @@ function fieldValue(json, type, prefix) {
   return json.reduce((acc, curr) => {
     if (curr.category == type) return acc + `\`${prefix}${curr.name}${curr.options[0]?.required ? '*' : ''}\`, `;
     else return acc;
-  }, '').slice(0, -2);
+  }, '').slice(0, -2) || '`Empty`';
 }
 
 module.exports = {
@@ -70,10 +70,10 @@ module.exports = {
           name: 'Utility',
           value: fieldValue(json, 'utility', prefix)
         },
-        // {
-        //   name: 'Music',
-        //   value: fieldValue(json, 'music', prefix)
-        // },
+        {
+          name: 'Music',
+          value: fieldValue(json, 'music', prefix)
+        },
         {
           name: 'Memes',
           value: fieldValue(json, 'memes', prefix)
@@ -82,14 +82,14 @@ module.exports = {
           name: 'Game Related',
           value: fieldValue(json, 'game', prefix)
         },
-        // {
-        //   name: 'Staff',
-        //   value: fieldValue(json, 'staff', prefix)
-        // },
-        // {
-        //   name: 'Other',
-        //   value: fieldValue(json, 'other', prefix)
-        // }
+        {
+          name: 'Staff',
+          value: fieldValue(json, 'staff', prefix)
+        },
+        {
+          name: 'Other',
+          value: fieldValue(json, 'other', prefix)
+        }
       ];
 
       const row = new MessageActionRow()
