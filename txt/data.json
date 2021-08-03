@@ -90,6 +90,31 @@
     ]
   },
   {
+    "name": "mc",
+    "description": "Returns information about a Minecraft Server",
+    "category": "game",
+    "options": [
+      {
+        "name": "ip",
+        "description": "The IP of the Minecraft Server",
+        "type": "STRING",
+        "required": true
+      },
+      {
+        "name": "port",
+        "description": "The port of the Minecraft Server",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "mc hypixel.net 25565",
+      "mc play.cubecraft.net 25565",
+      "mc someserver.com 42069",
+      "mc somemoreservers.org 1337"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends a pong back with the bot's current average response time",
     "category": "utility",
