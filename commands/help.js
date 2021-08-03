@@ -1,10 +1,13 @@
 const fs = require('fs');
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
 
+function description(command) {
+  return `${command.description}`;
+}
 function options(command) {
   if (!command.options[0]) return 'None';
   return command.options.reduce((acc, curr) => {
-    return acc + `[*${curr.required ? 'required' : 'optional'} option ${curr.type}*] `;
+    return acc + `[*${curr.required ? 'required' : 'optional'} option ${curr.type}*]\n**${curr.description}** `;
   }, '').slice(0, -1);
 }
 function examples(command, prefix) {
@@ -37,6 +40,10 @@ module.exports = {
       .setTitle(`Command: \`${prefix}${command.name}\``)
       .addField('Category', categoryName);
       const categories = [
+        {
+          name: 'Description',
+          value: description(command)
+        },
         {
           name: 'Options',
           value: options(command)
