@@ -392,6 +392,30 @@
     ]
   },
   {
+    "name": "spotify",
+    "description": "Returns information about a song on Spotify",
+    "category": "other",
+    "options": [
+      {
+        "name": "artist",
+        "description": "The artist of the song",
+        "type": "STRING",
+        "required": true
+      }, {
+        "name": "title",
+        "description": "The title of the song",
+        "type": "STRING",
+        "required": true
+      }
+    ],
+    "examples": [
+      "spotify KSI Domain",
+      "spotify Grant Macdonald Ram Ranch 69",
+      "spotify Halogen U Got That",
+      "spotify Vicetone Astronomia"
+    ]
+  },
+  {
     "name": "unloop",
     "description": "Unloops the current video",
     "category": "music",
