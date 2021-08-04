@@ -260,6 +260,55 @@
     ]
   },
   {
+    "name": "poll",
+    "description": "Creates a poll with the votes as reactions",
+    "category": "utility",
+    "options": [
+      {
+        "name": "title",
+        "description": "The title of the poll",
+        "type": "STRING",
+        "required": true
+      },
+      {
+        "name": "hours",
+        "description": "The amount of hours this poll should last",
+        "type": "NUMBER",
+        "required": true
+      },
+      {
+        "name": "field1",
+        "description": "An option in the poll",
+        "type": "STRING",
+        "required": true
+      },
+      {
+        "name": "field2",
+        "description": "An option in the poll",
+        "type": "STRING",
+        "required": false
+      },
+      {
+        "name": "field3",
+        "description": "An option in the poll",
+        "type": "STRING",
+        "required": false
+      },
+      {
+        "name": "field4",
+        "description": "An option in the poll",
+        "type": "STRING",
+        "required": false
+      }
+    ],
+    "examples": [
+      "poll What Food Is Best?. 3. Pizza. Burger. Pasta. Other",
+      "poll Which is Better?. 24. Sleep. Friends",
+      "poll Yes?. 48. Yes.",
+      "poll idk what to put anymore. 596.5. im bored. what are thooooooose"
+    ]
+  },
+  {
     "name": "queue",
     "description": "Gets the queue",
     "category": "music",
