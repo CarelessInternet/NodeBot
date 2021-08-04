@@ -364,6 +364,25 @@
     ]
   },
   {
+    "name": "say",
+    "description": "Makes the bot say what you type",
+    "category": "staff",
+    "options": [
+      {
+        "name": "text",
+        "description": "The stuff you want to say",
+        "type": "STRING",
+        "required": true
+      }
+    ],
+    "examples": [
+      "say why are you gae",
+      "say sample text",
+      "say something idk just something",
+      "say i ran out of examples very quickly"
+    ]
+  },
+  {
     "name": "skip",
     "description": "Skips the current video",
     "category": "music",
