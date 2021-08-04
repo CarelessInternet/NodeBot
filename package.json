@@ -28,7 +28,7 @@
     "utf-8-validate": "^5.0.5",
     "validator": "^13.6.0",
     "yt-search": "^2.10.0",
-    "ytdl-core": "^4.9.0",
+    "ytdl-core": "^4.9.1",
     "zlib-sync": "^0.1.7"
   }
 }
