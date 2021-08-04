@@ -1,6 +1,32 @@
+const {MessageEmbed} = require('discord.js');
+
 module.exports = {
   name: 'ping',
-  execute(interaction) {
-    interaction.reply({content: `🏓 My time to respond is roughly ${interaction.client.ws.ping}ms`}).catch(console.error);
+  async execute(interaction) {
+    if (!interaction.inGuild()) return interaction.reply({content: `Websocket Ping is roughly ${interaction.client.ws.ping}ms`}).catch(console.error);
+
+    try {
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setTitle('Pinging...');
+      const message = await interaction.reply({embeds: [embed], fetchReply: true});
+
+      embed.setTitle('Result:');
+      embed.addFields({
+        name: 'Websocket Ping',
+        value: `⌛ ${interaction.client.ws.ping}ms`
+      }, {
+        name: 'Roundtrip Latency',
+        value: `🏓 Roughly ${message.createdTimestamp - interaction.createdTimestamp}ms`
+      });
+
+      message.edit({embeds: [embed]});
+    } catch(err) {
+      console.error(err);
+      interaction.editReply({
+        content: 'An unknown error occured whilst trying to ping, please try again later',
+        ephemeral: true
+      }).catch(console.error);
+    }
   }
 }
