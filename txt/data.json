@@ -355,6 +355,15 @@
     ]
   },
   {
+    "name": "rickroll",
+    "description": "commits rick roll. joins vc if the message author is in one and plays rick roll",
+    "category": "memes",
+    "options": [],
+    "examples": [
+      "rickroll"
+    ]
+  },
+  {
     "name": "unloop",
     "description": "Unloops the current video",
     "category": "music",
