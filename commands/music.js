@@ -223,8 +223,8 @@ module.exports = {
     if (!channel) return interaction.reply({content: 'You must be in a voice channel to use music commands', ephemeral: true}).catch(console.error);
 
     if (interaction.guild.me.voice?.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return interaction.reply({content: 'You must be in the same voice channel as the bot', ephemeral: true}).catch(console.error);
-    if (!checkForPermissions(interaction.member)) return interaction.reply({content: 'You must have the DJ role or manage channels permission to use music commands'}).catch(console.error)
-    if (interaction.member.selfDeaf || interaction.member.serverDeaf) return interaction.reply({content: 'You must be undeafened to use music commands'}).catch(console.error);
+    if (!checkForPermissions(interaction.member)) return interaction.reply({content: 'You must have the DJ role or manage channels permission to use music commands', ephemeral: true}).catch(console.error)
+    if (interaction.member.selfDeaf || interaction.member.serverDeaf) return interaction.reply({content: 'You must be undeafened to use music commands', ephemeral: true}).catch(console.error);
 
     switch (command) {
       case 'play':
