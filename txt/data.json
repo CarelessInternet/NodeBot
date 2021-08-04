@@ -346,21 +346,30 @@
     ]
   },
   {
-    "name": "skip",
-    "description": "Skips the current video",
-    "category": "music",
-    "options": [],
-    "examples": [
-      "skip"
-    ]
-  },
-  {
     "name": "rickroll",
     "description": "commits rick roll. joins vc if the message author is in one and plays rick roll",
     "category": "memes",
     "options": [],
     "examples": [
       "rickroll"
+    ]
+  },
+  {
+    "name": "rps",
+    "description": "Plays a game of Rock Paper Scissors",
+    "category": "game",
+    "options": [],
+    "examples": [
+      "rps"
+    ]
+  },
+  {
+    "name": "skip",
+    "description": "Skips the current video",
+    "category": "music",
+    "options": [],
+    "examples": [
+      "skip"
     ]
   },
   {
