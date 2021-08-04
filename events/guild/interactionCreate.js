@@ -19,8 +19,9 @@ async function interaction(client, Discord, prefix, interaction) {
     case 'amogus':
       command.execute(interaction);
       return client.commands.get('music')?.execute(interaction, 'play', ['among us drip theme song original'], true);
-    case 'desc':
-      return command.execute(interaction, isMusicCommand);
+    case 'memer':
+      await interaction.defer().catch(console.error);
+      return command.execute(interaction);
     case 'music':
       return;
     default:

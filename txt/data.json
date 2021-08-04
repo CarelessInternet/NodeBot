@@ -151,6 +151,60 @@
     ]
   },
   {
+    "name": "memer",
+    "description": "Meme image manipulation powered by the memer-api module",
+    "category": "memes",
+    "options": [
+      {
+        "name": "format",
+        "description": "The format/template of the meme",
+        "type": "STRING",
+        "required": true
+      },
+      {
+        "name": "input",
+        "description": "The text to be sent, or the URL",
+        "type": "STRING",
+        "required": true
+      }
+    ],
+    "examples": [
+      "memer abandon text",
+      "memer affect link",
+      "memer america link",
+      "memer armor text",
+      "memer brazzers link",
+      "memer byemom text",
+      "memer cancer link",
+      "memer changemymind text",
+      "memer communism link",
+      "memer cry text",
+      "memer delete link",
+      "memer disability link",
+      "memer emergencymeeting text",
+      "memer excuseme text",
+      "memer facts text",
+      "memer failure link",
+      "memer fakenews link",
+      "memer godwhy text",
+      "memer hitler link",
+      "memer ipad link",
+      "memer jail link",
+      "memer keepdistance text",
+      "memer note text",
+      "memer roblox link",
+      "memer satan link",
+      "memer shit text",
+      "memer stroke text",
+      "memer trash link",
+      "memer tweet text",
+      "memer walking text",
+      "memer wanted link",
+      "memer whodidthis link",
+      "memer youtube text"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends a pong back with the bot's current average response time",
     "category": "utility",
