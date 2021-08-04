@@ -1,5 +1,4 @@
 const fs = require('fs');
-const randomHexColor = require('random-hex-color');
 
 async function onCreate(client, Discord, guild, prefix) {
   if (!guild.systemChannel) return;
@@ -7,7 +6,7 @@ async function onCreate(client, Discord, guild, prefix) {
   const file2 = await fs.readFileSync('./txt/support.txt', 'utf8');
   const text = await file.replace(new RegExp('{prefix}', 'g'), prefix);
   const embed = new Discord.MessageEmbed()
-  .setColor(randomHexColor())
+  .setColor('RANDOM')
   .setTitle('Hello!')
   .setDescription(text)
   .addField('Support Server', file2)
