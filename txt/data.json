@@ -416,6 +416,15 @@
     ]
   },
   {
+    "name": "support",
+    "description": "Sends the support server link",
+    "category": "other",
+    "options": [],
+    "examples": [
+      "support"
+    ]
+  },
+  {
     "name": "unloop",
     "description": "Unloops the current video",
     "category": "music",
