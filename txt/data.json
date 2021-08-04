@@ -425,6 +425,25 @@
     ]
   },
   {
+    "name": "ttt",
+    "description": "Tic Tac Toe game made possible with the discord-tictactoe NPM package",
+    "category": "game",
+    "options": [
+      {
+        "name": "user",
+        "description": "The user you want to battle against",
+        "type": "USER",
+        "required": false
+      }
+    ],
+    "examples": [
+      "ttt",
+      "ttt @Owner#6969",
+      "ttt @DeezNuts#0001",
+      "ttt @ihatedoingthis#9999"
+    ]
+  },
+  {
     "name": "unloop",
     "description": "Unloops the current video",
     "category": "music",
