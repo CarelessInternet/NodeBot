@@ -115,6 +115,42 @@
     ]
   },
   {
+    "name": "meme",
+    "description": "Returns a meme, either from r/dankmemes or the local memes folder if requested",
+    "category": "memes",
+    "options": [
+      {
+        "name": "type",
+        "description": "The amount of memes to be sent, or to send a meme from the local memes folder",
+        "type": "STRING",
+        "required": false,
+        "choices": [
+          {
+            "name": "once",
+            "value": "1"
+          },
+          {
+            "name": "twice",
+            "value": "2"
+          },
+          {
+            "name": "thrice",
+            "value": "3"
+          }, {
+            "name": "folder",
+            "value": "localfolder"
+          }
+        ]
+      }
+    ],
+    "examples": [
+      "meme",
+      "meme 2",
+      "meme 3",
+      "meme localfolder"
+    ]
+  },
+  {
     "name": "ping",
     "description": "Sends a pong back with the bot's current average response time",
     "category": "utility",
