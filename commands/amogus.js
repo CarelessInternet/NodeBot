@@ -25,13 +25,19 @@ module.exports = {
     ⢀⢂⢑⠀⡂⡃⠅⠊⢄⢑⠠⠑⢕⢕⢝⢮⢺⢕⢟⢮⢊⢢⢱⢄⠃⣇⣞⢞⣞⢾
     ⢀⠢⡑⡀⢂⢊⠠⠁⡂⡐⠀⠅⡈⠪⠪⠪⠣⠫⠑⡁⢔⠕⣜⣜⢦⡰⡎⡯⡾⡽
     `;
-    const message = await interaction.reply({
-      content: text,
-      fetchReply: true
-    }).catch(console.error);
     
-    message.react('😳');
-    message.react('😮');
-    message.react('😂');
+    try {
+      const message = await interaction.reply({
+        content: text,
+        fetchReply: true
+      });
+      if (!interaction.inGuild()) return;
+
+      message.react('😳');
+      message.react('😮');
+      message.react('😂');
+    } catch(err) {
+      console.error(err);
+    }
   }
 }
