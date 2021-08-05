@@ -12,7 +12,6 @@ function outcome(player, bot, emojis) {
 module.exports = {
   name: 'rps',
   async execute(interaction) {
-    if (!interaction.inGuild()) return interaction.reply({content: 'Unfortunately, the rps command is not available in DMs, please run this command in a server'}).catch(console.error);
     if (interaction.inGuild() && !interaction.guild.me.permissions.has('MANAGE_MESSAGES')) return interaction.reply({content: 'I need the manage messages permission to run this command', ephemeral: true}).catch(console.error);
     const embed = new MessageEmbed()
     .setColor('RANDOM')
@@ -47,12 +46,14 @@ module.exports = {
       .setStyle('DANGER')
     );
 
-    const filter = i => (i.customId === 'Rock' || i.customId === 'Paper' || i.customId === 'Scissors') && i.member.user.id === interaction.user.id;
-    const message = await interaction.reply({
+    const filter = i => (i.customId === 'Rock' || i.customId === 'Paper' || i.customId === 'Scissors') && ((interaction.inGuild() && i.member?.user.id === interaction.user.id) || !interaction.inGuild());
+    const msg = await interaction.reply({
       embeds: [embed],
       components: [row],
       fetchReply: true
     }).catch(console.error);
+    const channel = await interaction.client.channels.fetch(interaction.channelId).catch(console.error);
+    const message = await channel.messages.fetch(msg.id).catch(console.error);
     const collector = message.createMessageComponentCollector({filter, max: 1, time: 15 * 1000});
 
     collector.on('collect', i => {
@@ -79,7 +80,6 @@ module.exports = {
         case 'time':
           return message.edit({
             content: 'Game aborted due to no response',
-            ephemeral: true,
             embeds: [],
             components: []
           }).catch(console.error);

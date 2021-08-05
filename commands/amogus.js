@@ -27,11 +27,12 @@ module.exports = {
     `;
     
     try {
-      const message = await interaction.reply({
+      const msg = await interaction.reply({
         content: text,
         fetchReply: true
       });
-      if (!interaction.inGuild()) return;
+      const channel = await interaction.client.channels.fetch(interaction.channelId);
+      const message = await channel.messages.fetch(msg.id);
 
       message.react('😳');
       message.react('😮');
