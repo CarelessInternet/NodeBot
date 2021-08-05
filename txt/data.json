@@ -498,5 +498,24 @@
       "volume 1.5",
       "volume 2"
     ]
+  },
+  {
+    "name": "weather",
+    "description": "Gives information about the weathe in a city",
+    "category": "utility",
+    "options": [
+      {
+        "name": "city",
+        "description": "The city's weather",
+        "type": "STRING",
+        "required": true
+      }
+    ],
+    "examples": [
+      "weather Los Angeles",
+      "weather Jakarta",
+      "weather Stockholm",
+      "weather Pyongyang"
+    ]
   }
 ]
