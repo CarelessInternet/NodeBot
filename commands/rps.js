@@ -1,4 +1,4 @@
-const {Client, MessageActionRow, MessageButton, MessageEmbed, Message} = require('discord.js');
+const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 function outcome(player, bot, emojis) {
   if ((player === emojis[0].id && bot === emojis[2].id) || (player === emojis[2].id && bot === emojis[1].id) || (player === emojis[1].id && bot === emojis[0].id))
