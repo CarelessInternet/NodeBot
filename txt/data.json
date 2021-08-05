@@ -462,6 +462,25 @@
     ]
   },
   {
+    "name": "users",
+    "description": "Get the amount of user in the discord server excluding bots",
+    "category": "utility",
+    "options": [
+      {
+        "name": "role",
+        "description": "The amount of users with this role that aren't bots",
+        "type": "ROLE",
+        "required": false
+      }
+    ],
+    "examples": [
+      "users",
+      "users @administrator",
+      "users @bots",
+      "users @server boosters"
+    ]
+  },
+  {
     "name": "volume",
     "description": "Changes the volume of the bot",
     "category": "music",
