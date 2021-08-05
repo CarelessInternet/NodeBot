@@ -4,6 +4,8 @@
 
 sorry for any messy files, i cant bother making them cleaner and adding comments
 
+to run the bot, make sure you type <b>nbd!deploy</b> in discord to set all the commands after running the node application
+
 if u have any suggestions or bug reports, please open an issue.
 <b>only submit bug reports for the production version of NodeBot, not for self hosted bugs</b>
 
@@ -11,7 +13,7 @@ env variables:
 - token (discord bot token)
 - spotifyClientID
 - spotifyClientSecret
-- memerToken (for memer commmand)
-- weatherAPIKey
+- memerToken (for memer commmand, from the memer-api module)
+- weatherAPIKey (from weatherapi.com)
 - trackerGGAPIKey (for csgo stats)
 - topGGToken (server and shard count, <b>only for NodeBot production</b>)
