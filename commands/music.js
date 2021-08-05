@@ -43,9 +43,8 @@ async function play(interaction, serverQueue, channel, botArg = '') {
       constructor.connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
       constructor.connection.on(VoiceConnectionStatus.Destroyed, () => {
         queue.delete(interaction.guild.id);
-        interaction.reply({content: 'Disconnected from voice channel'}).catch(err => {
-          interaction.followUp({content: 'Disconnected from voice channel'}).catch(console.error);
-        });
+        if (interaction.replied || interaction.deferred) interaction.followUp({content: 'Disconnected from voice channel'}).catch(console.error);
+        else interaction.reply({content: 'Disconnected from voice channel'}).catch(console.error);
       });
       constructor.connection.on('error', console.error);
 
@@ -123,9 +122,8 @@ async function videoPlayer(interaction, constructor) {
     .setTimestamp()
     .setFooter(`Video ID: ${songQueue.videoId}`);
 
-    interaction.reply({embeds: [embed]}).catch(err => {
-      interaction.followUp({embeds: [embed]}).catch(console.error);
-    });
+    if (interaction.replied || interaction.deferred) interaction.followUp({embeds: [embed]}).catch(console.error);
+    else interaction.reply({embeds: [embed]}).catch(console.error);
   }
 }
 // show queue
