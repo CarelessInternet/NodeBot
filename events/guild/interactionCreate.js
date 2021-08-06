@@ -20,7 +20,7 @@ async function interaction(client, Discord, prefix, interaction) {
       command.execute(interaction);
       return client.commands.get('music')?.execute(interaction, 'play', ['among us drip theme song original'], true);
     case 'memer':
-      await interaction.defer().catch(console.error);
+      await interaction.deferReply().catch(console.error);
       return command.execute(interaction);
     case 'music':
       return;
