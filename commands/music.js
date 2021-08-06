@@ -67,7 +67,7 @@ async function play(interaction, serverQueue, channel, botArg = '') {
 async function videoPlayer(interaction, constructor) {
   const songQueue = constructor.queue[0];
   if (!songQueue) return constructor.connection.destroy();
-  if (!constructor.loop) await interaction.deferReply().catch(err => console.log('videoPlayer defer error, probably the INTERACTION_ALREADY_REPLIED error that we can ignore'));
+  if (!constructor.loop && !interaction.replied) await interaction.deferReply().catch(err => console.log('videoPlayer defer error, probably the INTERACTION_ALREADY_REPLIED error that we can ignore'));
 
   // create connection and play it
   const resource = await createAudioResource(ytdl(songQueue.url, {
