@@ -7,7 +7,7 @@ sorry for any messy files, i cant bother making them cleaner and adding comments
 to run the bot, make sure you type <b>nbd!deploy</b> in discord to set all the commands after running the node application
 
 if u have any suggestions or bug reports, please open an issue.
-<b>only submit bug reports for the production version of NodeBot, not for self hosted bugs</b>
+<b>only submit bug reports for bugs found when running the bot. dont submit an issue if you cant get the bot to run</b>
 
 env variables:
 - token (discord bot token)
