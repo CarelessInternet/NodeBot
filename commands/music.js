@@ -144,6 +144,7 @@ function getQueue(interaction, constructor) {
 // skips current video
 function skip(interaction, constructor) {
   if (!constructor) return interaction.reply({content: 'No videos to skip in the queue', ephemeral: true}).catch(console.error);
+  interaction.reply({content: 'Skipping video...'});
   constructor.player.stop();
 }
 // removes video from queue
