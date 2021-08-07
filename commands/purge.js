@@ -9,9 +9,7 @@ module.exports = {
       const amount = interaction.options.get('amount')?.value;
       if (amount < 1 || amount > 100) return interaction.reply({content: 'Amount must be at minimum 1 and at maximum 100', ephemeral: true});
 
-      const channel = await interaction.client.channels.fetch(interaction.channelId);
-      const deleted = await channel.bulkDelete(amount);
-
+      const deleted = await interaction.channel.bulkDelete(amount);
       interaction.reply({content: `👍 Successfully deleted the last ${deleted.size} ${deleted.size == 1 ? 'message' : 'messages'}`});
     } catch(err) {
       interaction.reply({
