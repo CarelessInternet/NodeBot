@@ -12,7 +12,7 @@ module.exports = {
       const channel = await interaction.client.channels.fetch(interaction.channelId);
       const deleted = await channel.bulkDelete(amount);
 
-      interaction.reply({content: `👍 Successfully deleted the last ${deleted.size} messages`});
+      interaction.reply({content: `👍 Successfully deleted the last ${deleted.size} ${deleted.size == 1 ? 'message' : 'messages'}`});
     } catch(err) {
       interaction.reply({
         content: 'An error occured whilst trying to purge messages, please try again later',
