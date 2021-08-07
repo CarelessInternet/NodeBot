@@ -309,6 +309,25 @@
     ]
   },
   {
+    "name": "purge",
+    "description": "Removes the latest messages by the requested amount",
+    "category": "staff",
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount of messages to delete",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "purge 5",
+      "purge 15",
+      "purge 30",
+      "purge 100"
+    ]
+  },
+  {
     "name": "queue",
     "description": "Gets the queue",
     "category": "music",
