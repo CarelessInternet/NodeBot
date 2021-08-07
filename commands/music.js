@@ -43,8 +43,8 @@ async function play(interaction, serverQueue, channel, botArg = '') {
       constructor.connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
       constructor.connection.on(VoiceConnectionStatus.Destroyed, () => {
         queue.delete(interaction.guild.id);
-        if (interaction.replied || interaction.deferred) interaction.followUp({content: 'Disconnected from voice channel'}).catch(console.error);
-        else interaction.reply({content: 'Disconnected from voice channel'}).catch(console.error);
+        if (interaction.replied || interaction.deferred) interaction.followUp({content: '☠️ Disconnected from voice channel'}).catch(console.error);
+        else interaction.reply({content: '☠️ Disconnected from voice channel'}).catch(console.error);
       });
       constructor.connection.on('error', console.error);
 
@@ -202,7 +202,7 @@ function volume(interaction, constructor) {
 // leaves voice channel
 function leave(interaction, constructor) {
   constructor.connection.destroy();
-  interaction.reply({content: '☠️ Disconnected from voice channel'}).catch(console.error);
+  interaction.reply({content: 'Disconnecting...', ephemeral: true}).catch(console.error);
 }
 
 // check for dj role or manage channels permission
