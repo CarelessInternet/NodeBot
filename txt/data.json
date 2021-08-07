@@ -520,7 +520,7 @@
   },
   {
     "name": "weather",
-    "description": "Gives information about the weathe in a city",
+    "description": "Gives information about the weather in a city",
     "category": "utility",
     "options": [
       {
