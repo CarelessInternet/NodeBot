@@ -263,6 +263,7 @@
     "name": "poll",
     "description": "Creates a poll with the votes as reactions",
     "category": "utility",
+    "cooldown": 30,
     "options": [
       {
         "name": "title",

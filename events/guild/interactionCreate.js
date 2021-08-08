@@ -1,3 +1,4 @@
+const fs = require('fs');
 const cooldowns = new Map();
 
 async function interaction(client, Discord, prefix, interaction) {
@@ -39,18 +40,20 @@ function cooldown(interaction, Discord, cmd, command) {
   // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
   const currentTime = Date.now();
   const timestamps = cooldowns.get(cmd);
-  const amount = (command?.cooldown || 3) * 1000;
+  const file = JSON.parse(fs.readFileSync('./txt/data.json')).find(val => val.name === cmd);
+  const amount = (file.cooldown || 3) * 1000;
+  const key = interaction.guild ? interaction.user.id + interaction.guildId : interaction.user.id;
 
-  if (timestamps.has(interaction.user.id)) {
-    const expirationTime = timestamps.get(interaction.user.id) + amount;
+  if (timestamps.has(key)) {
+    const expirationTime = timestamps.get(key) + amount;
     if (currentTime < expirationTime) {
       const timeLeft = ((expirationTime - currentTime) / 1000).toFixed(1);
       return `Please wait ${timeLeft} more ${timeLeft == 1 ? 'second' : 'seconds'} before using the ${cmd} command`;
     }
   }
 
-  timestamps.set(interaction.user.id, currentTime);
-  setTimeout(() => timestamps.delete(interaction.user.id), amount);
+  timestamps.set(key, currentTime);
+  setTimeout(() => timestamps.delete(key), amount);
 }
 
 function isMusicCommand(cmd) {
