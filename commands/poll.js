@@ -3,7 +3,6 @@ const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 module.exports = {
   name: 'poll',
-  cooldown: 30,
   async execute(interaction) {
     if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a guild to use this command'}).catch(console.error);
     if (!interaction.guild.me.permissions.has('MANAGE_MESSAGES')) return interaction.reply({content: 'I need the manage messages permission to run this command'}).catch(console.error);

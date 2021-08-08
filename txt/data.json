@@ -263,6 +263,7 @@
     "name": "poll",
     "description": "Creates a poll with the votes as reactions",
     "category": "utility",
+    "cooldown": 30,
     "options": [
       {
         "name": "title",
@@ -516,6 +517,16 @@
       "volume 1",
       "volume 1.5",
       "volume 2"
+    ]
+  },
+  {
+    "name": "work",
+    "description": "Effortlessly earn some money",
+    "category": "currency",
+    "cooldown": 120,
+    "options": [],
+    "examples": [
+      "work"
     ]
   },
   {

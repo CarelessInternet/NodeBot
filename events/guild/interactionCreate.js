@@ -1,3 +1,4 @@
+const fs = require('fs');
 const cooldowns = new Map();
 
 async function interaction(client, Discord, prefix, interaction) {
@@ -7,7 +8,7 @@ async function interaction(client, Discord, prefix, interaction) {
   const cmd = interaction.commandName.toLowerCase();
   const command = client.commands.get(cmd);
 
-  if (!command && !isMusicCommand(cmd)) return;
+  if (!command && !isMusicCommand(cmd) && !isCurrencyCommand(cmd)) return;
   const hasCooldown = cooldown(interaction, Discord, cmd, command);
   if (hasCooldown) return interaction.reply({content: hasCooldown, ephemeral: true}).catch(console.error);
 
@@ -30,6 +31,7 @@ async function interaction(client, Discord, prefix, interaction) {
 
   // if the command exists in the commands folder, run it
   if (isMusicCommand(cmd)) return client.commands.get('music').execute(interaction, cmd);
+  else if (isCurrencyCommand(cmd)) return client.commands.get('currency').execute(interaction, cmd);
   else if (command) command.execute(interaction, prefix);
 }
 
@@ -39,22 +41,27 @@ function cooldown(interaction, Discord, cmd, command) {
   // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
   const currentTime = Date.now();
   const timestamps = cooldowns.get(cmd);
-  const amount = (command?.cooldown || 3) * 1000;
+  const file = JSON.parse(fs.readFileSync('./txt/data.json')).find(val => val.name === cmd);
+  const amount = (file.cooldown || 3) * 1000;
+  const key = interaction.guild ? interaction.user.id + interaction.guildId : interaction.user.id;
 
-  if (timestamps.has(interaction.user.id)) {
-    const expirationTime = timestamps.get(interaction.user.id) + amount;
+  if (timestamps.has(key)) {
+    const expirationTime = timestamps.get(key) + amount;
     if (currentTime < expirationTime) {
       const timeLeft = ((expirationTime - currentTime) / 1000).toFixed(1);
       return `Please wait ${timeLeft} more ${timeLeft == 1 ? 'second' : 'seconds'} before using the ${cmd} command`;
     }
   }
 
-  timestamps.set(interaction.user.id, currentTime);
-  setTimeout(() => timestamps.delete(interaction.user.id), amount);
+  timestamps.set(key, currentTime);
+  setTimeout(() => timestamps.delete(key), amount);
 }
 
 function isMusicCommand(cmd) {
   return cmd === 'play' || cmd === 'leave' || cmd === 'skip' || cmd === 'queue' || cmd === 'pause' || cmd === 'resume' || cmd === 'unpause' || cmd === 'volume' || cmd === 'loop' || cmd === 'unloop' || cmd === 'remove';
+}
+function isCurrencyCommand(cmd) {
+  return cmd === 'work'/* || cmd === 'crime' || cmd === 'blackjack'*/;
 }
 
 module.exports = interaction;
