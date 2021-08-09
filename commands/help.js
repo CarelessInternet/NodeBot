@@ -90,8 +90,8 @@ module.exports = {
           value: fieldValue(json, 'game', prefix)
         },
         {
-          name: 'Currency',
-          value: fieldValue(json, 'currency', prefix)
+          name: 'Economy',
+          value: fieldValue(json, 'economy', prefix)
         },
         {
           name: 'Staff',

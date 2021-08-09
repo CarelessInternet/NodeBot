@@ -8,7 +8,7 @@ async function interaction(client, Discord, prefix, interaction) {
   const cmd = interaction.commandName.toLowerCase();
   const command = client.commands.get(cmd);
 
-  if (!command && !isMusicCommand(cmd) && !isCurrencyCommand(cmd)) return;
+  if (!command && !isMusicCommand(cmd) && !isEconomyCommand(cmd)) return;
   const hasCooldown = cooldown(interaction, Discord, cmd, command);
   if (hasCooldown) return interaction.reply({content: hasCooldown, ephemeral: true}).catch(console.error);
 
@@ -31,7 +31,7 @@ async function interaction(client, Discord, prefix, interaction) {
 
   // if the command exists in the commands folder, run it
   if (isMusicCommand(cmd)) return client.commands.get('music').execute(interaction, cmd);
-  else if (isCurrencyCommand(cmd)) return client.commands.get('currency').execute(interaction, cmd);
+  else if (isEconomyCommand(cmd)) return client.commands.get('economy').execute(interaction, cmd);
   else if (command) command.execute(interaction, prefix);
 }
 
@@ -60,8 +60,8 @@ function cooldown(interaction, Discord, cmd, command) {
 function isMusicCommand(cmd) {
   return cmd === 'play' || cmd === 'leave' || cmd === 'skip' || cmd === 'queue' || cmd === 'pause' || cmd === 'resume' || cmd === 'unpause' || cmd === 'volume' || cmd === 'loop' || cmd === 'unloop' || cmd === 'remove';
 }
-function isCurrencyCommand(cmd) {
-  return cmd === 'work' || cmd === 'crime' || cmd === 'slot-machine' || cmd === 'deposit' || cmd === 'withdraw' || cmd === 'stats';
+function isEconomyCommand(cmd) {
+  return cmd === 'work' || cmd === 'crime' || cmd === 'slot-machine' || cmd === 'deposit' || cmd === 'withdraw' || cmd === 'stats' || cmd === 'dice';
 }
 
 module.exports = interaction;

@@ -20,7 +20,7 @@
   {
     "name": "crime",
     "description": "You commit a crime and either get money or lose money",
-    "category": "currency",
+    "category": "economy",
     "cooldown": 180,
     "options": [],
     "examples": [
@@ -49,7 +49,7 @@
   {
     "name": "deposit",
     "description": "Deposits money from your cash into your bank",
-    "category": "currency",
+    "category": "economy",
     "options": [
       {
         "name": "amount",
@@ -63,6 +63,32 @@
       "deposit 1000",
       "deposit 6969",
       "deposit 420691337"
+    ]
+  },
+  {
+    "name": "dice",
+    "description": "Bet on a dice roll",
+    "category": "economy",
+    "cooldown": 5,
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount you want to bet",
+        "type": "INTEGER",
+        "required": true
+      },
+      {
+        "name": "number",
+        "description": "The side you want to bet on",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "dice 500 3",
+      "dice 1337 6",
+      "dice 6969 2",
+      "dice 7000 5"
     ]
   },
   {
@@ -443,7 +469,7 @@
   {
     "name": "slot-machine",
     "description": "Spins a slot machine",
-    "category": "currency",
+    "category": "economy",
     "cooldown": 5,
     "options": [
       {
@@ -487,7 +513,7 @@
   {
     "name": "stats",
     "description": "Returns stats about your current economy",
-    "category": "currency",
+    "category": "economy",
     "options": [],
     "examples": [
       "stats"
@@ -599,7 +625,7 @@
   {
     "name": "withdraw",
     "description": "Withdraw money from your bank",
-    "category": "currency",
+    "category": "economy",
     "options": [
       {
         "name": "amount",
@@ -618,7 +644,7 @@
   {
     "name": "work",
     "description": "Effortlessly earn some money",
-    "category": "currency",
+    "category": "economy",
     "cooldown": 180,
     "options": [],
     "examples": [

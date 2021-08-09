@@ -6,7 +6,7 @@ const {MessageEmbed} = require('discord.js');
 class User {
   static userInfo(id) {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM CurrencyUsers WHERE UserID = ?', [id], (err, rows) => {
+      connection.query('SELECT * FROM EconomyUsers WHERE UserID = ?', [id], (err, rows) => {
         if (err) reject(err);
         resolve(rows[0] ?? false);
       });
@@ -15,11 +15,11 @@ class User {
   static createUser({id, creationDate, userCreationDate}) {
     return new Promise((resolve, reject) => {
       /*
-        CurrencyUsers:
+        EconomyUsers:
         ID, UserID, CreationDate, UserCreationDate
       */
       const data = [id, creationDate, userCreationDate]; 
-      connection.query('INSERT INTO CurrencyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data, async err => {
+      connection.query('INSERT INTO EconomyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data, async err => {
         if (err) reject(err);
 
         try {
@@ -43,7 +43,7 @@ class Guild {
 
   static userInfo(userID, guildID) {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM CurrencyGuilds WHERE UserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
+      connection.query('SELECT * FROM EconomyGuilds WHERE UserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
         if (err) reject(err);
         resolve(rows[0] ?? false);
       });
@@ -53,11 +53,11 @@ class Guild {
   static createGuildUser({userID, guildID, creationDate}) {
     return new Promise((resolve, reject) => {
       /*
-        CurrencyGuilds:
+        EconomyGuilds:
         ID, UserID, GuildID, CreationDate, Cash, Bank
       */
       const data = [userID, guildID, creationDate];
-      connection.query('INSERT INTO CurrencyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data, async err => {
+      connection.query('INSERT INTO EconomyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data, async err => {
         if (err) reject(err);
 
         try {
@@ -73,7 +73,7 @@ class Guild {
   static updateCash(id, amount) {
     return new Promise((resolve, reject) => {
       amount = this.#preventLimit(amount);
-      connection.query('UPDATE CurrencyGuilds SET Cash = ? WHERE ID = ?', [amount, id], err => {
+      connection.query('UPDATE EconomyGuilds SET Cash = ? WHERE ID = ?', [amount, id], err => {
         if (err) reject(err);
         resolve(amount);
       });
@@ -83,7 +83,7 @@ class Guild {
   static updateBank(id, amount) {
     return new Promise((resolve, reject) => {
       amount = this.#preventLimit(amount);
-      connection.query('UPDATE CurrencyGuilds SET Bank = ? WHERE ID = ?', [amount, id], err => {
+      connection.query('UPDATE EconomyGuilds SET Bank = ? WHERE ID = ?', [amount, id], err => {
         if (err) reject(err);
         resolve(amount);
       });
@@ -92,7 +92,7 @@ class Guild {
 
   static userStats(interaction, id) {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT Cash, Bank FROM CurrencyGuilds WHERE ID = ?', [id], (err, rows) => {
+      connection.query('SELECT Cash, Bank FROM EconomyGuilds WHERE ID = ?', [id], (err, rows) => {
         if (err) reject(err);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
@@ -214,7 +214,7 @@ class Commands {
     return new Promise(async (resolve, reject) => {
       try {
         const amount = Math.floor(Math.random() * 200) + 300;
-        const file = JSON.parse(fs.readFileSync('./currency/work.json', 'utf8'));
+        const file = JSON.parse(fs.readFileSync('./economy/work.json', 'utf8'));
         const random = file[Math.floor(Math.random() * file.length)];
         const message = random.replace(new RegExp('{amount}', 'g'), amount);
         
@@ -235,7 +235,7 @@ class Commands {
   static crime(user) {
     return new Promise(async (resolve, reject) => {
       try {
-        const file = JSON.parse(fs.readFileSync('./currency/crime.json', 'utf8'));
+        const file = JSON.parse(fs.readFileSync('./economy/crime.json', 'utf8'));
         const luck = Math.floor(Math.random() * 2);
         const randomAmountOfDollars = Math.floor(Math.random() * 400) + 450;
 
@@ -262,7 +262,7 @@ class Commands {
       const validate = this.#validateCash(interaction, user);
       if (validate) return interaction.reply(validate);
       
-      const file = JSON.parse(fs.readFileSync('./currency/slot-machine.json', 'utf8'));
+      const file = JSON.parse(fs.readFileSync('./economy/slot-machine.json', 'utf8'));
       const embed = new MessageEmbed()
       .setColor('RANDOM')
       .setAuthor(interaction.user.tag, interaction.user.avatarURL())
@@ -305,10 +305,42 @@ class Commands {
       }).catch(console.error);
     }
   }
+
+  static async dice(user, interaction) {
+    try {
+      const validate = this.#validateCash(interaction, user);
+      if (validate) return interaction.reply(validate);
+
+      const amount = interaction.options.get('amount')?.value;
+      const number = interaction.options.get('number')?.value;
+      if (number < 1 || number > 6) return interaction.reply({content: 'You must bet on a valid dice side', ephemeral: true});
+      
+      const file = JSON.parse(fs.readFileSync('./economy/dice.json', 'utf8'));
+      const random = file[Math.floor(Math.random() * file.length)];
+      const newAmount = random.value === number ? amount : -amount;
+
+      await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Die Roll')
+      .setDescription(random.value === number ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
+      .addField('Result:', `**${random.emoji}**`)
+      .setTimestamp();
+
+      interaction.reply({embeds: [embed]});
+    } catch(err) {
+      console.error(err);
+      interaction.reply({
+        content: 'An unknown error occured whilst rolling a die, please try again later',
+        ephemeral: true
+      }).catch(console.error);
+    }
+  }
 }
 
 module.exports = {
-  name: 'currency',
+  name: 'economy',
   async execute(interaction, command) {
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command', ephemeral: true});
@@ -358,6 +390,9 @@ module.exports = {
         }
         case 'slot-machine': {
           return Commands.slotMachine(userGuild, interaction);
+        }
+        case 'dice': {
+          return Commands.dice(userGuild, interaction);
         }
       }
     } catch(err) {
