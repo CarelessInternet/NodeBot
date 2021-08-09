@@ -523,7 +523,7 @@
     "name": "work",
     "description": "Effortlessly earn some money",
     "category": "currency",
-    "cooldown": 120,
+    "cooldown": 180,
     "options": [],
     "examples": [
       "work"

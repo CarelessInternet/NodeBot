@@ -25,14 +25,22 @@ class User {
         try {
           const userData = await this.userInfo(id);
           resolve(userData);
-        } catch(err) {
-          reject(err);
+        } catch(err2) {
+          reject(err2);
         }
       });
     });
   }
 }
 class Guild {
+  static #bitLimit = 2147483647 / 2;
+
+  // cash and bank are 32 bit, so we have to make sure it doesnt go above or under half of 32 bit
+  static #preventLimit(amount) {
+    if (Math.abs(amount) > this.#bitLimit) return amount > 0 ? this.#bitLimit : -this.#bitLimit;
+    else return amount;
+  }
+
   static userInfo(userID, guildID) {
     return new Promise((resolve, reject) => {
       connection.query('SELECT * FROM CurrencyGuilds WHERE UserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
@@ -55,8 +63,8 @@ class Guild {
         try {
           const userGuildData = await this.userInfo(userID, guildID);
           resolve(userGuildData);
-        } catch(err) {
-          reject(err);
+        } catch(err2) {
+          reject(err2);
         }
       });
     });
@@ -66,6 +74,7 @@ class Guild {
     return new Promise((resolve, reject) => {
       connection.query('UPDATE CurrencyGuilds SET Cash = ? WHERE ID = ?', [amount, id], (err, rows) => {
         if (err) reject(err);
+        amount = this.#preventLimit(amount);
         resolve(amount);
       });
     });
@@ -81,7 +90,13 @@ class Commands {
         const message = random.replace(new RegExp('{amount}', 'g'), amount);
         
         await Guild.updateCash(user['ID'], user['Cash'] + amount);
-        resolve(message);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle('Work')
+        .setDescription(message)
+        .setTimestamp();
+
+        resolve(embed);
       } catch(err) {
         reject(err);
       }
@@ -119,12 +134,7 @@ module.exports = {
 
       switch (command) {
         case 'work': {
-          const message = await Commands.work(userGuild);
-          const embed = new MessageEmbed()
-          .setColor('RANDOM')
-          .setTitle('Work')
-          .setDescription(message)
-          .setTimestamp();
+          const embed = await Commands.work(userGuild);
           return interaction.reply({embeds: [embed]});
         }
       }
