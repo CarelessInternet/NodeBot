@@ -120,7 +120,12 @@ module.exports = {
       switch (command) {
         case 'work': {
           const message = await Commands.work(userGuild);
-          return interaction.reply({content: message});
+          const embed = new MessageEmbed()
+          .setColor('RANDOM')
+          .setTitle('Work')
+          .setDescription(message)
+          .setTimestamp();
+          return interaction.reply({embeds: [embed]});
         }
       }
     } catch(err) {
