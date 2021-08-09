@@ -47,6 +47,25 @@
     ]
   },
   {
+    "name": "deposit",
+    "description": "Deposits money from your cash into your bank",
+    "category": "currency",
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount you want to deposit into your bank",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "deposit 500",
+      "deposit 1000",
+      "deposit 6969",
+      "deposit 420691337"
+    ]
+  },
+  {
     "name": "help",
     "description": "Shows all available commands, or information about a specified command",
     "category": "utility",

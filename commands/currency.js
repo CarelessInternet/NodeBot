@@ -19,7 +19,7 @@ class User {
         ID, UserID, CreationDate, UserCreationDate
       */
       const data = [id, creationDate, userCreationDate]; 
-      connection.query('INSERT INTO CurrencyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data, async (err, rows) => {
+      connection.query('INSERT INTO CurrencyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data, async err => {
         if (err) reject(err);
 
         try {
@@ -57,7 +57,7 @@ class Guild {
         ID, UserID, GuildID, CreationDate, Cash, Bank
       */
       const data = [userID, guildID, creationDate];
-      connection.query('INSERT INTO CurrencyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data, async (err, rows) => {
+      connection.query('INSERT INTO CurrencyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data, async err => {
         if (err) reject(err);
 
         try {
@@ -73,9 +73,42 @@ class Guild {
   static updateCash(id, amount) {
     return new Promise((resolve, reject) => {
       amount = this.#preventLimit(amount);
-      connection.query('UPDATE CurrencyGuilds SET Cash = ? WHERE ID = ?', [amount, id], (err, rows) => {
+      connection.query('UPDATE CurrencyGuilds SET Cash = ? WHERE ID = ?', [amount, id], err => {
         if (err) reject(err);
         resolve(amount);
+      });
+    });
+  }
+
+  static updateBank(id, amount) {
+    return new Promise((resolve, reject) => {
+      amount = this.#preventLimit(amount);
+      connection.query('UPDATE CurrencyGuilds SET Bank = ? WHERE ID = ?', [amount, id], err => {
+        if (err) reject(err);
+        resolve(amount);
+      });
+    });
+  }
+
+  static userStats(interaction, id) {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT Cash, Bank FROM CurrencyGuilds WHERE ID = ?', [id], (err, rows) => {
+        if (err) reject(err);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setTitle(`${interaction.user.username}${interaction.user.username.endsWith('s') ? '\'' : '\'s'} Economy`)
+        .setDescription(`💰 The economy of ${interaction.user.username}:`)
+        .addFields({
+          name: 'Cash',
+          value: '💵 ' + rows[0]['Cash'].toString()
+        }, {
+          name: 'Bank',
+          value: '💵 ' + rows[0]['Bank'].toString()
+        })
+        .setTimestamp();
+
+        resolve({embeds: [embed]});
       });
     });
   }
@@ -104,6 +137,25 @@ class Commands {
     }
   }
 
+  static deposit(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const validate = this.#validateCash(interaction, user);
+        if (validate) return resolve(validate);
+
+        const amount = interaction.options.get('amount')?.value;
+        await Guild.updateBank(user['ID'], user['Bank'] + amount);
+        await Guild.updateCash(user['ID'], user['Cash'] - amount);
+
+        const stats = await Guild.userStats(interaction, user['ID']);
+        stats.content = `Successfully deposited $${amount}`;
+        resolve(stats);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
   static work(user) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -119,7 +171,7 @@ class Commands {
         .setDescription(message)
         .setTimestamp();
 
-        resolve(embed);
+        resolve({embeds: [embed]});
       } catch(err) {
         reject(err);
       }
@@ -144,14 +196,14 @@ class Commands {
         .setDescription(message)
         .setTimestamp();
 
-        resolve(embed);
+        resolve({embeds: [embed]});
       } catch(err) {
         reject(err);
       }
     });
   }
 
-  static async slotMachine(interaction, user) {
+  static async slotMachine(user, interaction) {
     try {
       const validate = this.#validateCash(interaction, user);
       if (validate) return interaction.reply(validate);
@@ -230,16 +282,20 @@ module.exports = {
       }
 
       switch (command) {
+        case 'deposit': {
+          const embed = await Commands.deposit(userGuild, interaction);
+          return interaction.reply(embed);
+        }
         case 'work': {
           const embed = await Commands.work(userGuild);
-          return interaction.reply({embeds: [embed]});
+          return interaction.reply(embed);
         }
         case 'crime': {
           const embed = await Commands.crime(userGuild);
-          return interaction.reply({embeds: [embed]});
+          return interaction.reply(embed);
         }
         case 'slot-machine': {
-          return Commands.slotMachine(interaction, userGuild);
+          return Commands.slotMachine(userGuild, interaction);
         }
       }
     } catch(err) {
