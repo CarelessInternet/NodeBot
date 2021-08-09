@@ -21,7 +21,6 @@ class User {
       const data = [id, creationDate, userCreationDate]; 
       connection.query('INSERT INTO EconomyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data, async err => {
         if (err) reject(err);
-
         try {
           const userData = await this.userInfo(id);
           resolve(userData);
@@ -59,7 +58,6 @@ class Guild {
       const data = [userID, guildID, creationDate];
       connection.query('INSERT INTO EconomyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data, async err => {
         if (err) reject(err);
-
         try {
           const userGuildData = await this.userInfo(userID, guildID);
           resolve(userGuildData);
