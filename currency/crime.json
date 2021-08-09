@@ -2,11 +2,13 @@
   [
     "You successfully robbed your mom and got {amount} dollars",
     "You robbed some cash at the nearby bank and got {amount} dollars",
-    "You stole cash from the homeless shelter and received {amount} dollars"
+    "You stole cash from the homeless shelter and received {amount} dollars",
+    "You held a random person on the street at gunpoint and he gave you {amount} dollars"
   ],
   [
     "You attempted to rob the local strip club and got fined {amount} dollars",
     "You tried to rob the police station... and lost {amount} dollars in the process",
-    "The GameStop employee uno reversed card you when attempting to rob, and lost {amount} dollars"
+    "The GameStop employee uno reversed card you when attempting to rob, and lost {amount} dollars",
+    "You tried to rob a ninja turtle, you dumb fuck you lost {amount} dollars"
   ]
 ]

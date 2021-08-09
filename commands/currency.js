@@ -116,7 +116,7 @@ class Commands {
 
         await Guild.updateCash(user['ID'], user['Cash'] + amount);
         const embed = new MessageEmbed()
-        .setColor('RANDOM')
+        .setColor(luck == 0 ? 'GREEN' : 'RED')
         .setTitle('Crime')
         .setDescription(message)
         .setTimestamp();
