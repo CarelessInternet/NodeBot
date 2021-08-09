@@ -311,22 +311,42 @@ class Commands {
 
       const amount = interaction.options.get('amount')?.value;
       const number = interaction.options.get('number')?.value;
+      const number2 = interaction.options.get('number2')?.value;
       if (number < 1 || number > 6) return interaction.reply({content: 'You must bet on a valid dice side', ephemeral: true});
       
       const file = JSON.parse(fs.readFileSync('./economy/dice.json', 'utf8'));
-      const random = file[Math.floor(Math.random() * file.length)];
-      const newAmount = random.value === number ? amount : -amount;
+      if (!number2) {
+        const random = file[Math.floor(Math.random() * file.length)];
+        const newAmount = random.value === number ? amount : -amount;
+  
+        await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setTitle('Die Roll')
+        .setDescription(random.value === number ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
+        .addField('Result:', `**${random.emoji}**`)
+        .setTimestamp();
+  
+        interaction.reply({embeds: [embed]});
+      } else {
+        if (number2 < 1 || number2 > 6) return interaction.reply({content: 'You must bet on a valid dice side', ephemeral: true});
 
-      await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
-      const embed = new MessageEmbed()
-      .setColor('RANDOM')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
-      .setTitle('Die Roll')
-      .setDescription(random.value === number ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
-      .addField('Result:', `**${random.emoji}**`)
-      .setTimestamp();
+        const random = file[Math.floor(Math.random() * file.length)];
+        const random2 = file[Math.floor(Math.random() * file.length)];
+        const newAmount = random.value === number && random2.value === number2 ? amount * 2 : -amount;
 
-      interaction.reply({embeds: [embed]});
+        await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setTitle('Dice Roll')
+        .setDescription(random.value === number && random2.value === number2 ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
+        .addField('Result:', `**${random.emoji} ${random2.emoji}**`)
+        .setTimestamp();
+
+        interaction.reply({embeds: [embed]});
+      }
     } catch(err) {
       console.error(err);
       interaction.reply({

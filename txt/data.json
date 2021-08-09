@@ -82,6 +82,12 @@
         "description": "The side you want to bet on",
         "type": "INTEGER",
         "required": true
+      },
+      {
+        "name": "number2",
+        "description": "Optionally choose another side, receive double the money if you win, lose the amount you bet",
+        "type": "INTEGER",
+        "required": false
       }
     ],
     "examples": [
