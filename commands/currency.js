@@ -199,6 +199,17 @@ class Commands {
     });
   }
 
+  static stats(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const stats = await Guild.userStats(interaction, user['ID']);
+        resolve(stats);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
   static work(user) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -331,6 +342,10 @@ module.exports = {
         }
         case 'withdraw': {
           const embed = await Commands.withdraw(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'stats': {
+          const embed = await Commands.stats(userGuild, interaction);
           return interaction.reply(embed);
         }
         case 'work': {
