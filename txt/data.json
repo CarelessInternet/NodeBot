@@ -422,6 +422,26 @@
     ]
   },
   {
+    "name": "slot-machine",
+    "description": "Spins a slot machine",
+    "category": "currency",
+    "cooldown": 5,
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount of money you want to bet",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "slot-machine 100",
+      "slot-machine 500",
+      "slot-machine 6969",
+      "slot-machine 42069"
+    ]
+  },
+  {
     "name": "spotify",
     "description": "Returns information about a song on Spotify",
     "category": "other",

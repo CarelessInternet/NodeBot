@@ -81,6 +81,29 @@ class Guild {
   }
 }
 class Commands {
+  static #validateCash(interaction, user) {
+    const amount = interaction.options.get('amount')?.value;
+    if (user['Cash'] < amount) {
+      const embed = new MessageEmbed()
+      .setColor('RED')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Not Enough Cash')
+      .setDescription(`❌ The amount you specified is more than the amount of cash you currently have, please withdraw some money or earn some.\n\n💵 You have $${user['Cash']} in cash`)
+      .setTimestamp();
+      return {embeds: [embed], ephemeral: true};
+    } else if (amount < 50) {
+      const embed = new MessageEmbed()
+      .setColor('RED')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Too Little Money')
+      .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
+      .setTimestamp();
+      return {embeds: [embed], ephemeral: true};
+    } else {
+      return false;
+    }
+  }
+
   static work(user) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -127,6 +150,55 @@ class Commands {
       }
     });
   }
+
+  static async slotMachine(interaction, user) {
+    try {
+      const validate = this.#validateCash(interaction, user);
+      if (validate) return interaction.reply(validate);
+      
+      const file = JSON.parse(fs.readFileSync('./currency/slot-machine.json', 'utf8'));
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Slot Machine')
+      .setTimestamp();
+      const resultArray = [[], [], []];
+  
+      for (let i = 0; i < 3; i++) {
+        for (let j = 0; j < 3; j++) {
+          const random = file[Math.floor(Math.random() * file.length)].value;
+          resultArray[i][j] = random;
+        }
+      }
+  
+      let string = '';
+      for (let i = 0; i < resultArray.length; i++) {
+        for (let j = 0; j < resultArray[i].length; j++) {
+          string += `${resultArray[i][j]} | `;
+        }
+        string = string.slice(0, -3);
+  
+        if (i === 1) string += ' ⬅️';
+        string += '\n';
+      }
+      embed.addField('Result:', string);
+  
+      let win = false;
+      if (resultArray[1][0] === resultArray[1][1] && resultArray[1][1] === resultArray[1][2]) win = true;
+
+      let amount = win ? interaction.options.get('amount')?.value : -interaction.options.get('amount')?.value;
+      embed.setDescription(win ? `🥳 You won $${amount}!` : `🤣 You lost ${amount} dollars`);
+      await Guild.updateCash(user['ID'], user['Cash'] + amount);
+
+      interaction.reply({embeds: [embed]});
+    } catch(err) {
+      console.error(err);
+      interaction.reply({
+        content: 'An unknown error occured, please try again later',
+        ephemeral: true
+      }).catch(console.error);
+    }
+  }
 }
 
 module.exports = {
@@ -166,11 +238,14 @@ module.exports = {
           const embed = await Commands.crime(userGuild);
           return interaction.reply({embeds: [embed]});
         }
+        case 'slot-machine': {
+          return Commands.slotMachine(interaction, userGuild);
+        }
       }
     } catch(err) {
       console.error(err);
       interaction.reply({
-        content: 'An error occured, please try again later',
+        content: 'An unknown error occured, please try again later',
         ephemeral: true
       }).catch(console.error);
     }
