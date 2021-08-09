@@ -569,16 +569,6 @@
     ]
   },
   {
-    "name": "work",
-    "description": "Effortlessly earn some money",
-    "category": "currency",
-    "cooldown": 180,
-    "options": [],
-    "examples": [
-      "work"
-    ]
-  },
-  {
     "name": "weather",
     "description": "Gives information about the weather in a city",
     "category": "utility",
@@ -595,6 +585,35 @@
       "weather Jakarta",
       "weather Stockholm",
       "weather Pyongyang"
+    ]
+  },
+  {
+    "name": "withdraw",
+    "description": "Withdraw money from your bank",
+    "category": "currency",
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount you want to withdraw",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "withdraw 69",
+      "withdraw 1337",
+      "withdraw 6969",
+      "withdraw 42069"
+    ]
+  },
+  {
+    "name": "work",
+    "description": "Effortlessly earn some money",
+    "category": "currency",
+    "cooldown": 180,
+    "options": [],
+    "examples": [
+      "work"
     ]
   }
 ]

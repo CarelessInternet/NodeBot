@@ -137,10 +137,34 @@ class Commands {
     }
   }
 
+  static #validateBank(interaction, user) {
+    const amount = interaction.options.get('amount')?.value;
+    if (user['Bank'] < amount) {
+      const embed = new MessageEmbed()
+      .setColor('RED')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Not Enough Money in Bank')
+      .setDescription(`❌ The amount you specified is more than the amount of money you currently have in your bank, please deposit some money.\n\n💵 You have $${user['Bank']} in your bank`)
+      .setTimestamp();
+      return {embeds: [embed], ephemeral: true};
+    } else if (amount < 50) {
+      const embed = new MessageEmbed()
+      .setColor('RED')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Too Little Money')
+      .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
+      .setTimestamp();
+      return {embeds: [embed], ephemeral: true};
+    } else {
+      return false;
+    }
+  }
+
   static deposit(user, interaction) {
     return new Promise(async (resolve, reject) => {
       try {
         const validate = this.#validateCash(interaction, user);
+        // resolve because if we reject the message will show error occured and not insufficient cash
         if (validate) return resolve(validate);
 
         const amount = interaction.options.get('amount')?.value;
@@ -149,6 +173,25 @@ class Commands {
 
         const stats = await Guild.userStats(interaction, user['ID']);
         stats.content = `Successfully deposited $${amount}`;
+        resolve(stats);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
+  static withdraw(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const validate = this.#validateBank(interaction, user);
+        if (validate) return resolve(validate);
+
+        const amount = interaction.options.get('amount')?.value;
+        await Guild.updateBank(user['ID'], user['Bank'] - amount);
+        await Guild.updateCash(user['ID'], user['Cash'] + amount);
+
+        const stats = await Guild.userStats(interaction, user['ID']);
+        stats.content = `Successfully withdrew $${amount}`;
         resolve(stats);
       } catch(err) {
         reject(err);
@@ -284,6 +327,10 @@ module.exports = {
       switch (command) {
         case 'deposit': {
           const embed = await Commands.deposit(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'withdraw': {
+          const embed = await Commands.withdraw(userGuild, interaction);
           return interaction.reply(embed);
         }
         case 'work': {
