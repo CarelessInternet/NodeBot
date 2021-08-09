@@ -1,6 +1,6 @@
 {
   "name": "interaction",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "NodeBot using discord.js v13 with slash commmands",
   "main": "index.js",
   "scripts": {
