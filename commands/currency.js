@@ -72,9 +72,9 @@ class Guild {
 
   static updateCash(id, amount) {
     return new Promise((resolve, reject) => {
+      amount = this.#preventLimit(amount);
       connection.query('UPDATE CurrencyGuilds SET Cash = ? WHERE ID = ?', [amount, id], (err, rows) => {
         if (err) reject(err);
-        amount = this.#preventLimit(amount);
         resolve(amount);
       });
     });
@@ -93,6 +93,31 @@ class Commands {
         const embed = new MessageEmbed()
         .setColor('RANDOM')
         .setTitle('Work')
+        .setDescription(message)
+        .setTimestamp();
+
+        resolve(embed);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
+  static crime(user) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const file = JSON.parse(fs.readFileSync('./currency/crime.json', 'utf8'));
+        const luck = Math.floor(Math.random() * 2);
+        const randomAmountOfDollars = Math.floor(Math.random() * 400) + 450;
+
+        const amount = luck == 0 ? randomAmountOfDollars : -randomAmountOfDollars;
+        const random = file[luck][Math.floor(Math.random() * file[luck].length)];
+        const message = random.replace(new RegExp('{amount}', 'g'), amount);
+
+        await Guild.updateCash(user['ID'], user['Cash'] + amount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle('Crime')
         .setDescription(message)
         .setTimestamp();
 
@@ -135,6 +160,10 @@ module.exports = {
       switch (command) {
         case 'work': {
           const embed = await Commands.work(userGuild);
+          return interaction.reply({embeds: [embed]});
+        }
+        case 'crime': {
+          const embed = await Commands.crime(userGuild);
           return interaction.reply({embeds: [embed]});
         }
       }

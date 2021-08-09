@@ -18,6 +18,16 @@
     ]
   },
   {
+    "name": "crime",
+    "description": "You commit a crime and either get money or lose money",
+    "category": "currency",
+    "cooldown": 180,
+    "options": [],
+    "examples": [
+      "crime"
+    ]
+  },
+  {
     "name": "csgo",
     "description": "Returns CS:GO stats about a player. Use the Steam ID, and the profile must be public for it to work",
     "category": "game",
