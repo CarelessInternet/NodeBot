@@ -61,7 +61,7 @@ function isMusicCommand(cmd) {
   return cmd === 'play' || cmd === 'leave' || cmd === 'skip' || cmd === 'queue' || cmd === 'pause' || cmd === 'resume' || cmd === 'unpause' || cmd === 'volume' || cmd === 'loop' || cmd === 'unloop' || cmd === 'remove';
 }
 function isEconomyCommand(cmd) {
-  return cmd === 'work' || cmd === 'crime' || cmd === 'slot-machine' || cmd === 'deposit' || cmd === 'withdraw' || cmd === 'stats' || cmd === 'dice';
+  return cmd === 'work' || cmd === 'crime' || cmd === 'slot-machine' || cmd === 'deposit' || cmd === 'withdraw' || cmd === 'stats' || cmd === 'dice' || cmd === 'add-money';
 }
 
 module.exports = interaction;

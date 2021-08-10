@@ -1,5 +1,31 @@
 [
   {
+    "name": "add-money",
+    "description": "Adds money to a pinged user",
+    "category": "currency",
+    "cooldown": 180,
+    "options": [
+      {
+        "name": "user",
+        "description": "The user to give money to",
+        "type": "USER",
+        "required": true
+      },
+      {
+        "name": "amount",
+        "description": "The amount of money to give",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "add-money @CarelessInternet#8114 999999",
+      "add-money @someoone#0001 420240",
+      "add-money @joe#6969 1",
+      "add-money @mamma#4200 69"
+    ]
+  },
+  {
     "name": "amogus",
     "description": "among us haha impostor sus! joins vc if the message author is in one and plays among us drip theme",
     "category": "memes",
@@ -85,7 +111,7 @@
       },
       {
         "name": "number2",
-        "description": "Optionally choose another side, receive double the money if you win, lose the amount you bet",
+        "description": "Optionally choose another side, receive double the money if you win, or lose the amount you bet",
         "type": "INTEGER",
         "required": false
       }

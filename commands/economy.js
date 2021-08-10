@@ -68,6 +68,38 @@ class Guild {
     });
   }
 
+  static createUserIfDoesntExist(member, guildID) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const userID = member.user.id;
+        let user = await User.userInfo(userID);
+        let userGuild = await this.userInfo(userID, guildID);
+  
+        if (!user) {
+          const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
+          const createdTimestamp = dateFormat(member.user.createdAt, 'yyyy-mm-dd HH:MM:ss');
+          user = await User.createUser({
+            id: userID,
+            creationDate: creationDate,
+            userCreationDate: createdTimestamp
+          });
+        }
+        if (!userGuild) {
+          const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
+          userGuild = await this.createGuildUser({
+            userID: userID,
+            guildID: guildID,
+            creationDate: creationDate
+          });
+        }
+
+        resolve({user: user, userGuild: userGuild});
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
   static updateCash(id, amount) {
     return new Promise((resolve, reject) => {
       amount = this.#preventLimit(amount);
@@ -95,14 +127,14 @@ class Guild {
         const embed = new MessageEmbed()
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
-        .setTitle(`${interaction.user.username}${interaction.user.username.endsWith('s') ? '\'' : '\'s'} Economy`)
+        .setTitle(`${interaction.user.username}${interaction.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Economy`)
         .setDescription(`💰 The economy of ${interaction.user.username}:`)
         .addFields({
           name: 'Cash',
-          value: '💵 ' + rows[0]['Cash'].toString()
+          value: '💵 ' + rows[0]['Cash'].toLocaleString()
         }, {
           name: 'Bank',
-          value: '💵 ' + rows[0]['Bank'].toString()
+          value: '💵 ' + rows[0]['Bank'].toLocaleString()
         })
         .setTimestamp();
 
@@ -119,7 +151,7 @@ class Commands {
       .setColor('RED')
       .setAuthor(interaction.user.tag, interaction.user.avatarURL())
       .setTitle('Not Enough Cash')
-      .setDescription(`❌ The amount you specified is more than the amount of cash you currently have, please withdraw some money or earn some.\n\n💵 You have $${user['Cash']} in cash`)
+      .setDescription(`❌ The amount you specified is more than the amount of cash you currently have, please withdraw some money or earn some.\n\n💵 You have $${user['Cash'].toLocaleString()} in cash`)
       .setTimestamp();
       return {embeds: [embed], ephemeral: true};
     } else if (amount < 50) {
@@ -142,7 +174,7 @@ class Commands {
       .setColor('RED')
       .setAuthor(interaction.user.tag, interaction.user.avatarURL())
       .setTitle('Not Enough Money in Bank')
-      .setDescription(`❌ The amount you specified is more than the amount of money you currently have in your bank, please deposit some money.\n\n💵 You have $${user['Bank']} in your bank`)
+      .setDescription(`❌ The amount you specified is more than the amount of money you currently have in your bank, please deposit some money.\n\n💵 You have $${user['Bank'].toLocaleString()} in your bank`)
       .setTimestamp();
       return {embeds: [embed], ephemeral: true};
     } else if (amount < 50) {
@@ -170,7 +202,7 @@ class Commands {
         await Guild.updateCash(user['ID'], user['Cash'] - amount);
 
         const stats = await Guild.userStats(interaction, user['ID']);
-        stats.content = `Successfully deposited $${amount}`;
+        stats.content = `Successfully deposited $${amount.toLocaleString()}`;
         resolve(stats);
       } catch(err) {
         reject(err);
@@ -189,8 +221,62 @@ class Commands {
         await Guild.updateCash(user['ID'], user['Cash'] + amount);
 
         const stats = await Guild.userStats(interaction, user['ID']);
-        stats.content = `Successfully withdrew $${amount}`;
+        stats.content = `Successfully withdrew $${amount.toLocaleString()}`;
         resolve(stats);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
+  static addMoney(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('Invalid Permissions')
+          .setDescription('You need the manage server permission to run this command')
+          .setTimestamp();
+
+          return resolve({embeds: [embed]});
+        }
+
+        const amount = interaction.options.get('amount')?.value;
+        const pingedUser = interaction.options.get('user')?.member;
+
+        if (pingedUser.user.bot) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('The User is a Bot')
+          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setTimestamp();
+
+          return resolve({embeds: [embed]});
+        }
+        const {userGuild} = await Guild.createUserIfDoesntExist(pingedUser, interaction.guildId);
+
+        const addedAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] + amount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(pingedUser.user.tag, pingedUser.user.avatarURL())
+        .setTitle(`Successfully Added Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
+        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .addFields({
+          name: 'Added Amount of Money',
+          value: '💵 ' + addedAmount.toLocaleString()
+        }, {
+          name: 'Cash',
+          value: '💵 ' + userGuild['Cash'].toLocaleString()
+        }, {
+          name: 'Bank',
+          value: '💵 ' + addedAmount.toLocaleString()
+        })
+        .setTimestamp();
+
+        resolve({embeds: [embed]});
       } catch(err) {
         reject(err);
       }
@@ -214,7 +300,7 @@ class Commands {
         const amount = Math.floor(Math.random() * 200) + 300;
         const file = JSON.parse(fs.readFileSync('./economy/work.json', 'utf8'));
         const random = file[Math.floor(Math.random() * file.length)];
-        const message = random.replace(new RegExp('{amount}', 'g'), amount);
+        const message = random.replace(new RegExp('{amount}', 'g'), amount.toLocaleString());
         
         await Guild.updateCash(user['ID'], user['Cash'] + amount);
         const embed = new MessageEmbed()
@@ -239,7 +325,7 @@ class Commands {
 
         const amount = luck == 0 ? randomAmountOfDollars : -randomAmountOfDollars;
         const random = file[luck][Math.floor(Math.random() * file[luck].length)];
-        const message = random.replace(new RegExp('{amount}', 'g'), amount);
+        const message = random.replace(new RegExp('{amount}', 'g'), amount.toLocaleString());
 
         await Guild.updateCash(user['ID'], user['Cash'] + amount);
         const embed = new MessageEmbed()
@@ -291,7 +377,7 @@ class Commands {
       if (resultArray[1][0] === resultArray[1][1] && resultArray[1][1] === resultArray[1][2]) win = true;
 
       let amount = win ? interaction.options.get('amount')?.value : -interaction.options.get('amount')?.value;
-      embed.setDescription(win ? `🥳 You won $${amount}!` : `🤣 You lost ${amount} dollars`);
+      embed.setDescription(win ? `🥳 You won $${amount.toLocaleString()}!` : `🤣 You lost ${amount.toLocaleString()} dollars`);
       await Guild.updateCash(user['ID'], user['Cash'] + amount);
 
       interaction.reply({embeds: [embed]});
@@ -341,7 +427,7 @@ class Commands {
         const newAmount = random.value === number && random2.value === number2 ? amount * 2 : -amount;
 
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
-        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount} dollars!` : `😐 You lost ${newAmount} dollars, maybe better luck next time!`)
+        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount.toLocaleString()} dollars!` : `😐 You lost ${newAmount.toLocaleString()} dollars, maybe better luck next time!`)
         .addFields({
           name: 'Your Choice:',
           value: `**${file[number - 1].emoji} ${file[number2 - 1].emoji}**`
@@ -369,29 +455,7 @@ module.exports = {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command', ephemeral: true});
       if (!interaction.guild.me.permissions.has('USE_EXTERNAL_EMOJIS')) return interaction.reply({content: 'I need the use external emojis permission to run currency commands'});
 
-      const userID = interaction.user.id;
-      const guildID = interaction.guildId;
-      let user = await User.userInfo(userID);
-      let userGuild = await Guild.userInfo(userID, guildID);
-
-      if (!user) {
-        const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
-        const createdTimestamp = dateFormat(interaction.user.createdAt, 'yyyy-mm-dd HH:MM:ss');
-        user = await User.createUser({
-          id: userID,
-          creationDate: creationDate,
-          userCreationDate: createdTimestamp
-        });
-      }
-      if (!userGuild) {
-        const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
-        userGuild = await Guild.createGuildUser({
-          userID: userID,
-          guildID: guildID,
-          creationDate: creationDate
-        });
-      }
-
+      const {userGuild} = await Guild.createUserIfDoesntExist(interaction.member, interaction.guildId);
       switch (command) {
         case 'deposit': {
           const embed = await Commands.deposit(userGuild, interaction);
@@ -399,6 +463,10 @@ module.exports = {
         }
         case 'withdraw': {
           const embed = await Commands.withdraw(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'add-money': {
+          const embed = await Commands.addMoney(userGuild, interaction);
           return interaction.reply(embed);
         }
         case 'stats': {
