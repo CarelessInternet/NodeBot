@@ -32,7 +32,7 @@ class User {
   }
 }
 class Guild {
-  static #bitLimit = 2147483647 / 2;
+  static #bitLimit = Math.floor(2147483647 / 2);
 
   // cash and bank are 32 bit, so we have to make sure it doesnt go above or under half of 32 bit
   static #preventLimit(amount) {
@@ -266,13 +266,67 @@ class Commands {
         .setDescription(`The new economy of ${pingedUser.user.username}:`)
         .addFields({
           name: 'Added Amount of Money',
-          value: '💵 ' + addedAmount.toLocaleString()
+          value: '💵 ' + amount.toLocaleString()
         }, {
           name: 'Cash',
           value: '💵 ' + userGuild['Cash'].toLocaleString()
         }, {
           name: 'Bank',
           value: '💵 ' + addedAmount.toLocaleString()
+        })
+        .setTimestamp();
+
+        resolve({embeds: [embed]});
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
+  static removeMoney(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        if (!interaction.member.permissions.has('MANAGE_GUILD')) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('Invalid Permissions')
+          .setDescription('You need the manage server permission to run this command')
+          .setTimestamp();
+
+          return resolve({embeds: [embed]});
+        }
+
+        const amount = interaction.options.get('amount')?.value;
+        const pingedUser = interaction.options.get('user')?.member;
+
+        if (pingedUser.user.bot) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('The User is a Bot')
+          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setTimestamp();
+
+          return resolve({embeds: [embed]});
+        }
+        const {userGuild} = await Guild.createUserIfDoesntExist(pingedUser, interaction.guildId);
+
+        const newAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] - amount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(pingedUser.user.tag, pingedUser.user.avatarURL())
+        .setTitle(`Successfully Removed Money from ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
+        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .addFields({
+          name: 'Removed Amount of Money',
+          value: '💵 ' + amount.toLocaleString()
+        }, {
+          name: 'Cash',
+          value: '💵 ' + userGuild['Cash'].toLocaleString()
+        }, {
+          name: 'Bank',
+          value: '💵 ' + newAmount.toLocaleString()
         })
         .setTimestamp();
 
@@ -467,6 +521,10 @@ module.exports = {
         }
         case 'add-money': {
           const embed = await Commands.addMoney(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'remove-money': {
+          const embed = await Commands.removeMoney(userGuild, interaction);
           return interaction.reply(embed);
         }
         case 'stats': {

@@ -444,6 +444,32 @@
     ]
   },
   {
+    "name": "remove-money",
+    "description": "Removes money from a pinged user",
+    "category": "economy",
+    "cooldown": 180,
+    "options": [
+      {
+        "name": "user",
+        "description": "The user to remove money from",
+        "type": "USER",
+        "required": true
+      },
+      {
+        "name": "amount",
+        "description": "The amount of money to remove from the bank",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "remove-money @CarelessInternet#8114 999999",
+      "remove-money @someoone#0001 420240",
+      "remove-money @joe#6969 1",
+      "remove-money @mamma#4200 69"
+    ]
+  },
+  {
     "name": "resume",
     "description": "Resumes the current video",
     "category": "music",
