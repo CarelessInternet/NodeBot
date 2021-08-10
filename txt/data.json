@@ -2,7 +2,7 @@
   {
     "name": "add-money",
     "description": "Adds money to a pinged user",
-    "category": "currency",
+    "category": "economy",
     "cooldown": 180,
     "options": [
       {
