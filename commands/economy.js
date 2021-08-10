@@ -143,9 +143,9 @@ class Guild {
     });
   }
 
-  static guildList(guildID) {
+  static guildList(guildID, limit = 5) {
     return new Promise((resolve, reject) => {
-      connection.query('SELECT * FROM EconomyGuilds WHERE GuildID = ?', [guildID], (err, rows) => {
+      connection.query('SELECT * FROM EconomyGuilds WHERE GuildID = ? LIMIT ?', [guildID, limit], (err, rows) => {
         if (err) reject(err);
         resolve(rows);
       });
@@ -375,7 +375,7 @@ class Commands {
         .setTimestamp()
         .setFooter('This command only displays, at most the top 5 users in the guild');
 
-        for (let i = 0; i < 5 && i < guildMembers.length; i++) {
+        for (let i = 0; i < guildMembers.length; i++) {
           const user = guildMembers[i];
 
           // fetch by shard because we are using shards, and not every user will be in one shard, so we have to get the one which has it
