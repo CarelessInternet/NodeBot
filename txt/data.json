@@ -124,6 +124,15 @@
     ]
   },
   {
+    "name": "economy-leaderboard",
+    "description": "Displays the economy leaderboard of the guild",
+    "category": "economy",
+    "options": [],
+    "examples": [
+      "economy-leaderboard"
+    ]
+  },
+  {
     "name": "help",
     "description": "Shows all available commands, or information about a specified command",
     "category": "utility",

@@ -142,6 +142,15 @@ class Guild {
       });
     });
   }
+
+  static guildList(guildID) {
+    return new Promise((resolve, reject) => {
+      connection.query('SELECT * FROM EconomyGuilds WHERE GuildID = ?', [guildID], (err, rows) => {
+        if (err) reject(err);
+        resolve(rows);
+      });
+    });
+  }
 }
 class Commands {
   static #validateCash(interaction, user) {
@@ -348,6 +357,39 @@ class Commands {
     });
   }
 
+  static leaderboard(interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const guildID = interaction.guildId;
+        const guildMembers = await Guild.guildList(guildID);
+        guildMembers.sort((a, b) => {
+          if (a['Cash'] + a['Bank'] < b['Cash'] + b['Bank']) return 1;
+          if (a['Cash'] + a['Bank'] > b['Cash'] + b['Bank']) return -1;
+          return 0;
+        });
+
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setTitle(`${interaction.guild.name} Leaderboard`)
+        .setDescription(`💰 The current economy leaderboard of ${interaction.guild.name}`)
+        .setTimestamp()
+        .setFooter('This command only displays, at most the top 5 users in the guild');
+
+        for (let i = 0; i < 5 && i < guildMembers.length; i++) {
+          const user = guildMembers[i];
+
+          // fetch by shard because we are using shards, and not every user will be in one shard, so we have to get the one which has it
+          const member = await interaction.client.shard.broadcastEval((client, id) => client.users.fetch(id), {context: user['UserID']});
+          embed.addField(`${i + 1}: ${member[0].tag}`, `💵 Cash: ${user['Cash'].toLocaleString()}\n💸 Bank: ${user['Bank'].toLocaleString()}`);
+        }
+
+        resolve({embeds: [embed]});
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
   static work(user) {
     return new Promise(async (resolve, reject) => {
       try {
@@ -529,6 +571,10 @@ module.exports = {
         }
         case 'stats': {
           const embed = await Commands.stats(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'economy-leaderboard': {
+          const embed = await Commands.leaderboard(interaction);
           return interaction.reply(embed);
         }
         case 'work': {
