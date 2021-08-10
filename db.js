@@ -4,7 +4,9 @@ const connection = mysql.createConnection({
   user: process.env.dbUser,
   password: process.env.dbPassword,
   database: process.env.dbDatabase,
-  port: process.env.dbPort
+  port: process.env.dbPort,
+  supportBigNumbers: true,
+  bigNumberStrings: true
 });
 connection.connect(err => {
   if (err) console.error(err);
