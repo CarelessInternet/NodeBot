@@ -367,6 +367,8 @@ module.exports = {
   async execute(interaction, command) {
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command', ephemeral: true});
+      if (!interaction.guild.me.permissions.has('USE_EXTERNAL_EMOJIS')) return interaction.reply({content: 'I need the use external emojis permission to run currency commands'});
+
       const userID = interaction.user.id;
       const guildID = interaction.guildId;
       let user = await User.userInfo(userID);
