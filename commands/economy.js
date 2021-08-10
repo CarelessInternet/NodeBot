@@ -312,41 +312,46 @@ class Commands {
       const amount = interaction.options.get('amount')?.value;
       const number = interaction.options.get('number')?.value;
       const number2 = interaction.options.get('number2')?.value;
-      if (number < 1 || number > 6) return interaction.reply({content: 'You must bet on a valid dice side', ephemeral: true});
+      if (number < 1 || number > 6) return interaction.reply({content: 'You must bet on a valid die side', ephemeral: true});
       
       const file = JSON.parse(fs.readFileSync('./economy/dice.json', 'utf8'));
+      const random = file[Math.floor(Math.random() * file.length)];
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle(`${number2 ? 'Dice' : 'Die'} Roll`)
+      .setTimestamp();
+
       if (!number2) {
-        const random = file[Math.floor(Math.random() * file.length)];
         const newAmount = random.value === number ? amount : -amount;
   
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
-        const embed = new MessageEmbed()
-        .setColor('RANDOM')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
-        .setTitle('Die Roll')
-        .setDescription(random.value === number ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
-        .addField('Result:', `**${random.emoji}**`)
-        .setTimestamp();
-  
-        interaction.reply({embeds: [embed]});
+        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount} dollars!` : `😐 You lost ${newAmount} dollars, maybe better luck next time!`)
+        .addFields({
+          name: 'Your Choice:',
+          value: `**${file[number - 1].emoji}**`
+        }, {
+          name: 'Result:',
+          value: `**${random.emoji}**`
+        });
       } else {
-        if (number2 < 1 || number2 > 6) return interaction.reply({content: 'You must bet on a valid dice side', ephemeral: true});
+        if (number2 < 1 || number2 > 6) return interaction.reply({content: 'You must bet on a valid die side', ephemeral: true});
 
-        const random = file[Math.floor(Math.random() * file.length)];
         const random2 = file[Math.floor(Math.random() * file.length)];
         const newAmount = random.value === number && random2.value === number2 ? amount * 2 : -amount;
 
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
-        const embed = new MessageEmbed()
-        .setColor('RANDOM')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
-        .setTitle('Dice Roll')
-        .setDescription(random.value === number && random2.value === number2 ? `🥳 You won ${newAmount} dollars!` : `🖕 You lost ${newAmount} dollars, maybe better luck next time!`)
-        .addField('Result:', `**${random.emoji} ${random2.emoji}**`)
-        .setTimestamp();
-
-        interaction.reply({embeds: [embed]});
+        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount} dollars!` : `😐 You lost ${newAmount} dollars, maybe better luck next time!`)
+        .addFields({
+          name: 'Your Choice:',
+          value: `**${file[number - 1].emoji} ${file[number2 - 1].emoji}**`
+        }, {
+          name: 'Result:',
+          value: `**${random.emoji} ${random2.emoji}**`
+        });
       }
+
+      interaction.reply({embeds: [embed]});
     } catch(err) {
       console.error(err);
       interaction.reply({
@@ -406,12 +411,12 @@ module.exports = {
           const embed = await Commands.crime(userGuild);
           return interaction.reply(embed);
         }
-        case 'slot-machine': {
+        case 'slot-machine':
           return Commands.slotMachine(userGuild, interaction);
-        }
-        case 'dice': {
+        case 'dice':
           return Commands.dice(userGuild, interaction);
-        }
+        default:
+          break;
       }
     } catch(err) {
       console.error(err);
