@@ -8,7 +8,8 @@ function handler(client, Discord) {
     for (const file of files) {
       const event = require(`../events/${dirs}/${file}`);
       const name = file.split('.')[0];
-      client.on(name, event.bind(null, client, Discord, prefix));
+      if (name === 'ready') client.once(name, event.bind(null, client, Discord, prefix));
+      else client.on(name, event.bind(null, client, Discord, prefix));
     }
   };
 
