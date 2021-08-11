@@ -522,7 +522,7 @@ class Commands {
         if (number2 < 1 || number2 > 6) return interaction.reply({content: 'You must bet on a valid die side', ephemeral: true});
 
         const random2 = file[Math.floor(Math.random() * file.length)];
-        const newAmount = random.value === number && random2.value === number2 ? amount * 2 : -amount;
+        const newAmount = (random.value === number && random2.value === number2) || (random2.value === number && random.value === number2) ? amount * 2 : -amount;
 
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
         embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount.toLocaleString()} dollars!` : `😐 You lost ${newAmount.toLocaleString()} dollars, maybe better luck next time!`)
