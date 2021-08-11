@@ -35,6 +35,26 @@
     ]
   },
   {
+    "name": "blackjack",
+    "description": "Plays a game of classic blackjack, the decks are made possible by deckofcardsapi.com",
+    "category": "economy",
+    "cooldown": 5,
+    "options": [
+      {
+        "name": "amount",
+        "description": "The amount you want to bet",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "blackjack 50",
+      "blackjack 1250",
+      "blackjack 1337",
+      "blackjack 42069"
+    ]
+  },
+  {
     "name": "bs",
     "description": "Damn, some bullshit that we have to stare at",
     "category": "memes",

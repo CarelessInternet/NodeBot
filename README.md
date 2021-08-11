@@ -9,6 +9,8 @@ to run the bot, make sure you type <b>nbd!deploy</b> in discord to set all the c
 if u have any suggestions or bug reports, please open an issue.
 <b>only submit bug reports for bugs found when running the bot. dont submit an issue if you cant get the bot to run</b>
 
+some emojis may be custom, thats for you to change to your own
+
 env variables:
 - token (discord bot token)
 - spotifyClientID
