@@ -154,6 +154,11 @@ class Guild {
   }
 }
 class Commands {
+  static #capitalize(word) {
+    const lowercase = word.toLowerCase();
+    return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
+  }
+
   static #validateCash(interaction, user) {
     const amount = interaction.options.get('amount')?.value;
     if (user['Cash'] < amount) {
@@ -523,7 +528,7 @@ class Commands {
         if (number2 < 1 || number2 > 6) return interaction.reply({content: 'You must bet on a valid die side', ephemeral: true});
 
         const random2 = file[Math.floor(Math.random() * file.length)];
-        const newAmount = random.value === number && random2.value === number2 ? amount * 2 : -amount;
+        const newAmount = (random.value === number && random2.value === number2) || (random2.value === number && random.value === number2) ? amount * 2 : -amount;
 
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
         embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount.toLocaleString()} dollars!` : `😐 You lost ${newAmount.toLocaleString()} dollars, maybe better luck next time!`)
@@ -571,8 +576,83 @@ class Commands {
       }
     });
   }
-  
+
+  static #blackjackCardValue(card) {
+    if (card === 'JACK' || card === 'QUEEN' || card === 'KING') return 10;
+    else if (card === 'ACE') return 11;
+    else return parseInt(card);
+  }
+
+  static #blackjackHandValue(hand) {
+    let score = hand.reduce((acc, curr) => acc + this.#blackjackCardValue(curr['value']), 0);
+    let aces = hand.filter(card => card['value'] === 'ACE').length;
+
+    while (aces > 0) {
+      if (score > 21) {
+        score -= 10;
+        aces--;
+      } else {
+        break;
+      }
+    }
+
+    if (score < 21) return [score.toString(), score];
+    else if (score === 21) return ['Blackjack!', score];
+    else return ['Bust!', score];
+  }
+
+  static async #blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID) {
+    try {
+      row.components.forEach(button => button.disabled = true);
+      const amount = interaction.options.get('amount')?.value;
+      const playerValue = cards['player'][0]['value'];
+      const playerValue2 = cards['player'][1]['value'];
+      const dealerValue = cards['dealer'][0]['value'];
+      
+      if (this.#blackjackHandValue(cards['player'])[1] > 21) {
+        await Guild.updateCash(user['ID'], user['Cash'] - amount);
+        embed.description = `<:haha:875143747640365107> You lost the game and $${amount.toLocaleString()}`;
+      } else {
+        while (this.#blackjackHandValue(cards['dealer'])[1] < 17) {
+          cards['dealer'].push(await this.#blackjackDrawCard(deckID));
+          embed.fields[1].value += `\n${cards['dealer'].at(-1)['value']} of ${this.#capitalize(cards['dealer'].at(-1)['suit'])}`;
+        }
+        const dealerValue2 = cards['dealer'][1]['value'];
+        embed.fields[4].value = (dealerValue === 'ACE' || dealerValue2 === 'ACE') && this.#blackjackHandValue(cards['dealer'])[1] === 21 ? this.#blackjackHandValue(cards['dealer'])[0] : this.#blackjackHandValue(cards['dealer'])[1].toString();
+        
+        const playerScore = this.#blackjackHandValue(cards['player'])[1];
+        const dealerScore = this.#blackjackHandValue(cards['dealer'])[1];
+        if (dealerScore > 21 || playerScore > dealerScore) {
+          await Guild.updateCash(user['ID'], user['Cash'] + amount);
+          embed.description = `🥳 You won against the dealer and got $${amount}!`;
+        } else if (playerScore === dealerScore) {
+          // if player has blackjack and dealer does not, or opposite, or neither
+
+          if ((playerValue === 'ACE' || playerValue2 === 'ACE') && (dealerValue !== 'ACE' && dealerValue2 !== 'ACE')) {
+            await Guild.updateCash(user['ID'], user['Cash'] + amount);
+            embed.description = `😌 You have a blackjack, and the dealer doesn't, you win $${amount}!`;
+          } else if ((dealerValue === 'ACE' || dealerValue2 === 'ACE') && (playerValue !== 'ACE' && playerValue2 !== 'ACE')) {
+            await Guild.updateCash(user['ID'], user['Cash'] - amount);
+            embed.description = `😔 The dealer has a blackjack, and you don't, you lose $${amount}`;
+          } else {
+            embed.description = `🧐 It's a draw! No one wins`;
+          }
+        } else if (playerScore < dealerScore) {
+          await Guild.updateCash(user['ID'], user['Cash'] - amount);
+          embed.description = `<:haha:875143747640365107> You lost the game and $${amount.toLocaleString()}`;
+        }
+      }
+      
+      embed.fields[3].value = (playerValue === 'ACE' || playerValue2 === 'ACE') && this.#blackjackHandValue(cards['player'])[1] === 21 ? this.#blackjackHandValue(cards['player'])[0] : this.#blackjackHandValue(cards['player'])[1].toString();
+      i.update({embeds: [embed], components: [row]});
+    } catch(err) {
+      console.error(err);
+      i.update({content: 'An unknown error occured whilst playing blackjack, please try again', components: []});
+    }
+  }
+
   static async blackjack(user, interaction) {
+    // blackjack wouldnt have been possible without this tutorial: https://brilliant.org/wiki/programming-blackjack/
     try {
       const validate = await this.#validateCash(interaction, user);
       if (validate) return interaction.reply(validate);
@@ -612,14 +692,66 @@ class Commands {
       
       cards['player'] = await this.#blackjackDrawCard(deckID, 2);
       cards['dealer'].push(await this.#blackjackDrawCard(deckID));
-      embed.addField('player cards:', `${cards['player'][0]['code']}, ${cards['player'][1]['code']}`, true);
-      embed.addField('dealer cards:', cards['dealer'][0]['code'], true);
+      embed.addFields({
+        name: 'Your Hand',
+        value: `${cards['player'][0]['value']} of ${this.#capitalize(cards['player'][0]['suit'])}\n${cards['player'][1]['value']} of ${this.#capitalize(cards['player'][1]['suit'])}`,
+        inline: true
+      }, {
+        name: 'Dealer\'s Hand',
+        value: `${cards['dealer'][0]['value']} of ${this.#capitalize(cards['dealer'][0]['suit'])}`,
+        inline: true
+      }, {
+        name: '\u200B',
+        value: '\u200B'
+      }, {
+        name: 'Your Value',
+        value: this.#blackjackHandValue(cards['player'])[0],
+        inline: true
+      }, {
+        name: 'Dealer\'s Value',
+        value: this.#blackjackHandValue(cards['dealer'])[0],
+        inline: true
+      })
       
-      interaction.followUp({embeds: [embed], components: [row], fetchReply: true});
+      const filter = i => buttons.filter(e => e.id === i.customId).length > 0 && i.member.user.id === interaction.user.id;
+      const msg = await interaction.followUp({embeds: [embed], components: [row], fetchReply: true});
+      const collector = msg.createMessageComponentCollector({filter, time: 2 * 60 * 1000});
+
+      collector.on('collect', async i => {
+        if (i.customId === 'Hit') {
+          cards['player'].push(await this.#blackjackDrawCard(deckID));
+          embed.fields[0].value += `\n${cards['player'].at(-1)['value']} of ${this.#capitalize(cards['player'].at(-1)['suit'])}`;
+          embed.fields[3].value = this.#blackjackHandValue(cards['player'])[0];
+
+          if (this.#blackjackHandValue(cards['player'])[1] >= 21) {
+            this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID);
+          } else {
+            i.update({embeds: [embed]});
+          }
+        } else if (i.customId === 'Stand') {
+          this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID);
+        }
+      });
+      collector.on('end', (collected, reason) => {
+        switch (reason) {
+          case 'time':
+            return;
+          case 'messageDelete':
+            return;
+          case 'channelDelete':
+            return;
+          case 'guildDelete':
+            return;
+          case 'limit':
+            return;
+          default:
+            return interaction.channel.send({content: 'Game aborted due to an unknown reason'}).catch(console.error);
+        }
+      });
     } catch(err) {
       console.error(err);
-      interaction.reply({
-        content: 'An unknown error occured whilst rolling a die, please try again later',
+      interaction.followUp({
+        content: 'An unknown error occured whilst creating/playing a blackjack game, please try again later',
         ephemeral: true
       }).catch(console.error);
     }

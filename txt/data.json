@@ -36,9 +36,9 @@
   },
   {
     "name": "blackjack",
-    "description": "Plays a game of classic blackjack",
+    "description": "Plays a game of classic blackjack, the decks are made possible by deckofcardsapi.com",
     "category": "economy",
-    "cooldown": 10,
+    "cooldown": 5,
     "options": [
       {
         "name": "amount",
