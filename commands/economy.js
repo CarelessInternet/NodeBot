@@ -378,7 +378,9 @@ class Commands {
         for (let i = 0; i < guildMembers.length; i++) {
           const user = guildMembers[i];
 
-          // fetch by shard because we are using shards, and not every user will be in one shard, so we have to get the one which has it
+          // fetch by shard because we are using sharding, and not every user will be in one shard, so we have to get the one which has it
+          // because the user might have left the server, so we cant use interaction.guild.members.fetch()
+          // since they wont be in the guild members list
           const member = await interaction.client.shard.broadcastEval((client, id) => client.users.fetch(id), {context: user['UserID']});
           embed.addField(`${i + 1}: ${member[0].tag}`, `💵 Cash: ${user['Cash'].toLocaleString()}\n💸 Bank: ${user['Bank'].toLocaleString()}`);
         }
