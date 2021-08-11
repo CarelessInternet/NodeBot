@@ -1,7 +1,8 @@
 const fs = require('fs');
 const dateFormat = require('dateformat');
+const fetch = require('node-fetch');
 const connection = require('../db');
-const {MessageEmbed} = require('discord.js');
+const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 class User {
   static userInfo(id) {
@@ -249,7 +250,7 @@ class Commands {
           .setDescription('You need the manage server permission to run this command')
           .setTimestamp();
 
-          return resolve({embeds: [embed]});
+          return resolve({embeds: [embed], ephemeral: true});
         }
 
         const amount = interaction.options.get('amount')?.value;
@@ -263,7 +264,7 @@ class Commands {
           .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
           .setTimestamp();
 
-          return resolve({embeds: [embed]});
+          return resolve({embeds: [embed], ephemeral: true});
         }
         const {userGuild} = await Guild.createUserIfDoesntExist(pingedUser, interaction.guildId);
 
@@ -544,6 +545,85 @@ class Commands {
       }).catch(console.error);
     }
   }
+
+  static #blackjackCreateGame() {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const request = await fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1').then(res => res.json());
+        if (!request['success']) reject('An error occured whilst fetching the deck, please try again later');
+
+        resolve(request['deck_id']);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+
+  static #blackjackDrawCard(id, count = 1) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const request = await fetch(`https://deckofcardsapi.com/api/deck/${id}/draw/?count=${count}`).then(res => res.json());
+        if (!request['success']) reject('An error occured whilst drawing a card, please try again later');
+
+        count === 1 ? resolve(request['cards'][0]) : resolve(request['cards']);
+      } catch(err) {
+        reject(err);
+      }
+    });
+  }
+  
+  static async blackjack(user, interaction) {
+    try {
+      const validate = await this.#validateCash(interaction, user);
+      if (validate) return interaction.reply(validate);
+      
+      interaction.deferReply();
+      const amount = interaction.options.get('amount')?.value;
+      const deckID = await this.#blackjackCreateGame();
+      const cards = {
+        player: [],
+        dealer: []
+      };
+      const buttons = [{
+        id: 'Hit',
+        value: 'Hit',
+        color: 'PRIMARY'
+      }, {
+        id: 'Stand',
+        value: 'Stand',
+        color: 'SUCCESS'
+      }];
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setTitle('Blackjack')
+      .setDescription(`Betting for $${amount}`)
+      .setTimestamp();
+      const row = new MessageActionRow();
+
+      for (let i = 0; i < buttons.length; i++) {
+        row.addComponents(
+          new MessageButton()
+          .setCustomId(buttons[i]['id'])
+          .setLabel(buttons[i]['value'])
+          .setStyle(buttons[i]['color'])
+        );
+      }
+      
+      cards['player'] = await this.#blackjackDrawCard(deckID, 2);
+      cards['dealer'].push(await this.#blackjackDrawCard(deckID));
+      embed.addField('player cards:', `${cards['player'][0]['code']}, ${cards['player'][1]['code']}`, true);
+      embed.addField('dealer cards:', cards['dealer'][0]['code'], true);
+      
+      interaction.followUp({embeds: [embed], components: [row], fetchReply: true});
+    } catch(err) {
+      console.error(err);
+      interaction.reply({
+        content: 'An unknown error occured whilst rolling a die, please try again later',
+        ephemeral: true
+      }).catch(console.error);
+    }
+  }
 }
 
 module.exports = {
@@ -591,6 +671,8 @@ module.exports = {
           return Commands.slotMachine(userGuild, interaction);
         case 'dice':
           return Commands.dice(userGuild, interaction);
+        case 'blackjack':
+          return Commands.blackjack(userGuild, interaction);
         default:
           break;
       }
