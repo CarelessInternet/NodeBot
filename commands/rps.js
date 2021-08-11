@@ -52,8 +52,6 @@ module.exports = {
       components: [row],
       fetchReply: true
     }).catch(console.error);
-    // const channel = await interaction.client.channels.fetch(interaction.channelId).catch(console.error);
-    // const message = await channel.messages.fetch(msg.id).catch(console.error);
     const collector = msg instanceof Message ? msg.createMessageComponentCollector({filter, max: 1, time: 15 * 1000}) : new Message(interaction.client, msg).createMessageComponentCollector({filter, max: 1, time: 15 * 1000});
 
     collector.on('collect', i => {
@@ -78,7 +76,7 @@ module.exports = {
     collector.on('end', (collected, reason) => {
       switch (reason) {
         case 'time':
-          return message.edit({
+          return msg.edit({
             content: 'Game aborted due to no response',
             embeds: [],
             components: []
