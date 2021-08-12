@@ -276,7 +276,7 @@ class Commands {
         const addedAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] + amount);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(pingedUser.user.tag, pingedUser.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`Successfully Added Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
         .setDescription(`The new economy of ${pingedUser.user.username}:`)
         .addFields({
@@ -323,14 +323,14 @@ class Commands {
           .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
           .setTimestamp();
 
-          return resolve({embeds: [embed]});
+          return resolve({embeds: [embed], ephemeral: true});
         }
         const {userGuild} = await Guild.createUserIfDoesntExist(pingedUser, interaction.guildId);
 
         const newAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] - amount);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(pingedUser.user.tag, pingedUser.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`Successfully Removed Money from ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
         .setDescription(`The new economy of ${pingedUser.user.username}:`)
         .addFields({
@@ -350,6 +350,72 @@ class Commands {
         reject(err);
       }
     });
+  }
+
+  static giveMoney(user, interaction) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const validate = this.#validateBank(interaction, user);
+        if (validate) return resolve(validate);
+    
+        const amount = interaction.options.get('amount')?.value;
+        const pingedUser = interaction.options.get('user')?.member;
+        if (pingedUser.user.bot) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('The User is a Bot')
+          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setTimestamp();
+    
+          return resolve({embeds: [embed], ephemeral: true});
+        }
+        if (pingedUser.id === interaction.user.id) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('You Cannot Give Money to Yourself')
+          .setDescription('Bruh, give it to someone else')
+          .setTimestamp();
+    
+          return resolve({embeds: [embed], ephemeral: true});
+        }
+        
+        const {userGuild} = await Guild.createUserIfDoesntExist(pingedUser, interaction.guildId);
+        const newRemovedAmount = await Guild.updateBank(user['ID'], user['Bank'] - amount);
+        const newAddedAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] + amount);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setTitle(`Successfully Gave Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
+        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .addFields({
+          name: 'Money Added',
+          value: '💵 ' + amount.toLocaleString(),
+          inline: true
+        }, {
+          name: 'Cash',
+          value: '💵 ' + userGuild['Cash'],
+          inline: true
+        }, {
+          name: '\u200B',
+          value: '\u200B'
+        }, {
+          name: `Bank of ${interaction.user.username}`,
+          value: '💵 ' + newRemovedAmount.toLocaleString(),
+          inline: true
+        }, {
+          name: `Bank of ${pingedUser.user.username}`,
+          value: '💵 ' + newAddedAmount.toLocaleString(),
+          inline: true
+        })
+        .setTimestamp();
+    
+        resolve({embeds: [embed]});
+      } catch(err) {
+        reject(err);
+      }
+    })
   }
 
   static stats(user, interaction) {
@@ -781,6 +847,10 @@ module.exports = {
         }
         case 'remove-money': {
           const embed = await Commands.removeMoney(userGuild, interaction);
+          return interaction.reply(embed);
+        }
+        case 'give-money': {
+          const embed = await Commands.giveMoney(userGuild, interaction);
           return interaction.reply(embed);
         }
         case 'stats': {

@@ -20,8 +20,8 @@
     ],
     "examples": [
       "add-money @CarelessInternet#8114 999999",
-      "add-money @someoone#0001 420240",
-      "add-money @joe#6969 1",
+      "add-money @someone#0001 420240",
+      "add-money @joe#6969 50",
       "add-money @mamma#4200 69"
     ]
   },
@@ -150,6 +150,30 @@
     "options": [],
     "examples": [
       "economy-leaderboard"
+    ]
+  },
+  {
+    "name": "give-money",
+    "description": "Gives money to another use from your own bank",
+    "category": "economy",
+    "options": [
+      {
+        "name": "user",
+        "description": "The user you want to give money to",
+        "type": "USER",
+        "required": true
+      }, {
+        "name": "amount",
+        "description": "The amount you want to give",
+        "type": "INTEGER",
+        "required": true
+      }
+    ],
+    "examples": [
+      "give-money @CarelessInternet#8114 999999",
+      "give-money @someone#0001 420240",
+      "give-money @joe#6969 50",
+      "give-money @mamma#4200 69"
     ]
   },
   {
@@ -493,8 +517,8 @@
     ],
     "examples": [
       "remove-money @CarelessInternet#8114 999999",
-      "remove-money @someoone#0001 420240",
-      "remove-money @joe#6969 1",
+      "remove-money @someone#0001 420240",
+      "remove-money @joe#6969 50",
       "remove-money @mamma#4200 69"
     ]
   },
