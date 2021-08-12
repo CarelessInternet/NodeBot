@@ -19,7 +19,7 @@
     "ffmpeg-static": "^4.4.0",
     "lorem-ipsum": "^2.0.3",
     "memer-api": "^3.0.6",
-    "minecraft-server-util": "^3.5.2",
+    "minecraft-server-util": "^3.5.3",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
     "spotify-web-api-node": "^5.0.2",
