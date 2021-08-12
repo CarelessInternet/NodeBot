@@ -674,6 +674,8 @@ class Commands {
       const playerValue = cards['player'][0]['value'];
       const playerValue2 = cards['player'][1]['value'];
       const dealerValue = cards['dealer'][0]['value'];
+      const arrayOf10 = ['JACK', 'QUEEN', 'KING', '10'];
+      const checkFor10 = c => arrayOf10.includes(c[0]['value']) || arrayOf10.includes(c[1]['value']);
       
       if (this.#blackjackHandValue(cards['player'])[1] > 21) {
         await Guild.updateCash(user['ID'], user['Cash'] - amount);
@@ -684,7 +686,7 @@ class Commands {
           embed.fields[1].value += `\n${cards['dealer'].at(-1)['value']} of ${this.#capitalize(cards['dealer'].at(-1)['suit'])}`;
         }
         const dealerValue2 = cards['dealer'][1]['value'];
-        embed.fields[4].value = (dealerValue === 'ACE' || dealerValue2 === 'ACE') && this.#blackjackHandValue(cards['dealer'])[1] === 21 ? this.#blackjackHandValue(cards['dealer'])[0] : this.#blackjackHandValue(cards['dealer'])[1].toString();
+        embed.fields[4].value = (dealerValue === 'ACE' || dealerValue2 === 'ACE') && checkFor10(cards['dealer']) && this.#blackjackHandValue(cards['dealer'])[1] === 21 ? this.#blackjackHandValue(cards['dealer'])[0] : (this.#blackjackHandValue(cards['dealer'])[1] > 21 ? this.#blackjackHandValue(cards['dealer'])[0] : this.#blackjackHandValue(cards['dealer'])[1].toString());
         
         const playerScore = this.#blackjackHandValue(cards['player'])[1];
         const dealerScore = this.#blackjackHandValue(cards['dealer'])[1];
@@ -692,12 +694,12 @@ class Commands {
           await Guild.updateCash(user['ID'], user['Cash'] + amount);
           embed.description = `🥳 You won against the dealer and got $${amount}!`;
         } else if (playerScore === dealerScore) {
+          
           // if player has blackjack and dealer does not, or opposite, or neither
-
-          if ((playerValue === 'ACE' || playerValue2 === 'ACE') && (dealerValue !== 'ACE' && dealerValue2 !== 'ACE')) {
+          if ((playerValue === 'ACE' || playerValue2 === 'ACE') && (dealerValue !== 'ACE' && dealerValue2 !== 'ACE') && checkFor10(cards['player']) && playerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] + amount);
             embed.description = `😌 You have a blackjack, and the dealer doesn't, you win $${amount}!`;
-          } else if ((dealerValue === 'ACE' || dealerValue2 === 'ACE') && (playerValue !== 'ACE' && playerValue2 !== 'ACE')) {
+          } else if ((dealerValue === 'ACE' || dealerValue2 === 'ACE') && (playerValue !== 'ACE' && playerValue2 !== 'ACE') && checkFor10(cards['dealer']) && dealerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] - amount);
             embed.description = `😔 The dealer has a blackjack, and you don't, you lose $${amount}`;
           } else {
@@ -709,7 +711,7 @@ class Commands {
         }
       }
       
-      embed.fields[3].value = (playerValue === 'ACE' || playerValue2 === 'ACE') && this.#blackjackHandValue(cards['player'])[1] === 21 ? this.#blackjackHandValue(cards['player'])[0] : this.#blackjackHandValue(cards['player'])[1].toString();
+      embed.fields[3].value = (playerValue === 'ACE' || playerValue2 === 'ACE') && checkFor10(cards['player']) && this.#blackjackHandValue(cards['player'])[1] === 21 ? this.#blackjackHandValue(cards['player'])[0] : (this.#blackjackHandValue(cards['player'])[1] > 21 ? this.#blackjackHandValue(cards['player'])[0] :this.#blackjackHandValue(cards['player'])[1].toString());
       i.update({embeds: [embed], components: [row]});
     } catch(err) {
       console.error(err);
@@ -743,7 +745,7 @@ class Commands {
       .setColor('RANDOM')
       .setAuthor(interaction.user.tag, interaction.user.avatarURL())
       .setTitle('Blackjack')
-      .setDescription(`Betting for $${amount}`)
+      .setDescription(`Betting for $${amount.toLocaleString()}`)
       .setTimestamp();
       const row = new MessageActionRow();
 
