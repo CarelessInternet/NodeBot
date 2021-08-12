@@ -212,7 +212,8 @@ function checkForPermissions(member) {
 
 module.exports = {
   name: 'music',
-  execute(interaction, command, botArgs = [], botCommand = false) {
+  aliases: ['play', 'queue', 'skip', 'remove', 'loop', 'unloop', 'pause', 'unpause', 'resume', 'volume', 'leave'],
+  execute(interaction, prefix, command, botArgs = [], botCommand = false) {
     if (!interaction.inGuild() && botCommand) return;
     if (!interaction.inGuild()) return interaction.reply({content: 'Music commands are only available in a guild'}).catch(console.error);
     const channel = interaction.member?.voice.channel;

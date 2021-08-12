@@ -129,7 +129,7 @@ class Guild {
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`${interaction.user.username}${interaction.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Economy`)
-        .setDescription(`💰 The economy of ${interaction.user.username}:`)
+        .setDescription(`💰 The economy of <@${interaction.user.id}>:`)
         .addFields({
           name: 'Cash',
           value: '💵 ' + rows[0]['Cash'].toLocaleString()
@@ -266,7 +266,7 @@ class Commands {
           .setColor('RED')
           .setAuthor(interaction.user.tag, interaction.user.avatarURL())
           .setTitle('The User is a Bot')
-          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setDescription(`The requested user (<@${pingedUser.user.id}>) is a bot, please select a valid user`)
           .setTimestamp();
 
           return resolve({embeds: [embed], ephemeral: true});
@@ -278,7 +278,7 @@ class Commands {
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`Successfully Added Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
-        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .setDescription(`The new economy of <@${pingedUser.user.id}>:`)
         .addFields({
           name: 'Added Amount of Money',
           value: '💵 ' + amount.toLocaleString()
@@ -320,7 +320,7 @@ class Commands {
           .setColor('RED')
           .setAuthor(interaction.user.tag, interaction.user.avatarURL())
           .setTitle('The User is a Bot')
-          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setDescription(`The requested user (<@${pingedUser.user.id}>) is a bot, please select a valid user`)
           .setTimestamp();
 
           return resolve({embeds: [embed], ephemeral: true});
@@ -332,7 +332,7 @@ class Commands {
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`Successfully Removed Money from ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
-        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .setDescription(`The new economy of <@${pingedUser.user.id}>:`)
         .addFields({
           name: 'Removed Amount of Money',
           value: '💵 ' + amount.toLocaleString()
@@ -365,7 +365,7 @@ class Commands {
           .setColor('RED')
           .setAuthor(interaction.user.tag, interaction.user.avatarURL())
           .setTitle('The User is a Bot')
-          .setDescription(`The requested user (${pingedUser.user.tag}) is a bot, please select a valid user`)
+          .setDescription(`The requested user (<@${pingedUser.user.id}>) is a bot, please select a valid user`)
           .setTimestamp();
     
           return resolve({embeds: [embed], ephemeral: true});
@@ -388,7 +388,7 @@ class Commands {
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle(`Successfully Gave Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
-        .setDescription(`The new economy of ${pingedUser.user.username}:`)
+        .setDescription(`The new economy of <@${pingedUser.user.id}>:`)
         .addFields({
           name: 'Money Added',
           value: '💵 ' + amount.toLocaleString(),
@@ -826,7 +826,8 @@ class Commands {
 
 module.exports = {
   name: 'economy',
-  async execute(interaction, command) {
+  aliases: ['deposit', 'withdraw', 'add-money', 'remove-money', 'give-money', 'stats', 'economy-leaderboard', 'work', 'crime', 'slot-machine', 'dice', 'blackjack'],
+  async execute(interaction, prefix, command) {
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command', ephemeral: true});
       if (!interaction.guild.me.permissions.has('USE_EXTERNAL_EMOJIS')) return interaction.reply({content: 'I need the use external emojis permission to run currency commands'});
