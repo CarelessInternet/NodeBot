@@ -64,15 +64,19 @@ module.exports = {
       .setDescription(`A command list of all current available commands, in an organized order.\nUse \`${prefix}help CommandName\`, e.g \`${prefix}help users\` to get more information about the command`)
       .addFields({
         name: 'Prefix',
-        value: `In order to run commands with this bot, you need to use the \`${prefix}\` prefix before putting in the command.\nCustom prefixes aren't available with me, since message content will be [deprecated in April 2022](https://support-dev.discord.com/hc/en-us/articles/4404772028055)`
+        value: `In order to run commands with this bot, you need to use the \`${prefix}\` prefix before putting in the command. Custom prefixes aren't available with me, since message content will be [deprecated in April 2022](https://support-dev.discord.com/hc/en-us/articles/4404772028055)`
       }, {
         name: 'Support',
         value: fs.readFileSync('./txt/support.txt', 'utf8')
       }, {
+        name: 'Invite',
+        value: fs.readFileSync('./txt/invite.txt', 'utf8')
+      }, {
         name: '\u200B',
         value: '\u200B'
       })
-      .setFooter(`* means that options may be required, use ${prefix}help CommandName to view more information on that command`);
+      .setFooter(`* means that options may be required, use ${prefix}help CommandName to view more information on that command`)
+      .setTimestamp();
       const categories = [
         {
           name: 'Utility',
