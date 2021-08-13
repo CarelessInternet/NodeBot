@@ -196,6 +196,15 @@
     ]
   },
   {
+    "name": "invite",
+    "description": "Sends the invite link",
+    "category": "other",
+    "options": [],
+    "examples": [
+      "invite"
+    ]
+  },
+  {
     "name": "kick",
     "description": "Kicks a user from the server",
     "category": "staff",
