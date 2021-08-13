@@ -638,8 +638,15 @@ class Commands {
   static #blackjackDrawCard(deck, count = 1) {
     return new Promise(async (resolve, reject) => {
       try {
-        const cards = shuffle.pick(deck, {'picks': count});
-        resolve(cards);
+        if (count > 1) {
+          const cards = [];
+          for (let i = 0; i < count; i++) {
+            cards.push(deck.shift());
+          }
+          return resolve(cards);
+        }
+        
+        resolve(deck.shift());
       } catch(err) {
         reject(err);
       }
