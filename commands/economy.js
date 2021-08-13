@@ -1,6 +1,7 @@
 const fs = require('fs');
 const dateFormat = require('dateformat');
 const fetch = require('node-fetch');
+const shuffle = require('shuffle-array');
 const connection = require('../db');
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
@@ -620,23 +621,25 @@ class Commands {
   static #blackjackCreateGame() {
     return new Promise(async (resolve, reject) => {
       try {
-        const request = await fetch('https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1').then(res => res.json());
-        if (!request['success']) reject('An error occured whilst fetching the deck, please try again later');
+        // i copied the deck of cards json into a file called blackjack.json to prevent errors when fetching
+        // because sometimes a 500 error occurs when getting a response from the website.
+        // i also did this to improve performance
+        // credits to deckofcardsapi.com for the json
+        const json = JSON.parse(fs.readFileSync('./economy/blackjack.json', 'utf8'));
+        const deck = shuffle(json);
 
-        resolve(request['deck_id']);
+        resolve(deck);
       } catch(err) {
         reject(err);
       }
     });
   }
 
-  static #blackjackDrawCard(id, count = 1) {
+  static #blackjackDrawCard(deck, count = 1) {
     return new Promise(async (resolve, reject) => {
       try {
-        const request = await fetch(`https://deckofcardsapi.com/api/deck/${id}/draw/?count=${count}`).then(res => res.json());
-        if (!request['success']) reject('An error occured whilst drawing a card, please try again later');
-
-        count === 1 ? resolve(request['cards'][0]) : resolve(request['cards']);
+        const cards = shuffle.pick(deck, {'picks': count});
+        resolve(cards);
       } catch(err) {
         reject(err);
       }
@@ -667,7 +670,7 @@ class Commands {
     else return ['Bust!', score];
   }
 
-  static async #blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID) {
+  static async #blackjackDealersTurn(i, embed, row, user, interaction, cards, deck) {
     try {
       row.components.forEach(button => button.disabled = true);
       const amount = interaction.options.get('amount')?.value;
@@ -682,7 +685,7 @@ class Commands {
         embed.description = `<:haha:875143747640365107> You lost the game and $${amount.toLocaleString()}`;
       } else {
         while (this.#blackjackHandValue(cards['dealer'])[1] < 17) {
-          cards['dealer'].push(await this.#blackjackDrawCard(deckID));
+          cards['dealer'].push(await this.#blackjackDrawCard(deck));
           embed.fields[1].value += `\n${cards['dealer'].at(-1)['value']} of ${this.#capitalize(cards['dealer'].at(-1)['suit'])}`;
         }
         const dealerValue2 = cards['dealer'][1]['value'];
@@ -727,7 +730,7 @@ class Commands {
       
       interaction.deferReply();
       const amount = interaction.options.get('amount')?.value;
-      const deckID = await this.#blackjackCreateGame();
+      const deck = await this.#blackjackCreateGame();
       const cards = {
         player: [],
         dealer: []
@@ -758,8 +761,8 @@ class Commands {
         );
       }
       
-      cards['player'] = await this.#blackjackDrawCard(deckID, 2);
-      cards['dealer'].push(await this.#blackjackDrawCard(deckID));
+      cards['player'] = await this.#blackjackDrawCard(deck, 2);
+      cards['dealer'].push(await this.#blackjackDrawCard(deck));
       embed.addFields({
         name: 'Your Hand',
         value: `${cards['player'][0]['value']} of ${this.#capitalize(cards['player'][0]['suit'])}\n${cards['player'][1]['value']} of ${this.#capitalize(cards['player'][1]['suit'])}`,
@@ -787,17 +790,17 @@ class Commands {
 
       collector.on('collect', async i => {
         if (i.customId === 'Hit') {
-          cards['player'].push(await this.#blackjackDrawCard(deckID));
+          cards['player'].push(await this.#blackjackDrawCard(deck));
           embed.fields[0].value += `\n${cards['player'].at(-1)['value']} of ${this.#capitalize(cards['player'].at(-1)['suit'])}`;
           embed.fields[3].value = this.#blackjackHandValue(cards['player'])[0];
 
           if (this.#blackjackHandValue(cards['player'])[1] >= 21) {
-            this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID);
+            this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deck);
           } else {
             i.update({embeds: [embed]});
           }
         } else if (i.customId === 'Stand') {
-          this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deckID);
+          this.#blackjackDealersTurn(i, embed, row, user, interaction, cards, deck);
         }
       });
       collector.on('end', (collected, reason) => {
@@ -830,6 +833,7 @@ module.exports = {
   name: 'economy',
   aliases: ['deposit', 'withdraw', 'add-money', 'remove-money', 'give-money', 'stats', 'economy-leaderboard', 'work', 'crime', 'slot-machine', 'dice', 'blackjack'],
   async execute(interaction, prefix, command) {
+    // the economy commands were heavily 'inspired' by unbelievaboat
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command', ephemeral: true});
       if (!interaction.guild.me.permissions.has('USE_EXTERNAL_EMOJIS')) return interaction.reply({content: 'I need the use external emojis permission to run currency commands'});
