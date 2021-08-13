@@ -6,7 +6,7 @@ module.exports = {
     if (!interaction.inGuild()) return interaction.reply({content: 'You need to be in a guild to use this command'}).catch(console.error);
 
     const args = [interaction.options.get('user')?.member, interaction.options.get('reason')?.value];
-    if (!args[0]) interaction.reply({content: 'Please specify a user', ephemeral: true}).catch(console.error);
+    if (!args[0]) return interaction.reply({content: 'Please specify a user', ephemeral: true}).catch(console.error);
     if (!interaction.guild.me.permissions.has(['KICK_MEMBERS', 'MANAGE_MESSAGES'])) return interaction.reply({content: 'I need the kick members and manage messages permissions to run this command', ephemeral: true}).catch(console.error);
     if (!interaction.member.permissions.has('KICK_MEMBERS')) return interaction.reply({content: 'You do not have the right permissions to kick a member', ephemeral: true}).catch(console.error);
 
