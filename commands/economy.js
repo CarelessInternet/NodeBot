@@ -677,10 +677,13 @@ class Commands {
       const playerValue = cards['player'][0]['value'];
       const playerValue2 = cards['player'][1]['value'];
       const dealerValue = cards['dealer'][0]['value'];
+
+      const playerHand = this.#blackjackHandValue(cards['player'])[1];
+      const playerHasAce = playerValue === 'ACE' || playerValue2 === 'ACE';
       const arrayOf10 = ['JACK', 'QUEEN', 'KING', '10'];
       const checkFor10 = c => arrayOf10.includes(c[0]['value']) || arrayOf10.includes(c[1]['value']);
       
-      if (this.#blackjackHandValue(cards['player'])[1] > 21) {
+      if (playerHand > 21) {
         await Guild.updateCash(user['ID'], user['Cash'] - amount);
         embed.description = `<:haha:875143747640365107> You lost the game and $${amount.toLocaleString()}`;
       } else {
@@ -688,33 +691,38 @@ class Commands {
           cards['dealer'].push(await this.#blackjackDrawCard(deck));
           embed.fields[1].value += `\n${cards['dealer'].at(-1)['value']} of ${this.#capitalize(cards['dealer'].at(-1)['suit'])}`;
         }
+
+        const dealerHand = this.#blackjackHandValue(cards['dealer'])[1];
         const dealerValue2 = cards['dealer'][1]['value'];
-        embed.fields[4].value = (dealerValue === 'ACE' || dealerValue2 === 'ACE') && checkFor10(cards['dealer']) && this.#blackjackHandValue(cards['dealer'])[1] === 21 ? this.#blackjackHandValue(cards['dealer'])[0] : (this.#blackjackHandValue(cards['dealer'])[1] > 21 ? this.#blackjackHandValue(cards['dealer'])[0] : this.#blackjackHandValue(cards['dealer'])[1].toString());
+        const dealerHasAce = dealerValue === 'ACE' || dealerValue2 === 'ACE';
+        embed.fields[4].value = dealerHasAce && checkFor10(cards['dealer']) && dealerHand === 21 ? this.#blackjackHandValue(cards['dealer'])[0] : (dealerHand > 21 ? this.#blackjackHandValue(cards['dealer'])[0] : dealerHand.toString());
         
         const playerScore = this.#blackjackHandValue(cards['player'])[1];
         const dealerScore = this.#blackjackHandValue(cards['dealer'])[1];
+        // comments to make it easier to read
         if (dealerScore > 21 || playerScore > dealerScore) {
           await Guild.updateCash(user['ID'], user['Cash'] + amount);
           embed.description = `🥳 You won against the dealer and got $${amount}!`;
         } else if (playerScore === dealerScore) {
-          
           // if player has blackjack and dealer does not, or opposite, or neither
-          if ((playerValue === 'ACE' || playerValue2 === 'ACE') && (dealerValue !== 'ACE' && dealerValue2 !== 'ACE') && checkFor10(cards['player']) && playerScore === 21) {
+          if (playerHasAce && !dealerHasAce && checkFor10(cards['player']) && playerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] + amount);
             embed.description = `😌 You have a blackjack, and the dealer doesn't, you win $${amount}!`;
-          } else if ((dealerValue === 'ACE' || dealerValue2 === 'ACE') && (playerValue !== 'ACE' && playerValue2 !== 'ACE') && checkFor10(cards['dealer']) && dealerScore === 21) {
+            // comments
+          } else if (dealerHasAce && !playerHasAce && checkFor10(cards['dealer']) && dealerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] - amount);
             embed.description = `😔 The dealer has a blackjack, and you don't, you lose $${amount}`;
           } else {
             embed.description = `🧐 It's a draw! No one wins`;
           }
+          // comments
         } else if (playerScore < dealerScore) {
           await Guild.updateCash(user['ID'], user['Cash'] - amount);
           embed.description = `<:haha:875143747640365107> You lost the game and $${amount.toLocaleString()}`;
         }
       }
       
-      embed.fields[3].value = (playerValue === 'ACE' || playerValue2 === 'ACE') && checkFor10(cards['player']) && this.#blackjackHandValue(cards['player'])[1] === 21 ? this.#blackjackHandValue(cards['player'])[0] : (this.#blackjackHandValue(cards['player'])[1] > 21 ? this.#blackjackHandValue(cards['player'])[0] :this.#blackjackHandValue(cards['player'])[1].toString());
+      embed.fields[3].value = playerHasAce && checkFor10(cards['player']) && playerHand === 21 ? this.#blackjackHandValue(cards['player'])[0] : (playerHand > 21 ? this.#blackjackHandValue(cards['player'])[0] : playerHand.toString());
       i.update({embeds: [embed], components: [row]});
     } catch(err) {
       console.error(err);
