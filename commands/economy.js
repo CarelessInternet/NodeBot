@@ -709,16 +709,16 @@ class Commands {
         // comments to make it easier to read
         if (dealerScore > 21 || playerScore > dealerScore) {
           await Guild.updateCash(user['ID'], user['Cash'] + amount);
-          embed.description = `🥳 You won against the dealer and got $${amount}!`;
+          embed.description = `🥳 You won against the dealer and got $${amount.toLocaleString()}!`;
         } else if (playerScore === dealerScore) {
           // if player has blackjack and dealer does not, or opposite, or neither
           if (playerHasAce && !dealerHasAce && checkFor10(cards['player']) && playerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] + amount);
-            embed.description = `😌 You have a blackjack, and the dealer doesn't, you win $${amount}!`;
+            embed.description = `😌 You have a blackjack, and the dealer doesn't, you win $${amount.toLocaleString()}!`;
             // comments
           } else if (dealerHasAce && !playerHasAce && checkFor10(cards['dealer']) && dealerScore === 21) {
             await Guild.updateCash(user['ID'], user['Cash'] - amount);
-            embed.description = `😔 The dealer has a blackjack, and you don't, you lose $${amount}`;
+            embed.description = `😔 The dealer has a blackjack, and you don't, you lose $${amount.toLocaleString()}`;
           } else {
             embed.description = `🧐 It's a draw! No one wins`;
           }
