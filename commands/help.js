@@ -1,5 +1,6 @@
 const fs = require('fs');
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
+const optionType = require('../txt/data-options');
 
 function description(command) {
   return `${command.description}`;
@@ -7,7 +8,7 @@ function description(command) {
 function options(command) {
   if (!command.options[0]) return 'None';
   return command.options.reduce((acc, curr) => {
-    return acc + `[*${curr.required ? 'required' : 'optional'} option ${curr.type}*]\n**${curr.description}**\n`;
+    return acc + `[*${curr.required ? 'required' : 'optional'} option ${optionType.get(curr.type)}*]\n**${curr.description}**\n`;
   }, '');
 }
 function examples(command, prefix) {

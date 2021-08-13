@@ -8,13 +8,13 @@
       {
         "name": "user",
         "description": "The user to give money to",
-        "type": "USER",
+        "type": 6,
         "required": true
       },
       {
         "name": "amount",
         "description": "The amount of money to give",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -43,7 +43,7 @@
       {
         "name": "amount",
         "description": "The amount you want to bet",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -81,7 +81,7 @@
       {
         "name": "id",
         "description": "The Steam ID, the last part of the URL when looking at a steam profile",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -100,7 +100,7 @@
       {
         "name": "amount",
         "description": "The amount you want to deposit into your bank",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -120,19 +120,19 @@
       {
         "name": "amount",
         "description": "The amount you want to bet",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       },
       {
         "name": "number",
         "description": "The side you want to bet on",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       },
       {
         "name": "number2",
         "description": "Optionally choose another side, receive double the money if you win, or lose the amount you bet",
-        "type": "INTEGER",
+        "type": 4,
         "required": false
       }
     ],
@@ -160,12 +160,12 @@
       {
         "name": "user",
         "description": "The user you want to give money to",
-        "type": "USER",
+        "type": 6,
         "required": true
       }, {
         "name": "amount",
         "description": "The amount you want to give",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -184,7 +184,7 @@
       {
         "name": "command",
         "description": "A specific command to get inforamation about",
-        "type": "STRING",
+        "type": 3,
         "required": false
       }
     ],
@@ -203,13 +203,13 @@
       {
         "name": "user",
         "description": "The desired user to be kicked",
-        "type": "USER",
+        "type": 6,
         "required": true
       },
       {
         "name": "reason",
         "description": "The reason for the kick",
-        "type": "STRING",
+        "type": 3,
         "required": false
       }
     ],
@@ -255,13 +255,13 @@
       {
         "name": "ip",
         "description": "The IP of the Minecraft Server",
-        "type": "STRING",
+        "type": 3,
         "required": true
       },
       {
         "name": "port",
         "description": "The port of the Minecraft Server",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -280,7 +280,7 @@
       {
         "name": "type",
         "description": "The amount of memes to be sent, or to send a meme from the local memes folder",
-        "type": "STRING",
+        "type": 3,
         "required": false,
         "choices": [
           {
@@ -316,13 +316,13 @@
       {
         "name": "format",
         "description": "The format/template of the meme",
-        "type": "STRING",
+        "type": 3,
         "required": true
       },
       {
         "name": "input",
         "description": "The text to be sent, or the URL",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -388,7 +388,7 @@
       {
         "name": "video",
         "description": "The video to play",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -408,37 +408,37 @@
       {
         "name": "title",
         "description": "The title of the poll",
-        "type": "STRING",
+        "type": 3,
         "required": true
       },
       {
         "name": "hours",
         "description": "The amount of hours this poll should last",
-        "type": "NUMBER",
+        "type": 10,
         "required": true
       },
       {
         "name": "field1",
         "description": "An option in the poll",
-        "type": "STRING",
+        "type": 3,
         "required": true
       },
       {
         "name": "field2",
         "description": "An option in the poll",
-        "type": "STRING",
+        "type": 3,
         "required": false
       },
       {
         "name": "field3",
         "description": "An option in the poll",
-        "type": "STRING",
+        "type": 3,
         "required": false
       },
       {
         "name": "field4",
         "description": "An option in the poll",
-        "type": "STRING",
+        "type": 3,
         "required": false
       }
     ],
@@ -457,7 +457,7 @@
       {
         "name": "amount",
         "description": "The amount of messages to delete",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -485,7 +485,7 @@
       {
         "name": "index",
         "description": "The video to remove, use the number above the video as the video to remove",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -505,13 +505,13 @@
       {
         "name": "user",
         "description": "The user to remove money from",
-        "type": "USER",
+        "type": 6,
         "required": true
       },
       {
         "name": "amount",
         "description": "The amount of money to remove from the bank",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -557,7 +557,7 @@
       {
         "name": "text",
         "description": "The stuff you want to say",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -586,7 +586,7 @@
       {
         "name": "amount",
         "description": "The amount of money you want to bet",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
@@ -605,12 +605,12 @@
       {
         "name": "artist",
         "description": "The artist of the song",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }, {
         "name": "title",
         "description": "The title of the song",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -647,7 +647,7 @@
       {
         "name": "user",
         "description": "The user you want to battle against",
-        "type": "USER",
+        "type": 6,
         "required": false
       }
     ],
@@ -684,7 +684,7 @@
       {
         "name": "role",
         "description": "The amount of users with this role that aren't bots",
-        "type": "ROLE",
+        "type": 8,
         "required": false
       }
     ],
@@ -703,7 +703,7 @@
       {
         "name": "volume",
         "description": "The volume to change it to",
-        "type": "NUMBER",
+        "type": 10,
         "required": true
       }
     ],
@@ -722,7 +722,7 @@
       {
         "name": "city",
         "description": "The city's weather",
-        "type": "STRING",
+        "type": 3,
         "required": true
       }
     ],
@@ -741,7 +741,7 @@
       {
         "name": "amount",
         "description": "The amount you want to withdraw",
-        "type": "INTEGER",
+        "type": 4,
         "required": true
       }
     ],
