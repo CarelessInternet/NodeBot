@@ -15,7 +15,7 @@ env variables:
 - token (discord bot token)
 - spotifyClientID
 - spotifyClientSecret
-- memerToken (for memer commmand, from the memer-api module)
+- memerToken (for memer command, from the memer-api module)
 - weatherAPIKey (from weatherapi.com)
 - trackerGGAPIKey (for csgo stats)
 - topGGToken (server and shard count, <b>only for NodeBot production</b>)

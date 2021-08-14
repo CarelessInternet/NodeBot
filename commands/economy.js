@@ -739,6 +739,7 @@ class Commands {
 
   static async blackjack(user, interaction) {
     // blackjack wouldnt have been possible without this tutorial: https://brilliant.org/wiki/programming-blackjack/
+    // for any poor souls who are trying to understand the blackjack code, i am sorry
     try {
       const validate = await this.#validateCash(interaction, user);
       if (validate) return interaction.reply(validate);
