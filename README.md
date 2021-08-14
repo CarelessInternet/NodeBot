@@ -4,10 +4,8 @@
 
 this repository introduces an economy system, you can view the database structure below under env variables
 
-to run the bot, make sure you type <b>nbd!deploy</b> in discord to set all the commands after running the node application
-
 if u have any suggestions or bug reports, please open an issue.
-<b>only submit bug reports for bugs found when running the bot. dont submit an issue if you cant get the bot to run</b>
+<b>only submit bug reports for bugs found when running the bot. dont submit an issue if you cant get the bot to run, ask about it in the discord server in #support</b>
 
 some emojis may be custom, thats for you to change to your own
 
