@@ -112,7 +112,7 @@ module.exports = {
       .addComponents(
         new MessageButton()
         .setLabel('Vote for Me')
-        .setURL('https://top.gg/bot/507915396037214208')
+        .setURL('https://top.gg/bot/507915396037214208/vote')
         .setStyle('LINK')
       );
 
