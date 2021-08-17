@@ -1,6 +1,5 @@
 const fs = require('fs');
 const dateFormat = require('dateformat');
-const fetch = require('node-fetch');
 const shuffle = require('shuffle-array');
 const connection = require('../db');
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
