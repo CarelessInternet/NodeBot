@@ -44,4 +44,4 @@ database structure:
   * CreatorUserID bigint(20) NOT NULL,
   * GuildID bigint(20) NOT NULL,
   * Reason varchar(255) NOT NULL,
-  * Creationdate datetime NOT NULL
+  * CreationDate datetime NOT NULL
