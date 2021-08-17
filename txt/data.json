@@ -55,6 +55,51 @@
     ]
   },
   {
+    "name": "blacklist",
+    "description": "Blacklists a member from using NodeBot commands",
+    "category": "staff",
+    "options": [
+      {
+        "name": "add",
+        "description": "Add a member to the blacklist",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user you want to blacklist",
+            "type": 6,
+            "required": true
+          },
+          {
+            "name": "reason",
+            "description": "The reason you want to blacklist the user",
+            "type": 3,
+            "required": true
+          }
+        ]
+      },
+      {
+        "name": "remove",
+        "description": "Remove a member from the blacklist",
+        "type": 1,
+        "options": [
+          {
+            "name": "user",
+            "description": "The user you want to remove from the blacklist",
+            "type": 6,
+            "required": true
+          }
+        ]
+      }
+    ],
+    "examples": [
+      "blacklist add @CarelessInternet#8114 sample reason",
+      "blacklist add @johndoe#0001 why r u gae",
+      "blacklist remove @deeznuts#6969",
+      "blacklist remove @sssss#1234"
+    ]
+  },
+  {
     "name": "bs",
     "description": "Damn, some bullshit that we have to stare at",
     "category": "memes",

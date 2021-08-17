@@ -1,4 +1,6 @@
 const fs = require('fs');
+const dateFormat = require('dateformat');
+const connection = require('../../db');
 const cooldowns = new Map();
 
 async function interaction(client, Discord, prefix, interaction) {
@@ -9,7 +11,10 @@ async function interaction(client, Discord, prefix, interaction) {
   const command = client.commands.get(cmd) || client.commands.find(file => file.aliases?.includes(cmd));
 
   if (!command) return;
-  const hasCooldown = cooldown(interaction, Discord, cmd, command);
+  const isBlacklisted = await blacklist(interaction, Discord);
+  if (isBlacklisted) return interaction.reply({embeds: [isBlacklisted], ephemeral: true}).catch(console.error);
+  
+  const hasCooldown = cooldown(interaction, Discord, cmd);
   if (hasCooldown) return interaction.reply({content: hasCooldown, ephemeral: true}).catch(console.error);
 
   // switch statement for commands which we have to give special parameters for
@@ -31,7 +36,47 @@ async function interaction(client, Discord, prefix, interaction) {
   if (command) command.execute(interaction, prefix, cmd);
 }
 
-function cooldown(interaction, Discord, cmd, command) {
+function hasBlacklist(id) {
+  return new Promise((resolve, reject) => {
+    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ?', [id], (err, rows) => {
+      if (err) reject(err);
+      resolve(rows[0] ?? false);
+    });
+  });
+}
+async function blacklist(interaction, Discord) {
+  try {
+    const blacklist = await hasBlacklist(interaction.user.id);
+    if (!blacklist) return false;
+  
+    const embed = new Discord.MessageEmbed()
+    .setColor('RED')
+    .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+    .setTitle('You are Blacklisted')
+    .setDescription('You are blacklisted from using NodeBot commands, please contact the server mods/admins if you have any questions')
+    .addFields({
+      name: 'Reason',
+      value: blacklist['Reason'],
+      inline: true
+    }, {
+      name: 'Creation Date',
+      value: `${dateFormat(blacklist['CreationDate'], 'longDate')} at ${dateFormat(blacklist['CreationDate'], 'isoTime')}`,
+      inline: true
+    }, {
+      name: 'Blacklist By',
+      value: `<@${blacklist['CreatorUserID']}>`,
+      inline: true
+    })
+    .setTimestamp();
+  
+    return embed;
+  } catch(err) {
+    console.error(err);
+    return false;
+  }
+}
+
+function cooldown(interaction, Discord, cmd) {
   if (!cooldowns.has(cmd)) cooldowns.set(cmd, new Discord.Collection());
 
   // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
