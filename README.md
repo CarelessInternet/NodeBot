@@ -38,3 +38,10 @@ database structure:
   * CreationDate datetime NOT NULL,
   * Cash int NOT NULL,
   * Bank int NOT NULL
+- Blacklist:
+  * ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  * TargettedUserID bigint(20) NOT NULL,
+  * CreatorUserID bigint(20) NOT NULL,
+  * GuildID bigint(20) NOT NULL,
+  * Reason varchar(255) NOT NULL,
+  * Creationdate datetime NOT NULL
