@@ -38,7 +38,7 @@ module.exports = {
   async execute(interaction) {
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command'});
-      if (!interaction.member.permissions.has('MANAGE_GUILD')) return interaction.reply({content: 'You need the manage server pemission to run this command'});
+      if (!interaction.member.permissions.has('MANAGE_CHANNELS')) return interaction.reply({content: 'You need the manage channels pemission to run this command'});
 
       const member = interaction.options.getMember('user');
       if (member.user.bot) {
@@ -51,21 +51,12 @@ module.exports = {
 
         return interaction.reply({embeds: [embed], ephemeral: true});
       }
-      if (interaction.user.id === member.id) {
-        const embed = new MessageEmbed()
-        .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
-        .setTitle('You Cannot Blacklist/Whitelist Yourself')
-        .setDescription('You are unable to blacklist/whitelist yourself')
-        .setTimestamp();
-
-        return interaction.reply({embeds: [embed], ephemeral: true});
-      }
 
       if (interaction.options.getSubcommand() === 'add') {
         const reason = interaction.options.getString('reason');
         const isBlacklisted = await getBlacklistedUser(member.id);
-        if (isBlacklisted) {
+
+        if (isBlacklisted && !member.permissions.has('MANAGE_CHANNELS')) {
           const embed = new MessageEmbed()
           .setColor('RED')
           .setAuthor(interaction.user.tag, interaction.user.avatarURL())
@@ -76,7 +67,7 @@ module.exports = {
             value: isBlacklisted['Reason'],
             inline: true
           }, {
-            name: 'Creation Date',
+            name: 'Blacklist Date',
             value: `${dateFormat(isBlacklisted['CreationDate'], 'longDate')} at ${dateFormat(isBlacklisted['CreationDate'], 'isoTime')}`,
             inline: true
           }, {
@@ -84,6 +75,26 @@ module.exports = {
             value: `<@${isBlacklisted['CreatorUserID']}>`,
             inline: true
           })
+          .setTimestamp();
+  
+          return interaction.reply({embeds: [embed], ephemeral: true});
+        }
+        if (member.permissions.has('MANAGE_CHANNELS')) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('The User has High Permissions')
+          .setDescription(`The user <@${member.id}> has the manage channels permission, meaning that you cannot blacklist them`)
+          .setTimestamp();
+  
+          return interaction.reply({embeds: [embed], ephemeral: true});
+        }
+        if (interaction.user.id === member.id) {
+          const embed = new MessageEmbed()
+          .setColor('RED')
+          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setTitle('You Cannot Blacklist/Whitelist Yourself')
+          .setDescription('You are unable to blacklist/whitelist yourself')
           .setTimestamp();
   
           return interaction.reply({embeds: [embed], ephemeral: true});

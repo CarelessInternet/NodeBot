@@ -46,8 +46,10 @@ function hasBlacklist(id) {
 }
 async function blacklist(interaction, Discord) {
   try {
+    if (!interaction.inGuild()) return false;
+
     const blacklist = await hasBlacklist(interaction.user.id);
-    if (!blacklist) return false;
+    if (!blacklist || interaction.member.permissions.has('MANAGE_CHANNELS')) return false;
   
     const embed = new Discord.MessageEmbed()
     .setColor('RED')
@@ -59,7 +61,7 @@ async function blacklist(interaction, Discord) {
       value: blacklist['Reason'],
       inline: true
     }, {
-      name: 'Creation Date',
+      name: 'Blacklist Date',
       value: `${dateFormat(blacklist['CreationDate'], 'longDate')} at ${dateFormat(blacklist['CreationDate'], 'isoTime')}`,
       inline: true
     }, {
