@@ -199,13 +199,22 @@ module.exports = {
           return interaction.reply({embeds: [embed], ephemeral: true});
         }
 
-        await deleteBlacklistedUser(member.id, interaction.guildId);
         const embed = new MessageEmbed()
         .setColor('GREEN')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle('User Successfully Whitelisted')
         .setDescription(`The user <@${member.id}> has successfully been whitelisted, they can now use NodeBot commands again!`)
         .setTimestamp();
+        
+        try {
+          await deleteBlacklistedUser(member.id, interaction.guildId);
+
+          embed.title = 'User Successfully Whitelisted';
+          embed.description = `The user <@${member.id}> has successfully been whitelisted, they can now use NodeBot commands again!`;
+        } catch(err) {
+          embed.title = 'An Error Occured';
+          embed.description = 'An unknown error occured, please try again later';
+        }
 
         interaction.reply({embeds: [embed]});
       }
