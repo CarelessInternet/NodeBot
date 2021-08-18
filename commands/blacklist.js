@@ -2,9 +2,9 @@ const connection = require('../db');
 const dateFormat = require('dateformat');
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
-function getBlacklistedUser(userID) {
+function getBlacklistedUser(userID, guildID) {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ?', [userID], (err, rows) => {
+    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
       if (err) reject(err);
       resolve(rows[0] ?? false);
     });
@@ -16,7 +16,7 @@ function createBlacklistedUser({targettedID, creatorID, guildID, reason, creatio
     connection.query('INSERT INTO Blacklist (TargettedUserID, CreatorUserID, GuildID, Reason, CreationDate) VALUES (?, ?, ?, ?, ?)', data, async err => {
       if (err) reject(err);
       try {
-        const userData = await getBlacklistedUser(targettedID);
+        const userData = await getBlacklistedUser(targettedID, guildID);
         resolve(userData);
       } catch(err2) {
         reject(err2);
@@ -24,9 +24,9 @@ function createBlacklistedUser({targettedID, creatorID, guildID, reason, creatio
     });
   });
 }
-function deleteBlacklistedUser(userID) {
+function deleteBlacklistedUser(userID, guildID) {
   return new Promise((resolve, reject) => {
-    connection.query('DELETE FROM Blacklist WHERE TargettedUserID = ?', [userID], err => {
+    connection.query('DELETE FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], err => {
       if (err) reject(err);
       resolve();
     });
@@ -46,7 +46,7 @@ module.exports = {
         .setColor('RED')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle('The Requested User is a Bot')
-        .setDescription(`<@${member.id}> is a bot, you cannot blacklist them`)
+        .setDescription(`<@${member.id}> is a bot, you cannot blacklist/whitelist them`)
         .setTimestamp();
 
         return interaction.reply({embeds: [embed], ephemeral: true});
@@ -54,7 +54,7 @@ module.exports = {
 
       if (interaction.options.getSubcommand() === 'add') {
         const reason = interaction.options.getString('reason');
-        const isBlacklisted = await getBlacklistedUser(member.id);
+        const isBlacklisted = await getBlacklistedUser(member.id, interaction.guildId);
 
         if (isBlacklisted && !member.permissions.has('MANAGE_CHANNELS')) {
           const embed = new MessageEmbed()
@@ -126,7 +126,7 @@ module.exports = {
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
         .setTitle('Blacklist Confirmation')
-        .setDescription(`Are you sure you want to blacklist <@${member.id}> for the following reason: ${reason}?`)
+        .setDescription(`Are you sure you want to blacklist <@${member.id}> from using NodeBot commands for the following reason: ${reason}?`)
         .setTimestamp();
   
         const confirmation = await interaction.reply({
@@ -134,8 +134,10 @@ module.exports = {
           components: [row],
           fetchReply: true
         });
-  
-        confirmation.awaitMessageComponent({filter, time: 10 * 1000}).then(async i => {
+        // we use this instead of awaitMessageComponent to get the reason and reply accordingly
+        const collector = confirmation.createMessageComponentCollector({filter, max: 1, time: 10 * 1000});
+
+        collector.on('collect', async i => {
           const reaction = i.customId;
           if (reaction === 'Confirm') {
             try {
@@ -149,33 +151,43 @@ module.exports = {
 
               embed.title = 'User Successfully Blacklisted';
               embed.description = `<@${member.id}> has successfully been blacklisted from using NodeBot commands!`;
-
-              i.update({
-                embeds: [embed],
-                components: []
-              })
             } catch(err) {
+              console.error(err);
+              
               embed.title = 'An Error Occured';
               embed.description = 'An unknown error occured whilst trying to blacklist, please try again later';
-
-              i.update({
-                embeds: [embed],
-                components: []
-              })
             }
           } else {
             embed.title = 'Blacklist Aborted';
             embed.description = `The blacklist on <@${member.id}> has been aborted`;
-  
-            i.update({
-              embeds: [embed],
-              components: []
-            });
           }
-        })
-        .catch(console.error);
+          
+          i.update({
+            embeds: [embed],
+            components: []
+          });
+        });
+        collector.on('end', (collected, reason) => {
+          switch (reason) {
+            case 'time': {
+              embed.title = 'Blacklist Aborted';
+              embed.description = `The blacklist on <@${member.id}> has been aborted`;
+              return confirmation.edit({embeds: [embed], components: []}).catch(console.error);
+            }
+            case 'messageDelete':
+              return interaction.channel.send({content: 'Blacklist aborted because the message was deleted'}).catch(console.error);
+            case 'channelDelete':
+              return;
+            case 'guildDelete':
+              return;
+            case 'limit':
+              return;
+            default:
+              return interaction.channel.send({content: 'Kick aborted due to an unknown reason'}).catch(console.error);
+          }
+        });
       } else if (interaction.options.getSubcommand() === 'remove') {
-        const isBlacklisted = await getBlacklistedUser(member.id);
+        const isBlacklisted = await getBlacklistedUser(member.id, interaction.guildId);
         if (!isBlacklisted) {
           const embed = new MessageEmbed()
           .setColor('RED')
@@ -187,7 +199,7 @@ module.exports = {
           return interaction.reply({embeds: [embed], ephemeral: true});
         }
 
-        await deleteBlacklistedUser(member.id);
+        await deleteBlacklistedUser(member.id, interaction.guildId);
         const embed = new MessageEmbed()
         .setColor('GREEN')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
