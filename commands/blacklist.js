@@ -32,6 +32,15 @@ function deleteBlacklistedUser(userID, guildID) {
     });
   });
 }
+function getAllBlacklistedUsers(guildID, page = 0) {
+  return new Promise((resolve, reject) => {
+    // limit 10 results, offset by page amount
+    connection.query('SELECT * FROM Blacklist WHERE GuildID = ? ORDER BY ID LIMIT 10 OFFSET ?', [guildID, page * 10], (err, rows) =>{
+      if (err) reject(err);
+      resolve(rows);
+    });
+  });
+}
 
 module.exports = {
   name: 'blacklist',
@@ -41,7 +50,7 @@ module.exports = {
       if (!interaction.member.permissions.has('MANAGE_CHANNELS')) return interaction.reply({content: 'You need the manage channels pemission to run this command'});
 
       const member = interaction.options.getMember('user');
-      if (member.user.bot) {
+      if (member?.user.bot) {
         const embed = new MessageEmbed()
         .setColor('RED')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
@@ -153,7 +162,6 @@ module.exports = {
               embed.description = `<@${member.id}> has successfully been blacklisted from using NodeBot commands!`;
             } catch(err) {
               console.error(err);
-              
               embed.title = 'An Error Occured';
               embed.description = 'An unknown error occured whilst trying to blacklist, please try again later';
             }
@@ -205,15 +213,40 @@ module.exports = {
         .setTitle('User Successfully Whitelisted')
         .setDescription(`The user <@${member.id}> has successfully been whitelisted, they can now use NodeBot commands again!`)
         .setTimestamp();
-        
+
         try {
           await deleteBlacklistedUser(member.id, interaction.guildId);
-
           embed.title = 'User Successfully Whitelisted';
           embed.description = `The user <@${member.id}> has successfully been whitelisted, they can now use NodeBot commands again!`;
         } catch(err) {
+          console.error(err);
           embed.title = 'An Error Occured';
           embed.description = 'An unknown error occured, please try again later';
+        }
+
+        interaction.reply({embeds: [embed]});
+      } else if (interaction.options.getSubcommand() === 'list') {
+        const page = interaction.options.getInteger('page') ?? 0;
+        const list = await getAllBlacklistedUsers(interaction.guildId, page);
+        const embed = new MessageEmbed()
+        .setColor('RANDOM')
+        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setTitle('Blacklisted Members')
+        .setDescription('Shows all of the blacklisted members in this server')
+        .setTimestamp()
+        .setFooter(`Page: ${page || 1}`);
+
+        if (list.length) {
+          list.forEach((val, index) => {
+            let string = `To: <@${val['TargettedUserID']}>\n`;
+            string += `By: <@${val['CreatorUserID']}>\n`
+            string += `Blacklist Date: ${dateFormat(val['CreationDate'], 'longDate')} at ${dateFormat(val['CreationDate'], 'isoTime')}\n`;
+            string += `Reason: ${val['Reason']}`;
+  
+            embed.addField((index + 1).toLocaleString(), string);
+          });
+        } else {
+          embed.addField('No Results', 'No results were found');
         }
 
         interaction.reply({embeds: [embed]});

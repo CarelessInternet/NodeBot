@@ -90,6 +90,19 @@
             "required": true
           }
         ]
+      },
+      {
+        "name": "list",
+        "description": "The list of blacklisted members",
+        "type": 1,
+        "options": [
+          {
+            "name": "page",
+            "description": "The page you want to see",
+            "type": 4,
+            "required": false
+          }
+        ]
       }
     ],
     "examples": [
