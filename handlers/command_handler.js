@@ -15,7 +15,7 @@ function handler(client, Discord) {
   (async () => {
     try {
       console.log('Started refreshing application (/) commands');
-      const commands = await JSON.parse(fs.readFileSync('./txt/data.json', 'utf8'));
+      const commands = JSON.parse(fs.readFileSync('./txt/data.json', 'utf8'));
       await rest.put(Routes.applicationCommands(process.env.clientID), {body: commands});
       
       console.log('Successfully reloaded application (/) commands');
