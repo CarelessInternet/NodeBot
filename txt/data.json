@@ -1,5 +1,21 @@
 [
   {
+    "name": "8ball",
+    "description": "Magic 8-Ball",
+    "category": "other",
+    "options": [
+      {
+        "name": "text",
+        "description": "Whatever input you wish to ask, this field doesn't matter, it's not taken into account",
+        "type": 3,
+        "required": false
+      }
+    ],
+    "examples": [
+      "8ball"
+    ]
+  },
+  {
     "name": "add-money",
     "description": "Adds money to a pinged user",
     "category": "economy",

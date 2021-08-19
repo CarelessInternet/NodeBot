@@ -1,0 +1,82 @@
+[
+  {
+    "type": 1,
+    "value": "It is certain."
+  },
+  {
+    "type": 2,
+    "value": "Reply hazy, try again."
+  },
+  {
+    "type": 1,
+    "value": "As I see it, yes."
+  },
+  {
+    "type": 3,
+    "value": "Don't count on it."
+  },
+  {
+    "type": 1,
+    "value": "It is decidedly so."
+  },
+  {
+    "type": 2,
+    "value": "Ask again later."
+  },
+  {
+    "type": 1,
+    "value": "Most likely."
+  },
+  {
+    "type": 3,
+    "value": "My reply is no."
+  },
+  {
+    "type": 1,
+    "value": "Without a doubt."
+  },
+  {
+    "type": 2,
+    "value": "Better not tell you now."
+  },
+  {
+    "type": 1,
+    "value": "Outlook good."
+  },
+  {
+    "type": 3,
+    "value": "My sources say no."
+  },
+  {
+    "type": 1,
+    "value": "Yes definitely."
+  },
+  {
+    "type": 2,
+    "value": "Cannot predict now."
+  },
+  {
+    "type": 1,
+    "value": "Yes."
+  },
+  {
+    "type": 3,
+    "value": "Outlook not so good."
+  },
+  {
+    "type": 1,
+    "value": "You may rely on it."
+  },
+  {
+    "type": 2,
+    "value": "Concentrate and ask again."
+  },
+  {
+    "type": 1,
+    "value": "Signs point to yes."
+  },
+  {
+    "type": 3,
+    "value": "Very doubtful."
+  }
+]
