@@ -761,7 +761,7 @@
   },
   {
     "name": "users",
-    "description": "Get the amount of user in the discord server excluding bots",
+    "description": "Get the amount of users in the discord server excluding bots",
     "category": "utility",
     "options": [
       {
