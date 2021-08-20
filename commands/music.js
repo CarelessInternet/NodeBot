@@ -13,8 +13,8 @@ async function videoFinder(query) {
 async function play(interaction, serverQueue, channel, botArg = '') {
   const arg = interaction.options.get('video')?.value ?? botArg;
   const video = await videoFinder(arg);
-  if (!video) return interaction.reply({content: 'No search result found', ephemeral: true}).catch(console.error);
-  if (video.duration.seconds > 10800) return interaction.reply({content: 'Video must be less than 3 hours long', ephemeral: true}).catch(console.error);
+  if (!video) return interaction.followUp({content: 'No search result found', ephemeral: true}).catch(console.error);
+  if (video.duration.seconds > 10800) return interaction.followUp({content: 'Video must be less than 3 hours long', ephemeral: true}).catch(console.error);
 
   if (!serverQueue) {
     // all necessary information needed for sending messages, setting up loops, queue system, etc
@@ -39,35 +39,31 @@ async function play(interaction, serverQueue, channel, botArg = '') {
         adapterCreator: channel.guild.voiceAdapterCreator
       });
 
-      constructor.connection = connection;
-      constructor.connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
-      constructor.connection.on(VoiceConnectionStatus.Destroyed, () => {
+      connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
+      connection.on(VoiceConnectionStatus.Destroyed, () => {
         queue.delete(interaction.guild.id);
-        if (interaction.replied || interaction.deferred) interaction.followUp({content: '☠️ Disconnected from voice channel'}).catch(console.error);
-        else interaction.reply({content: '☠️ Disconnected from voice channel'}).catch(console.error);
+        interaction.followUp({content: '☠️ Disconnected from voice channel'}).catch(console.error);
       });
-      constructor.connection.on('error', console.error);
+      connection.on('error', console.error);
+      constructor.connection = connection;
 
       videoPlayer(interaction, constructor);
     } catch(err) {
       console.error(err);
       queue.get(interaction.guild.id).connection.destroy();
 
-      interaction.reply({
-        content: 'There was an error creating a connection, please try again later',
-        ephemeral: true
-      }).catch(console.error);
+      interaction.followUp({content: 'There was an error creating a connection, please try again later', ephemeral: true}).catch(console.error);
     }
   } else {
     serverQueue.queue.push(video);
-    interaction.reply({content: `👍 Video added to queue: ***${video.title}***, length: **${video.duration.timestamp}**`}).catch(console.error);
+    interaction.followUp({content: `👍 Video added to queue: ***${video.title}***, length: **${video.duration.timestamp}**`}).catch(console.error);
   }
 }
 // the function that actually plays the video
 async function videoPlayer(interaction, constructor) {
   const songQueue = constructor.queue[0];
-  if (!songQueue) return constructor.connection.destroy();
-  if (!constructor.loop && !interaction.replied) await interaction.deferReply().catch(err => console.log('videoPlayer defer error, probably the INTERACTION_ALREADY_REPLIED error that we can ignore'));
+  const connection = constructor.connection;
+  if (!songQueue) return connection.destroy();
 
   // create connection and play it
   const resource = await createAudioResource(ytdl(songQueue.url, {
@@ -76,7 +72,6 @@ async function videoPlayer(interaction, constructor) {
     highWaterMark: 1 << 25
   }), {inlineVolume: true});
   const player = createAudioPlayer();
-  const connection = constructor.connection;
 
   resource.volume.setVolume(constructor.volume);
   player.play(resource);
@@ -122,8 +117,7 @@ async function videoPlayer(interaction, constructor) {
     .setTimestamp()
     .setFooter(`Video ID: ${songQueue.videoId}`);
 
-    if (interaction.replied || interaction.deferred) interaction.followUp({embeds: [embed]}).catch(console.error);
-    else interaction.reply({embeds: [embed]}).catch(console.error);
+    interaction.followUp({embeds: [embed]}).catch(console.error);
   }
 }
 // show queue
@@ -142,9 +136,11 @@ function getQueue(interaction, constructor) {
   interaction.reply({embeds: [embed]}).catch(console.error);
 }
 // skips current video
-function skip(interaction, constructor) {
-  if (!constructor) return interaction.reply({content: 'No videos to skip in the queue', ephemeral: true}).catch(console.error);
-  interaction.reply({content: 'Skipping video...'});
+async function skip(interaction, constructor) {
+  await interaction.deferReply().catch(console.error);
+
+  if (!constructor) return interaction.followUp({content: 'No videos to skip in the queue'}).catch(console.error);
+  interaction.followUp({content: 'Skipping video...'});
   constructor.player.stop();
 }
 // removes video from queue
@@ -154,16 +150,16 @@ function remove(interaction, constructor) {
   const num = arg - 1;
 
   if (!constructor.queue[num]) return interaction.reply({content: 'Cannot find the video to remove', ephemeral: true}).catch(console.error);
+  if (num === 0) return skip(interaction, constructor);
   const embed = new MessageEmbed()
   .setColor('RANDOM')
   .setTitle('Removing the following video:')
   .setDescription(`${constructor.queue[num].title} by ${constructor.queue[num].author.name}`)
   .setImage(constructor.queue[num].image)
   .setTimestamp();
-  interaction.reply({embeds: [embed]}).catch(console.error);
 
-  if (num === 0) skip(interaction, constructor);
-  else constructor.queue.splice(num, num);
+  constructor.queue.splice(num, num);
+  interaction.reply({embeds: [embed]}).catch(console.error);
 }
 // loop the current video
 function loop(interaction, constructor) {
@@ -201,8 +197,8 @@ function volume(interaction, constructor) {
 }
 // leaves voice channel
 function leave(interaction, constructor) {
+  interaction.editReply({content: 'Disconnecting...'}).catch(console.error);
   constructor.connection.destroy();
-  interaction.reply({content: 'Disconnecting...', ephemeral: true}).catch(console.error);
 }
 
 // check for dj role or manage channels permission
@@ -213,7 +209,7 @@ function checkForPermissions(member) {
 module.exports = {
   name: 'music',
   aliases: ['play', 'queue', 'skip', 'remove', 'loop', 'unloop', 'pause', 'unpause', 'resume', 'volume', 'leave'],
-  execute(interaction, prefix, command, botArgs = [], botCommand = false) {
+  async execute(interaction, prefix, command, botArgs = [], botCommand = false) {
     if (!interaction.inGuild() && botCommand) return;
     if (!interaction.inGuild()) return interaction.reply({content: 'Music commands are only available in a guild'}).catch(console.error);
     const channel = interaction.member?.voice.channel;
@@ -223,12 +219,13 @@ module.exports = {
     if ((!channel && botCommand) || (!checkForPermissions(interaction.member) && botCommand)) return;
     if (!channel) return interaction.reply({content: 'You must be in a voice channel to use music commands', ephemeral: true}).catch(console.error);
 
-    if (interaction.guild.me.voice?.channelId && interaction.member.voice.channelId !== interaction.guild.me.voice.channelId) return interaction.reply({content: 'You must be in the same voice channel as the bot', ephemeral: true}).catch(console.error);
+    if (interaction.guild.me.voice?.channelId && channel.id !== interaction.guild.me.voice.channelId) return interaction.reply({content: 'You must be in the same voice channel as the bot', ephemeral: true}).catch(console.error);
     if (!checkForPermissions(interaction.member)) return interaction.reply({content: 'You must have the DJ role or manage channels permission to use music commands', ephemeral: true}).catch(console.error)
-    if (interaction.member.selfDeaf || interaction.member.serverDeaf) return interaction.reply({content: 'You must be undeafened to use music commands', ephemeral: true}).catch(console.error);
+    if (interaction.member.voice.selfDeaf || interaction.member.voice.serverDeaf) return interaction.reply({content: 'You must be undeafened to use music commands', ephemeral: true}).catch(console.error);
 
     switch (command) {
       case 'play':
+        if (!botCommand) await interaction.deferReply().catch(console.error);
         if (botArgs) return play(interaction, serverQueue, channel, botArgs[0]);
         else return play(interaction, serverQueue, channel);
       case 'queue':
@@ -250,6 +247,7 @@ module.exports = {
       case 'volume':
         return volume(interaction, serverQueue);
       case 'leave':
+        await interaction.deferReply({ephemeral: true}).catch(console.error);
         return leave(interaction, serverQueue);
       default:
         break;
