@@ -129,7 +129,9 @@ function text(interaction, format) {
 
 module.exports = {
   name: 'memer',
-  execute(interaction) {
+  async execute(interaction) {
+    await interaction.deferReply().catch(console.error);
+
     const format = interaction.options.get('format')?.value.toLowerCase();
     const input = interaction.options.get('input')?.value;
 
