@@ -1,6 +1,6 @@
 {
   "name": "economy",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "NodeBot using discord.js v13 with slash commmands and economy system",
   "main": "index.js",
   "scripts": {
