@@ -582,7 +582,7 @@ class Commands {
         const newAmount = random.value === number ? amount : -amount;
   
         await Guild.updateCash(user['ID'], user['Cash'] + newAmount);
-        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount} dollars!` : `😐 You lost ${newAmount} dollars, maybe better luck next time!`)
+        embed.setDescription(Math.abs(newAmount) === newAmount ? `🥳 You won ${newAmount.toLocaleString()} dollars!` : `😐 You lost ${newAmount.toLocaleString()} dollars, maybe better luck next time!`)
         .addFields({
           name: 'Your Choice:',
           value: `**${file[number - 1].emoji}**`
