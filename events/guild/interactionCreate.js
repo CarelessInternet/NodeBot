@@ -33,9 +33,9 @@ async function interaction(client, Discord, prefix, interaction) {
   if (command) command.execute(interaction, prefix, cmd);
 }
 
-function hasBlacklist(id) {
+function hasBlacklist(userID, guildID) {
   return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ?', [id], (err, rows) => {
+    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
       if (err) reject(err);
       resolve(rows[0] ?? false);
     });
@@ -45,7 +45,7 @@ async function blacklist(interaction, Discord) {
   try {
     if (!interaction.inGuild()) return false;
 
-    const blacklist = await hasBlacklist(interaction.user.id);
+    const blacklist = await hasBlacklist(interaction.user.id, interaction.guildId);
     if (!blacklist || interaction.member.permissions.has('MANAGE_CHANNELS')) return false;
   
     const embed = new Discord.MessageEmbed()
