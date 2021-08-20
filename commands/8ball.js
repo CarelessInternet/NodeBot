@@ -20,13 +20,20 @@ function getRandom8Ball() {
 module.exports = {
   name: "8ball",
   execute(interaction) {
+    const input = interaction.options.getString('text');
     const msg = getRandom8Ball();
     const embed = new MessageEmbed()
     .setColor(msg.color)
     .setAuthor(interaction.user.tag, interaction.user.avatarURL())
     .setTitle('Magic 8-Ball')
-    .setDescription(`🎱 ${msg.value}`)
     .setTimestamp();
+
+    if (input) {
+      embed.setDescription(`Question: ${input}`);
+      embed.addField('Answer:', `🎱 ${msg.value}`);
+    } else {
+      embed.setDescription(`🎱 ${msg.value}`);
+    }
 
     interaction.reply({embeds: [embed]}).catch(console.error);
   }
