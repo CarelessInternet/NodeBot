@@ -9,7 +9,7 @@
   "author": "CarelessInternet",
   "license": "GPL-V3",
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
+    "@discordjs/opus": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.6.0",
     "bufferutil": "^4.0.3",
@@ -21,7 +21,7 @@
     "ffmpeg-static": "^4.4.0",
     "lorem-ipsum": "^2.0.3",
     "memer-api": "^3.0.6",
-    "minecraft-server-util": "^3.5.3",
+    "minecraft-server-util": "^3.6.0",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
     "shuffle-array": "^1.0.1",
@@ -31,7 +31,7 @@
     "tweetnacl": "^1.0.3",
     "utf-8-validate": "^5.0.5",
     "validator": "^13.6.0",
-    "yt-search": "^2.10.0",
+    "yt-search": "^2.10.1",
     "ytdl-core": "^4.9.1",
     "zlib-sync": "^0.1.7"
   }
