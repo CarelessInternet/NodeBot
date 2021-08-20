@@ -17,7 +17,7 @@ async function interaction(client, Discord, prefix, interaction) {
   const hasCooldown = cooldown(interaction, Discord, cmd);
   if (hasCooldown) return interaction.reply({content: hasCooldown, ephemeral: true}).catch(console.error);
 
-  // switch statement for commands which we have to give special parameters for
+  // switch statement for commands which we have to run another command
   switch (cmd) {
     case 'rickroll':
       command.execute(interaction);
@@ -25,9 +25,6 @@ async function interaction(client, Discord, prefix, interaction) {
     case 'amogus':
       command.execute(interaction);
       return client.commands.get('music')?.execute(interaction, prefix, 'play', ['among us drip theme song original'], true);
-    case 'memer':
-      await interaction.deferReply().catch(console.error);
-      return command.execute(interaction);
     default:
       break;
   }
