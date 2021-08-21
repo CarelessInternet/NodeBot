@@ -1,15 +1,13 @@
 const mysql = require('mysql');
-const connection = mysql.createConnection({
+const connection = mysql.createPool({
   host: process.env.dbHost,
   user: process.env.dbUser,
   password: process.env.dbPassword,
   database: process.env.dbDatabase,
   port: process.env.dbPort,
+  connectionLimit: 100,
   supportBigNumbers: true,
   bigNumberStrings: true
-});
-connection.connect(err => {
-  if (err) console.error(err);
 });
 
 module.exports = connection;
