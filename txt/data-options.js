@@ -1,7 +1,7 @@
 const map = new Map();
 map.set(1, 'Sub-Command');
 map.set(2, 'Sub-Command-Group');
-map.set(3, 'String');
+map.set(3, 'Text');
 map.set(4, 'Integer');
 map.set(5, 'Boolean');
 map.set(6, 'User');
