@@ -2,7 +2,7 @@
   {
     "name": "8ball",
     "description": "Magic 8-Ball",
-    "category": "other",
+    "category": "utility",
     "options": [
       {
         "name": "text",
@@ -683,7 +683,7 @@
   {
     "name": "spotify",
     "description": "Returns information about a song on Spotify",
-    "category": "other",
+    "category": "utility",
     "options": [
       {
         "name": "artist",
@@ -843,6 +843,25 @@
     "options": [],
     "examples": [
       "work"
+    ]
+  },
+  {
+    "name": "ytsearch",
+    "description": "Searches for a video on youtube and returns the first result",
+    "category": "utility",
+    "options": [
+      {
+        "name": "query",
+        "description": "The video you want to search for",
+        "type": 3,
+        "required": true
+      }
+    ],
+    "examples": [
+      "ytsearch me at the zoo",
+      "ytsearch bitch lasagna",
+      "ytsearch idk something",
+      "ytsearch jag vet inte"
     ]
   }
 ]
