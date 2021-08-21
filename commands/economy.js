@@ -35,7 +35,7 @@ class User {
 class Guild {
   static #bitLimit = Math.floor(2147483647 / 2);
 
-  // cash and bank are 32 bit, so we have to make sure it doesnt go above or under half of 32 bit
+  // cash and bank are 32 bit, so we have to make sure it doesnt go above half of 32 bit
   static #preventLimit(amount) {
     if (Math.abs(amount) > this.#bitLimit) return amount > 0 ? this.#bitLimit : -this.#bitLimit;
     else return amount;
