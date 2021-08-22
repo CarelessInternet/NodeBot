@@ -4,7 +4,7 @@ const connection = require('../../db');
 const cooldowns = new Map();
 
 async function interaction(client, Discord, prefix, interaction) {
-  if (!interaction.isCommand()) return;
+  if (!interaction.isCommand() && !interaction.isContextMenu()) return;
   if (interaction.user.bot) return;
 
   const cmd = interaction.commandName.toLowerCase();
