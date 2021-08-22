@@ -386,8 +386,8 @@
     ],
     "examples": [
       "meme",
-      "meme 2",
-      "meme 3",
+      "meme twice",
+      "meme thrice",
       "meme localfolder"
     ]
   },
@@ -549,6 +549,25 @@
       "purge 15",
       "purge 30",
       "purge 100"
+    ]
+  },
+  {
+    "name": "qrcode",
+    "description": "Takes some input and convert it into a QR code",
+    "category": "utility",
+    "options": [
+      {
+        "name": "input",
+        "description": "The input you want to generate into a QR code",
+        "type": 3,
+        "required": true
+      }
+    ],
+    "examples": [
+      "qrcode why are you gae",
+      "qrcode deez nuts",
+      "qrcode https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "qrcode bruh"
     ]
   },
   {
@@ -721,6 +740,10 @@
     "examples": [
       "support"
     ]
+  },
+  {
+    "name": "translate",
+    "type": 3
   },
   {
     "name": "ttt",
