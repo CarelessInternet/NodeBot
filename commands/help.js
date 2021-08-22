@@ -3,7 +3,7 @@ const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
 const optionType = require('../txt/data-options');
 
 function description(command) {
-  return `${command.description}`;
+  return `${command.description || 'No description'}`;
 }
 function options(command) {
   if (!command.options[0]) return 'None';
@@ -34,6 +34,7 @@ module.exports = {
         content: 'Requested command does not exist',
         ephemeral: true
       }).catch(console.error);
+      if (command.name && (command.type === 2 || command.type === 3) && !command.description && !command.options) return interaction.reply({content: 'This is a context menu command, information cannot be given about it', ephemeral: true});
 
       const categoryName = command.category == 'game' ? 'Game Related' : command.category.charAt(0).toUpperCase() + command.category.slice(1);
       const embed = new MessageEmbed()
