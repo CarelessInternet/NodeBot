@@ -1,6 +1,6 @@
 {
   "name": "economy",
-  "version": "3.2.4",
+  "version": "3.3.0",
   "description": "NodeBot using discord.js v13 with slash commmands and economy system",
   "main": "index.js",
   "scripts": {
@@ -12,6 +12,7 @@
     "@discordjs/opus": "^0.6.0",
     "@discordjs/rest": "^0.1.0-canary.0",
     "@discordjs/voice": "^0.6.0",
+    "@vitalets/google-translate-api": "^7.0.0",
     "bufferutil": "^4.0.3",
     "dateformat": "^4.5.1",
     "discord-api-types": "^0.22.0",
@@ -24,6 +25,7 @@
     "minecraft-server-util": "^3.6.0",
     "mysql": "^2.18.1",
     "node-fetch": "^2.6.1",
+    "qrcode": "^1.4.4",
     "shuffle-array": "^1.0.1",
     "spotify-web-api-node": "^5.0.2",
     "string-progressbar": "^1.0.4",
