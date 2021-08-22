@@ -760,6 +760,25 @@
     ]
   },
   {
+    "name": "urban",
+    "description": "Returns the urban definition of a word",
+    "category": "other",
+    "options": [
+      {
+        "name": "word",
+        "description": "The word you want to get the definiton of",
+        "type": 3,
+        "required": true
+      }
+    ],
+    "examples": [
+      "urban joe mamma",
+      "urban hello world",
+      "urban fatneek",
+      "urban sample text"
+    ]
+  },
+  {
     "name": "users",
     "description": "Get the amount of users in the discord server excluding bots",
     "category": "utility",
