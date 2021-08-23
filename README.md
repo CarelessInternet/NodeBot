@@ -17,6 +17,7 @@ env variables:
 - weatherAPIKey (from weatherapi.com)
 - trackerGGAPIKey (for csgo stats)
 - topGGToken (server and shard count, <b>only for NodeBot production</b>)
+- youtubeAPIKey (for faster youtube searching)
 - dbHost (for database connections)
 - dbUser
 - dbPassword
