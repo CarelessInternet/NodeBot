@@ -11,7 +11,7 @@ async function videoFinder(query) {
 }
 // prepares video before calling the video player function
 async function play(interaction, serverQueue, channel, botArg = '') {
-  const arg = interaction.options.get('video')?.value ?? botArg;
+  const arg = interaction.options.getString('video') ?? botArg;
   const video = await videoFinder(arg);
   if (!video) return interaction.followUp({content: 'No search result found', ephemeral: true}).catch(console.error);
   if (video.duration.seconds > 10800) return interaction.followUp({content: 'Video must be less than 3 hours long', ephemeral: true}).catch(console.error);
@@ -42,7 +42,7 @@ async function play(interaction, serverQueue, channel, botArg = '') {
       connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
       connection.on(VoiceConnectionStatus.Destroyed, () => {
         queue.delete(interaction.guild.id);
-        interaction.followUp({content: '☠️ Disconnected from voice channel'}).catch(console.error);
+        interaction.channel.send({content: '☠️ Disconnected from voice channel'}).catch(console.error);
       });
       connection.on('error', console.error);
       constructor.connection = connection;
@@ -86,7 +86,10 @@ async function videoPlayer(interaction, constructor) {
     constructor.queue.shift();
     videoPlayer(interaction, constructor);
   });
-  player.on('error', console.error);
+  player.on('error', err => {
+    console.error(err);
+    interaction.followUp({content: 'An unknown error occured whilst creating the audio resource, please try again later'});
+  });
 
   if (!constructor.loop) {
     const embed = new MessageEmbed()
