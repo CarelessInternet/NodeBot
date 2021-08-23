@@ -5,6 +5,7 @@ const {MessageEmbed} = require('discord.js');
 function videoFinder(query) {
   return new Promise(async (resolve, reject) => {
     try {
+      // im gonna keep yt-search instead of using youtube api to limit quota usage
       const result = await ytSearch(query);
       resolve(result.videos?.[0]);
     } catch(err) {
