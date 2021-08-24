@@ -129,8 +129,17 @@
     ]
   },
   {
+    "name": "bot-stats",
+    "description": "Returns stats about the bot: server, member, and emoji count",
+    "category": "other",
+    "options": [],
+    "examples": [
+      "bot-stats"
+    ]
+  },
+  {
     "name": "bs",
-    "description": "Damn, some bullshit that we have to stare at",
+    "description": "Damn, some bs that we have to stare at. Contains sensitive language",
     "category": "memes",
     "options": [],
     "examples": [
@@ -139,7 +148,7 @@
   },
   {
     "name": "crime",
-    "description": "You commit a crime and either get money or lose money",
+    "description": "You commit a crime and either get money or lose money. Can contain sensitive language",
     "category": "economy",
     "cooldown": 180,
     "options": [],
@@ -901,7 +910,7 @@
     ],
     "examples": [
       "ytsearch me at the zoo",
-      "ytsearch bitch lasagna",
+      "ytsearch b*tch lasagna",
       "ytsearch idk something",
       "ytsearch jag vet inte"
     ]
