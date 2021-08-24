@@ -130,7 +130,7 @@
   },
   {
     "name": "bot-stats",
-    "description": "Returns stats about the bot: server, member, and emoji count",
+    "description": "Returns stats about the bot",
     "category": "other",
     "options": [],
     "examples": [
