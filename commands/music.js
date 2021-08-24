@@ -1,4 +1,5 @@
 const search = require('youtube-search');
+const secondarySearch = require('yt-search');
 const ytdl = require('ytdl-core');
 const {MessageEmbed} = require('discord.js');
 const {joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus} = require('@discordjs/voice');
@@ -41,7 +42,11 @@ function videoFinder(query) {
         videoId: id
       });
     } catch(err) {
-      reject(err);
+      // just in case the quota is exceeded or an error occures, we'll use the yt-search module
+      const result = await secondarySearch(query).catch(reject);
+      if (!result.videos?.[0]) reject('No search result found (#2)');
+
+      resolve(result.videos[0]);
     }
   });
 }
