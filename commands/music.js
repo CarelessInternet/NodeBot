@@ -19,7 +19,6 @@ function videoFinder(query) {
       };
     
       const result = await search(query, options);
-      if (result.error) reject(result.error.message);
       if (!result.results[0]) reject('No search result found');
     
       const {link, description, title, thumbnails, channelTitle, id} = result.results[0];
@@ -44,7 +43,7 @@ function videoFinder(query) {
     } catch(err) {
       // just in case the quota is exceeded or an error occures, we'll use the yt-search module
       const result = await secondarySearch(query).catch(reject);
-      if (!result.videos?.[0]) reject('No search result found (#2)');
+      if (!result.videos?.[0]) reject('No search result found');
 
       resolve(result.videos[0]);
     }
