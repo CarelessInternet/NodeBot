@@ -352,7 +352,7 @@
       },
       {
         "name": "port",
-        "description": "The port of the Minecraft Server",
+        "description": "The port of the Minecraft Server. Default is 25565",
         "type": 4,
         "required": true
       }
