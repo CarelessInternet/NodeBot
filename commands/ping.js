@@ -3,8 +3,6 @@ const {MessageEmbed} = require('discord.js');
 module.exports = {
   name: 'ping',
   async execute(interaction) {
-    if (!interaction.inGuild()) return interaction.reply({content: `Websocket Ping is roughly ${interaction.client.ws.ping}ms`}).catch(console.error);
-
     try {
       const embed = new MessageEmbed()
       .setColor('RANDOM')

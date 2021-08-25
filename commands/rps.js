@@ -1,4 +1,4 @@
-const {Message, MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
+const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 function outcome(player, bot, emojis) {
   if ((player === emojis[0].id && bot === emojis[2].id) || (player === emojis[2].id && bot === emojis[1].id) || (player === emojis[1].id && bot === emojis[0].id))
@@ -52,7 +52,7 @@ module.exports = {
       components: [row],
       fetchReply: true
     }).catch(console.error);
-    const collector = msg instanceof Message ? msg.createMessageComponentCollector({filter, max: 1, time: 15 * 1000}) : new Message(interaction.client, msg).createMessageComponentCollector({filter, max: 1, time: 15 * 1000});
+    const collector = msg.createMessageComponentCollector({filter, max: 1, time: 15 * 1000});
 
     collector.on('collect', i => {
       const reaction = i.customId;
