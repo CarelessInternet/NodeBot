@@ -9,10 +9,11 @@ module.exports = {
         shard.fetchClientValues('guilds.cache.size'),
         shard.fetchClientValues('emojis.cache.size'),
         shard.fetchClientValues('channels.cache.size'),
+        shard.fetchClientValues('users.cache.size'),
         shard.broadcastEval(c => c.guilds.cache.reduce((acc, curr) => acc + curr.memberCount, 0))
       ];
 
-      const [guildSize, emojiSize, channelSize, memberSize] = await Promise.all(promises);
+      const [guildSize, emojiSize, channelSize, userSize, memberSize] = await Promise.all(promises);
       const embed = new MessageEmbed()
       .setColor('RANDOM')
       .setAuthor(interaction.user.tag, interaction.user.avatarURL())
@@ -23,8 +24,12 @@ module.exports = {
         value: '📊 ' + guildSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
         inline: true
       }, {
-        name: 'Members',
-        value: '👤 ' + memberSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
+        name: 'Server Members',
+        value: '👥 ' + memberSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
+        inline: true
+      }, {
+        name: 'Users',
+        value: '👤 ' + userSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
         inline: true
       }, {
         name: '\u200B',
