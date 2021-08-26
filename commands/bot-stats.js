@@ -28,7 +28,7 @@ module.exports = {
         value: '👥 ' + memberSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
         inline: true
       }, {
-        name: 'Users',
+        name: 'Cached Users',
         value: '👤 ' + userSize.reduce((acc, curr) => acc + curr, 0).toLocaleString(),
         inline: true
       }, {
