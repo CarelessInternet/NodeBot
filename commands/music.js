@@ -29,7 +29,7 @@ function videoFinder(query) {
         url: link,
         author: {
           name: channelTitle,
-          url: videoDetails['channel_url']
+          url: videoDetails['author']['channel_url']
         },
         description: description,
         image: thumbnails.high.url,
