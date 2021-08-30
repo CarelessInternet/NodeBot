@@ -1,7 +1,10 @@
 const translate = require('@vitalets/google-translate-api');
 
 module.exports = {
-  name: 'translate',
+  data: {
+    name: "translate",
+    type: 3
+  },
   async execute(interaction) {
     // context menu command
     try {

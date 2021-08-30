@@ -2,7 +2,25 @@ const qrcode = require('qrcode');
 const {MessageAttachment} = require('discord.js');
 
 module.exports = {
-  name: 'qrcode',
+  data: {
+    name: "qrcode",
+    description: "Takes some input and convert it into a QR code",
+    category: "utility",
+    options: [
+      {
+        name: "input",
+        description: "The input you want to generate into a QR code",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "qrcode why are you gae",
+      "qrcode deez nuts",
+      "qrcode https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "qrcode bruh"
+    ]
+  },
   async execute(interaction) {
     try {
       const text = interaction.options.getString('input');

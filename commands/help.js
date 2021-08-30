@@ -1,6 +1,7 @@
 const fs = require('fs');
+const fg = require('fast-glob');
 const {MessageEmbed, MessageActionRow, MessageButton} = require('discord.js');
-const optionType = require('../txt/data-options');
+const optionType = require('../info/data-options');
 
 function description(command) {
   return `${command.description || 'No description'}`;
@@ -24,12 +25,38 @@ function fieldValue(json, type, prefix) {
 }
 
 module.exports = {
-  name: 'help',
-  execute(interaction, prefix) {
-    const json = JSON.parse(fs.readFileSync('./txt/data.json', 'utf8'));
-    const arg = interaction.options.get('command')?.value;
+  data: {
+    name: "help",
+    description: "Shows all available commands, or information about a specified command",
+    category: "utility",
+    options: [
+      {
+        name: "command",
+        description: "A specific command to get information about",
+        type: 3,
+        required: false
+      }
+    ],
+    examples: [
+      "help",
+      "help mc",
+      "help rps",
+      "help help"
+    ]
+  },
+  async execute(interaction, prefix) {
+    const files = await fg('./commands/**/*.js', {dot: true});
+    const guildCommands = [];
+    const commands = files.reduce((acc, file) => {
+      const {data} = require(`../${file}`);
+      if (!data.guild) acc.push(data);
+      else guildCommands.push(data);
+      return acc;
+    }, []);
+    const arg = interaction.options.getString('command');
+
     if (arg) {
-      const command = json.find(val => val.name == arg.toLowerCase());
+      const command = commands.find(val => val.name == arg.toLowerCase()) || (interaction.guildId === process.env.guildID ? guildCommands.find(file => file.name === arg.toLowerCase()) : false);
       if (!command) return interaction.reply({
         content: 'Requested command does not exist',
         ephemeral: true
@@ -68,60 +95,63 @@ module.exports = {
         value: `In order to run commands with this bot, you need to use the \`${prefix}\` prefix before putting in the command. Custom prefixes aren't available with me, since message content will be [deprecated in April 2022](https://support-dev.discord.com/hc/en-us/articles/4404772028055)`
       }, {
         name: 'Support',
-        value: fs.readFileSync('./txt/support.txt', 'utf8')
+        value: fs.readFileSync('./info/support.txt', 'utf8')
       }, {
         name: 'Invite',
-        value: fs.readFileSync('./txt/invite.txt', 'utf8')
+        value: fs.readFileSync('./info/invite.txt', 'utf8')
       }, {
         name: '\u200B',
         value: '\u200B'
       })
       .setFooter(`* means that options may be required, use ${prefix}help CommandName to view more information on that command`)
       .setTimestamp();
+
+      if (interaction.guildId === process.env.guildID) guildCommands.forEach(file => commands.push(file));
       const categories = [
         {
           name: 'Utility',
-          value: fieldValue(json, 'utility', prefix)
+          value: fieldValue(commands, 'utility', prefix)
         },
         {
           name: 'Music',
-          value: fieldValue(json, 'music', prefix)
+          value: fieldValue(commands, 'music', prefix)
         },
         {
           name: 'Memes',
-          value: fieldValue(json, 'memes', prefix)
+          value: fieldValue(commands, 'memes', prefix)
         },
         {
           name: 'Game Related',
-          value: fieldValue(json, 'game', prefix)
+          value: fieldValue(commands, 'game', prefix)
         },
         {
           name: 'Economy',
-          value: fieldValue(json, 'economy', prefix)
+          value: fieldValue(commands, 'economy', prefix)
         },
         {
           name: 'Staff',
-          value: fieldValue(json, 'staff', prefix)
+          value: fieldValue(commands, 'staff', prefix)
         },
         {
           name: 'Other',
-          value: fieldValue(json, 'other', prefix)
+          value: fieldValue(commands, 'other', prefix)
         }
       ];
 
-      const row = new MessageActionRow()
-      .addComponents(
-        new MessageButton()
-        .setLabel('Vote for Me')
-        .setURL('https://top.gg/bot/507915396037214208/vote')
-        .setStyle('LINK')
-      );
-
       categories.forEach(curr => embed.addField(curr.name, curr.value, true));
-      interaction.reply({
-        embeds: [embed],
-        components: [row]
-      }).catch(console.error);
+      if (process.env.topGGToken) {
+        const row = new MessageActionRow()
+        .addComponents(
+          new MessageButton()
+          .setLabel('Vote for Me')
+          .setURL(`https://top.gg/bot/${process.env.clientID}/vote`)
+          .setStyle('LINK')
+        );
+
+        interaction.reply({embeds: [embed], components: [row]}).catch(console.error);
+      } else {
+        interaction.reply({embeds: [embed]}).catch(console.error); 
+      }
     }
   }
 }

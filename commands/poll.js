@@ -2,7 +2,56 @@ const progressBar = require('string-progressbar');
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 module.exports = {
-  name: 'poll',
+  data: {
+    name: "poll",
+    description: "Creates a poll with the votes as reactions",
+    category: "utility",
+    cooldown: 30,
+    options: [
+      {
+        name: "title",
+        description: "The title of the poll",
+        type: 3,
+        required: true
+      },
+      {
+        name: "hours",
+        description: "The amount of hours this poll should last",
+        type: 10,
+        required: true
+      },
+      {
+        name: "field1",
+        description: "An option in the poll",
+        type: 3,
+        required: true
+      },
+      {
+        name: "field2",
+        description: "An option in the poll",
+        type: 3,
+        required: false
+      },
+      {
+        name: "field3",
+        description: "An option in the poll",
+        type: 3,
+        required: false
+      },
+      {
+        name: "field4",
+        description: "An option in the poll",
+        type: 3,
+        required: false
+      }
+    ],
+    examples: [
+      "poll What Food Is Best?. 3. Pizza. Burger. Pasta. Other",
+      "poll Which is Better?. 24. Sleep. Friends",
+      "poll Yes?. 48. Yes.",
+      "poll idk what to put anymore. 596.5. im bored. what are thooooooose"
+    ]
+  },
   async execute(interaction) {
     if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a guild to use this command'}).catch(console.error);
     if (!interaction.guild.me.permissions.has('MANAGE_MESSAGES')) return interaction.reply({content: 'I need the manage messages permission to run this command'}).catch(console.error);

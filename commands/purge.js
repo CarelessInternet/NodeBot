@@ -1,5 +1,23 @@
 module.exports = {
-  name: 'purge',
+  data: {
+    name: "purge",
+    description: "Removes the latest messages by the requested amount",
+    category: "staff",
+    options: [
+      {
+        name: "amount",
+        description: "The amount of messages to delete",
+        type: 4,
+        required: true
+      }
+    ],
+    examples: [
+      "purge 5",
+      "purge 15",
+      "purge 30",
+      "purge 100"
+    ]
+  },
   async execute(interaction) {
     if (!interaction.inGuild()) return interaction.reply({content: 'You need to be in server to use this command'}).catch(console.error);
     if (!interaction.member.permissions.has('MANAGE_MESSAGES')) return interaction.reply({content: 'You need the manage messages permission to run this command', ephemeral: true}).catch(console.error);

@@ -3,7 +3,25 @@ const dateFormat = require('dateformat');
 const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-  name: 'urban',
+  data: {
+    name: "urban",
+    description: "Returns the urban definition of a word",
+    category: "other",
+    options: [
+      {
+        name: "word",
+        description: "The word you want to get the definiton of",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "urban joe mamma",
+      "urban hello world",
+      "urban fatneek",
+      "urban sample text"
+    ]
+  },
   async execute(interaction) {
     try {
       const word = interaction.options.getString('word');

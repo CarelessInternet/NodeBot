@@ -11,9 +11,27 @@ function getInfo(stat, top = false) {
 }
 
 module.exports = {
-  name: 'csgo',
+  data: {
+    name: "csgo",
+    description: "Returns CS:GO stats about a player. Use the Steam ID, and profile must be public for it to work",
+    category: "game",
+    options: [
+      {
+        name: "id",
+        description: "The Steam ID, the last part of the URL when looking at a steam profile",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "csgo noprofilephoto",
+      "csgo anomaly",
+      "csgo LindisXd",
+      "csgo dev1ce"
+    ]
+  },
   async execute(interaction) {
-    const arg = interaction.options.get('id')?.value;
+    const arg = interaction.options.getString('id');
     try {
       const username = encodeURIComponent(arg);
       const key = process.env.trackerGGAPIKey;

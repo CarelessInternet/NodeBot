@@ -1,7 +1,13 @@
-const {Message} = require('discord.js');
-
 module.exports = {
-  name: 'amogus',
+  data: {
+    name: "amogus",
+    description: "among us haha impostor sus!! joins vc if the message author is in one and plays among us drip theme",
+    category: "memes",
+    options: [],
+    examples: [
+      "amogus"
+    ]
+  },
   async execute(interaction) {
     const text =
     `

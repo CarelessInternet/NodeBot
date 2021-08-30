@@ -11,6 +11,9 @@ some emojis may be custom, thats for you to change to your own
 
 env variables:
 - token (discord bot token)
+- clientID
+- guildID (for sensitive information commands)
+- ownerID (to restrict those commands to the owner of the bot)
 - spotifyClientID
 - spotifyClientSecret
 - memerToken (for memer command, from the memer-api module)

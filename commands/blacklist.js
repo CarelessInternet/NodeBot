@@ -3,47 +3,108 @@ const dateFormat = require('dateformat');
 const {MessageActionRow, MessageButton, MessageEmbed} = require('discord.js');
 
 function getBlacklistedUser(userID, guildID) {
-  return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
-      if (err) reject(err);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const [rows] = await connection.execute('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID]);
       resolve(rows[0] ?? false);
-    });
+    } catch(err) {
+      reject(err);
+    }
   });
 }
 function createBlacklistedUser({targettedID, creatorID, guildID, reason, creationDate}) {
-  return new Promise((resolve, reject) => {
-    const data = [targettedID, creatorID, guildID, reason, creationDate];
-    connection.query('INSERT INTO Blacklist (TargettedUserID, CreatorUserID, GuildID, Reason, CreationDate) VALUES (?, ?, ?, ?, ?)', data, async err => {
-      if (err) reject(err);
-      try {
-        const userData = await getBlacklistedUser(targettedID, guildID);
-        resolve(userData);
-      } catch(err2) {
-        reject(err2);
-      }
-    });
+  return new Promise(async (resolve, reject) => {
+    try {
+      const data = [targettedID, creatorID, guildID, reason, creationDate];
+      await connection.execute('INSERT INTO Blacklist (TargettedUserID, CreatorUserID, GuildID, Reason, CreationDate) VALUES (?, ?, ?, ?, ?)', data);
+      const userData = await getBlacklistedUser(targettedID, guildID);
+      resolve(userData);
+    } catch(err) {
+      reject(err);
+    }
   });
 }
 function deleteBlacklistedUser(userID, guildID) {
-  return new Promise((resolve, reject) => {
-    connection.query('DELETE FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], err => {
-      if (err) reject(err);
+  return new Promise(async (resolve, reject) => {
+    try {
+      await connection.execute('DELETE FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID]);
       resolve();
-    });
+    } catch(err) {
+      reject(err);
+    }
   });
 }
 function getAllBlacklistedUsers(guildID, page = 0) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     // limit 10 results, offset by page amount
-    connection.query('SELECT * FROM Blacklist WHERE GuildID = ? ORDER BY ID LIMIT 10 OFFSET ?', [guildID, page * 10], (err, rows) =>{
-      if (err) reject(err);
+    try {
+      const [rows] = await connection.execute('SELECT * FROM Blacklist WHERE GuildID = ? ORDER BY ID LIMIT 10 OFFSET ?', [guildID, page * 10]);
       resolve(rows);
-    });
+    } catch(err) {
+      reject(err);
+    }
   });
 }
 
 module.exports = {
-  name: 'blacklist',
+  data: {
+    name: "blacklist",
+    description: "Blacklists a member from using NodeBot commands",
+    category: "staff",
+    options: [
+      {
+        name: "add",
+        description: "Add a member to the blacklist",
+        type: 1,
+        options: [
+          {
+            name: "user",
+            description: "The user you want to blacklist",
+            type: 6,
+            required: true
+          },
+          {
+            name: "reason",
+            description: "The reason you want to blacklist the user",
+            type: 3,
+            required: true
+          }
+        ]
+      },
+      {
+        name: "remove",
+        description: "Remove a member from the blacklist",
+        type: 1,
+        options: [
+          {
+            name: "user",
+            description: "The user you want to remove from the blacklist",
+            type: 6,
+            required: true
+          }
+        ]
+      },
+      {
+        name: "list",
+        description: "The list of blacklisted members",
+        type: 1,
+        options: [
+          {
+            name: "page",
+            description: "The page you want to see",
+            type: 4,
+            required: false
+          }
+        ]
+      }
+    ],
+    examples: [
+      "blacklist add @CarelessInternet#8114 sample reason",
+      "blacklist add @johndoe#0001 why r u gae",
+      "blacklist remove @deeznuts#6969",
+      "blacklist remove @sssss#1234"
+    ]
+  },
   async execute(interaction) {
     try {
       if (!interaction.inGuild()) return interaction.reply({content: 'You must be in a server to use this command'});

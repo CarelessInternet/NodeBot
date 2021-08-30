@@ -1,7 +1,15 @@
 const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-  name: 'ping',
+  data: {
+    name: "ping",
+    description: "Sends a pong back with the bot's current average response time",
+    category: "utility",
+    options: [],
+    examples: [
+      "ping"
+    ]
+  },
   async execute(interaction) {
     try {
       const embed = new MessageEmbed()

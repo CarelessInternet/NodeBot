@@ -1,7 +1,31 @@
 const {MessageActionRow, MessageButton} = require('discord.js');
 
 module.exports = {
-  name: 'kick',
+  data: {
+    name: "kick",
+    description: "Kicks a user from the server",
+    category: "staff",
+    options: [
+      {
+        name: "user",
+        description: "The desired user to be kicked",
+        type: 6,
+        required: true
+      },
+      {
+        name: "reason",
+        description: "The reason for the kick",
+        type: 3,
+        required: false
+      }
+    ],
+    examples: [
+      "kick @SomeDude#1337",
+      "kick @you#5555 why are you gae",
+      "kick @noone#2321",
+      "kick @whyamistillherejusttosuffer#1111 reason reason reason reason sample text"
+    ]
+  },
   async execute(interaction) {
     if (!interaction.inGuild()) return interaction.reply({content: 'You need to be in a guild to use this command'}).catch(console.error);
 

@@ -10,7 +10,15 @@ function outcome(player, bot, emojis) {
 }
 
 module.exports = {
-  name: 'rps',
+  data: {
+    name: "rps",
+    description: "Plays a game of Rock Paper Scissors",
+    category: "game",
+    options: [],
+    examples: [
+      "rps"
+    ]
+  },
   async execute(interaction) {
     if (interaction.inGuild() && !interaction.guild.me.permissions.has('MANAGE_MESSAGES')) return interaction.reply({content: 'I need the manage messages permission to run this command', ephemeral: true}).catch(console.error);
     const embed = new MessageEmbed()

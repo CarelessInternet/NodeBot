@@ -25,7 +25,25 @@ function ytdlInfo(url) {
 }
 
 module.exports = {
-  name: 'ytsearch',
+  data: {
+    name: "ytsearch",
+    description: "Searches for a video on youtube and returns the first result",
+    category: "utility",
+    options: [
+      {
+        name: "query",
+        description: "The video you want to search for",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "ytsearch me at the zoo",
+      "ytsearch b*tch lasagna",
+      "ytsearch idk something",
+      "ytsearch jag vet inte"
+    ]
+  },
   async execute(interaction) {
     try {
       await interaction.deferReply();

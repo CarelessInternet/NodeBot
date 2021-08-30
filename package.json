@@ -1,10 +1,10 @@
 {
   "name": "economy",
-  "version": "3.3.1",
+  "version": "3.4.0",
   "description": "NodeBot using discord.js v13 with slash commmands and economy system",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "node deploy.js"
   },
   "author": "CarelessInternet",
   "license": "GPL-V3",
@@ -19,11 +19,13 @@
     "discord-tictactoe": "^2.1.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
+    "fast-glob": "^3.2.7",
     "ffmpeg-static": "^4.4.0",
     "lorem-ipsum": "^2.0.3",
     "memer-api": "^3.0.6",
     "minecraft-server-util": "^3.6.0",
     "mysql": "^2.18.1",
+    "mysql2": "^2.3.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
     "shuffle-array": "^1.0.1",

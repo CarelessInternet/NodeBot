@@ -1,5 +1,23 @@
 module.exports = {
-  name: 'users',
+  data: {
+    name: "users",
+    description: "Get the amount of users in the discord server excluding bots",
+    category: "utility",
+    options: [
+      {
+        name: "role",
+        description: "The amount of users with this role that aren't bots",
+        type: 8,
+        required: false
+      }
+    ],
+    examples: [
+      "users",
+      "users @administrator",
+      "users @bots",
+      "users @server boosters"
+    ]
+  },
   execute(interaction) {
     if (!interaction.inGuild()) return interaction.reply({content: 'This command is only available in a server'}).catch(console.error);
     const role = interaction.options.get('role')?.role;

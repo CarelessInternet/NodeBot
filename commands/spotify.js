@@ -14,7 +14,31 @@ function getAccessToken() {
 }
 
 module.exports = {
-  name: 'spotify',
+  data: {
+    name: "spotify",
+    description: "Returns information about a song on Spotify",
+    category: "utility",
+    options: [
+      {
+        name: "artist",
+        description: "The artist of the song",
+        type: 3,
+        required: true
+      },
+      {
+        name: "title",
+        description: "The title of the song",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "spotify KSI Domain",
+      "spotify Grant Macdonald Ram Ranch 69",
+      "spotify Halogen U Got That",
+      "spotify Vicetone Astronomia"
+    ]
+  },
   async execute(interaction) {
     const artist = interaction.options.get('artist')?.value;
     const title = interaction.options.get('title')?.value;

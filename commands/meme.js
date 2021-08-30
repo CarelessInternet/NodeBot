@@ -31,7 +31,43 @@ function isBetween(arg, min, max) {
 }
 
 module.exports = {
-  name: 'meme',
+  data: {
+    name: "meme",
+    description: "Returns a meme, either from r/dankmemes or the local memes folder if requested",
+    category: "memes",
+    options: [
+      {
+        name: "type",
+        description: "The amount of memes to be sent, or to send a meme from the local memes folder",
+        type: 3,
+        required: false,
+        choices: [
+          {
+            name: "once",
+            value: "1"
+          },
+          {
+            name: "twice",
+            value: "2"
+          },
+          {
+            name: "thrice",
+            value: "3"
+          },
+          {
+            name: "folder",
+            value: "localfolder"
+          }
+        ]
+      }
+    ],
+    examples: [
+      "meme",
+      "meme twice",
+      "meme thrice",
+      "meme localfolder"
+    ]
+  },
   execute(interaction) {
     const arg = interaction.options.get('type')?.value;
     if (!arg) return reddit(interaction);

@@ -1,9 +1,20 @@
 const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-  name: 'bot-stats',
+  data: {
+    name: "bot-stats",
+    description: "Returns stats about the bot",
+    category: "other",
+    guild: process.env.guildID,
+    options: [],
+    examples: [
+      "bot-stats"
+    ]
+  },
   async execute(interaction) {
     try {
+      if (interaction.user.id !== process.env.ownerID) return interaction.reply({content: 'You are not the owner of this bot, you may not view the stats', ephemeral: true});
+
       const {shard} = interaction.client;
       const promises = [
         shard.fetchClientValues('guilds.cache.size'),
@@ -45,7 +56,7 @@ module.exports = {
       })
       .setTimestamp();
 
-      interaction.reply({embeds: [embed]});
+      interaction.reply({embeds: [embed], ephemeral: true});
     } catch(err) {
       console.error(err);
       interaction.reply({content: 'An unknown error occured whilst fetching data, please try again later', ephemeral: true});

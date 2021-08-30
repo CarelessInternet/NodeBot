@@ -1,7 +1,15 @@
 const {LoremIpsum} = require('lorem-ipsum');
 
 module.exports = {
-  name: 'lorem',
+  data: {
+    name: "lorem",
+    description: "Spits out some lorem ipsum text",
+    category: "other",
+    options: [],
+    examples: [
+      "lorem"
+    ]
+  },
   execute(interaction) {
     const random = Math.floor(Math.random() * 2) + 1;
     const text = new LoremIpsum({

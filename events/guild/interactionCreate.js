@@ -2,14 +2,15 @@ const fs = require('fs');
 const dateFormat = require('dateformat');
 const connection = require('../../db');
 const cooldowns = new Map();
+const queue = new Map();
 
 async function interaction(client, Discord, prefix, interaction) {
   if (!interaction.isCommand() && !interaction.isContextMenu()) return;
   if (interaction.user.bot) return;
-
+  
   const cmd = interaction.commandName.toLowerCase();
   const command = client.commands.get(cmd) || client.commands.find(file => file.aliases?.includes(cmd));
-
+  
   if (!command) return;
   const isBlacklisted = await blacklist(interaction, Discord);
   if (isBlacklisted) return interaction.reply({embeds: [isBlacklisted], ephemeral: true}).catch(console.error);
@@ -20,31 +21,32 @@ async function interaction(client, Discord, prefix, interaction) {
   // switch statement for commands which we have to run another command
   switch (cmd) {
     case 'rickroll':
-      command.execute(interaction);
-      return client.commands.get('music')?.execute(interaction, prefix, 'play', ['rick astley never gonna give you up'], true);
+      command.execute(interaction, prefix, cmd, queue);
+      return client.commands.get('play')?.execute(interaction, prefix, 'play', queue, ['rick astley never gonna give you up'], true);
     case 'amogus':
-      command.execute(interaction);
-      return client.commands.get('music')?.execute(interaction, prefix, 'play', ['among us drip theme song original'], true);
+      command.execute(interaction, prefix, cmd, queue);
+      return client.commands.get('play')?.execute(interaction, prefix, 'play', queue, ['among us drip theme song original'], true);
     default:
       break;
   }
 
-  // if the command exists in the commands folder or aliases array, run it
-  if (command) command.execute(interaction, prefix, cmd);
+  command.execute(interaction, prefix, cmd, queue);
 }
 
 function hasBlacklist(userID, guildID) {
-  return new Promise((resolve, reject) => {
-    connection.query('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID], (err, rows) => {
-      if (err) reject(err);
+  return new Promise(async (resolve, reject) => {
+    try {
+      const [rows] = await connection.execute('SELECT * FROM Blacklist WHERE TargettedUserID = ? AND GuildID = ?', [userID, guildID]);
       resolve(rows[0] ?? false);
-    });
+    } catch(err) {
+      reject(err);
+    }
   });
 }
 async function blacklist(interaction, Discord) {
   try {
     if (!interaction.inGuild()) return false;
-
+    
     const blacklist = await hasBlacklist(interaction.user.id, interaction.guildId);
     if (!blacklist || interaction.member.permissions.has('MANAGE_CHANNELS')) return false;
   
@@ -81,7 +83,7 @@ function cooldown(interaction, Discord, cmd) {
   // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
   const currentTime = Date.now();
   const timestamps = cooldowns.get(cmd);
-  const file = JSON.parse(fs.readFileSync('./txt/data.json')).find(val => val.name === cmd);
+  const file = JSON.parse(fs.readFileSync('./info/data.json')).find(val => val.name === cmd);
   const amount = (file.cooldown || 3) * 1000;
   const key = interaction.guild ? interaction.user.id + interaction.guildId : interaction.user.id;
 

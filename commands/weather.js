@@ -2,7 +2,25 @@ const fetch = require('node-fetch');
 const {MessageEmbed} = require('discord.js');
 
 module.exports = {
-  name: 'weather',
+  data: {
+    name: "weather",
+    description: "Gives information about the weather in a city",
+    category: "utility",
+    options: [
+      {
+        name: "city",
+        description: "The city's weather",
+        type: 3,
+        required: true
+      }
+    ],
+    examples: [
+      "weather Los Angeles",
+      "weather Jakarta",
+      "weather Stockholm",
+      "weather Pyongyang"
+    ]
+  },
   async execute(interaction) {
     const arg = interaction.options.get('city')?.value;
     try {
