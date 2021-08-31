@@ -6,8 +6,8 @@ async function reddit(interaction, count = 1) {
   for (let i = 0; i < count; i++) {
     try {
       const post = await fetch('https://www.reddit.com/r/dankmemes/random/.json').then(res => res.json());
-      const data = post[0].data.children[0].data;
-      if (data['is_video']) return reddit(interaction);
+      const {data} = post[0].data.children[0];
+      if (data['is_video'] || data['over_18']) return reddit(interaction);
 
       const embed = new MessageEmbed()
       .setColor('RANDOM')

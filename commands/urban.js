@@ -5,7 +5,7 @@ const {MessageEmbed} = require('discord.js');
 module.exports = {
   data: {
     name: "urban",
-    description: "Returns the urban definition of a word",
+    description: "Returns the urban definition of a word. Could potentially contain NSFW content",
     category: "other",
     options: [
       {
