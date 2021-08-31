@@ -1,6 +1,8 @@
 # Nodebot
 
 Welcome to the official GitHub page for NodeBot! You are welcome to look at all of the source code right here!<br>
+The source code is mainly for educational and demonstration purposes on building a Discord bot.<br>
+I advise you to only clone this repository for making pull requests, or making your own private version of the bot
 
 ## Support
 
