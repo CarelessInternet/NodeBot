@@ -12,7 +12,7 @@ Welcome to the official GitHub page for NodeBot! You are welcome to look at all 
 Get the files by running `git clone https://github.com/CarelessInternet/NodeBot.git`
 
 #### Installing MySQL
-MySQL is required to run the bot. However, you can find a tutorial to install MySQL if you don't have it already, because I don't want to
+MySQL is required to run the bot. However, you can go find a tutorial to install MySQL if you don't have it already, because I don't want to help for this step
 
 #### Creating `.env` File
 To do anything with the bot, create a file named `.env` and add all necessary environment variables in the list labelled "Environment Variables."<br>
