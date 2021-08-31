@@ -4,6 +4,9 @@
   "description": "NodeBot using discord.js v13 with slash commmands and economy system",
   "main": "index.js",
   "scripts": {
+    "start": "NODE_ENV=development node .",
+    "production": "NODE_ENV=production node .",
+    "mysql": "node mysql.js",
     "deploy": "node deploy.js"
   },
   "author": "CarelessInternet",
@@ -24,7 +27,6 @@
     "lorem-ipsum": "^2.0.3",
     "memer-api": "^3.0.6",
     "minecraft-server-util": "^3.6.0",
-    "mysql": "^2.18.1",
     "mysql2": "^2.3.0",
     "node-fetch": "^2.6.1",
     "qrcode": "^1.4.4",
