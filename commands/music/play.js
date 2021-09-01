@@ -2,7 +2,7 @@ const search = require('youtube-search');
 const secondarySearch = require('yt-search');
 const ytdl = require('ytdl-core');
 const {MessageEmbed} = require('discord.js');
-const {joinVoiceChannel, createAudioPlayer, createAudioResource, AudioPlayerStatus, VoiceConnectionStatus} = require('@discordjs/voice');
+const {joinVoiceChannel, createAudioPlayer, createAudioResource, entersState, AudioPlayerStatus, VoiceConnectionStatus} = require('@discordjs/voice');
 const check = require('../../musicCheck');
 
 // reject if no result, resolve with video if result
@@ -79,7 +79,17 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
           adapterCreator: channel.guild.voiceAdapterCreator
         });
   
-        connection.on(VoiceConnectionStatus.Disconnected, () => queue.delete(interaction.guild.id));
+        connection.on(VoiceConnectionStatus.Disconnected, async () => {
+          try {
+            await Promise.race([
+              entersState(connection, VoiceConnectionStatus.Signalling, 5000),
+              entersState(connection, VoiceConnectionStatus.Connecting, 5000)
+            ]);
+          } catch(err) {
+            queue.delete(interaction.guild.id);
+            connection.destroy();
+          }
+        });
         connection.on(VoiceConnectionStatus.Destroyed, () => {
           queue.delete(interaction.guild.id);
           interaction.channel.send({content: '☠️ Disconnected from voice channel'}).catch(console.error);
@@ -189,13 +199,15 @@ module.exports = {
   },
   async execute(interaction, prefix, command, queue, botArgs = '', botCommand = false) {
     try {
-      const [serverQueue, channel] = await check(interaction, queue, botCommand);
-      if (!botCommand) await interaction.deferReply();
-      if (botArgs) play(interaction, queue, serverQueue, channel, botArgs[0]);
-      else play(interaction, queue, serverQueue, channel);
+      // for some reason, using var lets the variables be used outside the try catch scope?? but not const or let????
+      // and i have to put this code in try catch instead of await check.catch() because i get an intermediate value is not iterable error??
+      var [serverQueue, channel] = await check(interaction, queue, botCommand);
     } catch(err) {
-      console.error(err);
-      interaction.reply({content: 'An unknown error occured, please try again later', ephemeral: true});
+      return interaction.reply(err);
     }
+
+    if (!botCommand) await interaction.deferReply().catch(console.error);
+    if (botArgs) play(interaction, queue, serverQueue, channel, botArgs[0]);
+    else play(interaction, queue, serverQueue, channel);
   }
 }

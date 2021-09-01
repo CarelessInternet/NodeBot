@@ -20,11 +20,11 @@ module.exports = {
   },
   async execute(interaction, prefix, command, queue) {
     try {
-      const [serverQueue] = await check(interaction, queue);
-      leave(interaction, serverQueue);
+      var [serverQueue] = await check(interaction, queue);
     } catch(err) {
-      console.error(err);
-      interaction.reply({content: 'An unknown error occured, please try again later', ephemeral: true});
+      return interaction.reply(err);
     }
+
+    leave(interaction, serverQueue);
   }
 }
