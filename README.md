@@ -70,13 +70,11 @@ The columns with bigint(20) can be bigint(18) because twitter/discord snowflakes
 - EconomyUsers:
   * ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   * UserID bigint(20) NOT NULL UNIQUE,
-  * CreationDate datetime NOT NULL,
-  * UserCreationDate datetime NOT NULL
+  * CreationDate datetime NOT NULL
 - EconomyGuilds:
   * ID int NOT NULL PRIMARY KEY AUTO_INCREMENT,
   * UserID bigint(20) NOT NULL FOREIGN KEY REFERENCES EconomyUsers(UserID),
   * GuildID bigint(20) NOT NULL,
-  * CreationDate datetime NOT NULL,
   * Cash int NOT NULL,
   * Bank int NOT NULL
 - Blacklist:

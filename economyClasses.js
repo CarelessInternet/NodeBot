@@ -1,4 +1,5 @@
 const connection = require('./db');
+const dateFormat = require('dateformat');
 const {MessageEmbed} = require('discord.js');
 
 class User {
@@ -12,15 +13,15 @@ class User {
       }
     });
   }
-  static createUser({id, creationDate, userCreationDate}) {
+  static createUser({id, creationDate}) {
     return new Promise(async (resolve, reject) => {
       /*
         EconomyUsers:
-        ID, UserID, CreationDate, UserCreationDate
+        ID, UserID, CreationDate
       */
       try {
-        const data = [id, creationDate, userCreationDate]; 
-        await connection.execute('INSERT INTO EconomyUsers (UserID, CreationDate, UserCreationDate) VALUES (?, ?, ?)', data);
+        const data = [id, creationDate]; 
+        await connection.execute('INSERT INTO EconomyUsers (UserID, CreationDate) VALUES (?, ?)', data);
 
         const userData = await this.userInfo(id);
         resolve(userData);
@@ -50,15 +51,15 @@ class Guild {
     });
   }
 
-  static createGuildUser({userID, guildID, creationDate}) {
+  static createGuildUser({userID, guildID}) {
     return new Promise(async (resolve, reject) => {
       /*
         EconomyGuilds:
-        ID, UserID, GuildID, CreationDate, Cash, Bank
+        ID, UserID, GuildID, Cash, Bank
       */
       try {
-        const data = [userID, guildID, creationDate];
-        await connection.execute('INSERT INTO EconomyGuilds (UserID, GuildID, CreationDate, Cash, Bank) VALUES (?, ?, ?, 1000, 0)', data);
+        const data = [userID, guildID];
+        await connection.execute('INSERT INTO EconomyGuilds (UserID, GuildID, Cash, Bank) VALUES (?, ?, 1000, 0)', data);
 
         const userGuildData = await this.userInfo(userID, guildID);
         resolve(userGuildData);
@@ -77,19 +78,15 @@ class Guild {
   
         if (!user) {
           const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
-          const createdTimestamp = dateFormat(member.user.createdAt, 'yyyy-mm-dd HH:MM:ss');
           user = await User.createUser({
             id: userID,
-            creationDate: creationDate,
-            userCreationDate: createdTimestamp
+            creationDate: creationDate
           });
         }
         if (!userGuild) {
-          const creationDate = dateFormat(new Date(), 'yyyy-mm-dd HH:MM:ss');
           userGuild = await this.createGuildUser({
             userID: userID,
-            guildID: guildID,
-            creationDate: creationDate
+            guildID: guildID
           });
         }
 
