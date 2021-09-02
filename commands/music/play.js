@@ -86,7 +86,6 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
               entersState(connection, VoiceConnectionStatus.Connecting, 5000)
             ]);
           } catch(err) {
-            queue.delete(interaction.guild.id);
             connection.destroy();
           }
         });
