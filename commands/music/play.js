@@ -68,7 +68,7 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
       };
   
       // add the info into a map/hashmap with the key as the guild id
-      queue.set(interaction.guild.id, constructor);
+      queue.set(interaction.guildId, constructor);
       constructor.queue.push(video);
   
       try {
@@ -89,9 +89,10 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
             connection.destroy();
           }
         });
-        connection.on(VoiceConnectionStatus.Destroyed, () => {
-          queue.delete(interaction.guild.id);
-          interaction.channel.send({content: '☠️ Disconnected from voice channel'}).catch(console.error);
+        connection.on(VoiceConnectionStatus.Destroyed, async () => {
+          await queue.get(interaction.guildId).player.stop(true);
+          queue.delete(interaction.guildId);
+          interaction.channel?.send({content: '☠️ Disconnected from voice channel'}).catch(console.error);
         });
         connection.on('error', console.error);
         constructor.connection = connection;
@@ -99,7 +100,7 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
         videoPlayer(interaction, constructor);
       } catch(err) {
         console.error(err);
-        queue.get(interaction.guild.id).connection.destroy();
+        queue.get(interaction.guildId).connection.destroy();
   
         interaction.followUp({content: 'There was an error creating a connection, please try again later', ephemeral: true}).catch(console.error);
       }
