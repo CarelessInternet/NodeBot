@@ -90,7 +90,6 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
           }
         });
         connection.on(VoiceConnectionStatus.Destroyed, async () => {
-          await queue.get(interaction.guildId).player.stop(true);
           queue.delete(interaction.guildId);
           interaction.channel?.send({content: '☠️ Disconnected from voice channel'}).catch(console.error);
         });
