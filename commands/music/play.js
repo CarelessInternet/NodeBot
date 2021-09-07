@@ -86,7 +86,7 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
               entersState(connection, VoiceConnectionStatus.Connecting, 5000)
             ]);
           } catch(err) {
-            connection.destroy();
+            if (connection.state.status !== VoiceConnectionStatus.Destroyed) connection.destroy();
           }
         });
         connection.on(VoiceConnectionStatus.Destroyed, async () => {
