@@ -18,7 +18,7 @@
     "@vitalets/google-translate-api": "^7.0.0",
     "bufferutil": "^4.0.3",
     "dateformat": "^4.5.1",
-    "discord-api-types": "^0.22.0",
+    "discord-api-types": "^0.23.1",
     "discord-tictactoe": "^2.1.1",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
