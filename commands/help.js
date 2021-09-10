@@ -92,7 +92,7 @@ module.exports = {
       .setDescription(`A command list of all current available commands, in an organized order.\nUse \`${prefix}help CommandName\`, e.g \`${prefix}help users\` to get more information about the command`)
       .addFields({
         name: 'Prefix',
-        value: `In order to run commands with this bot, you need to use the \`${prefix}\` prefix before putting in the command. Custom prefixes aren't available with me, since message content will be [deprecated in April 2022](https://support-dev.discord.com/hc/en-us/articles/4404772028055)`
+        value: `Use the \`${prefix}\` prefix before putting in the command. Custom prefixes aren't available with me, since message content will be [deprecated in April 2022](https://support-dev.discord.com/hc/en-us/articles/4404772028055)`
       }, {
         name: 'Support',
         value: fs.readFileSync('./info/support.txt', 'utf8')

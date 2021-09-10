@@ -1,4 +1,5 @@
 const fs = require('fs');
+const fg = require('fast-glob');
 const dateFormat = require('dateformat');
 const connection = require('../../db');
 const cooldowns = new Map();
@@ -15,7 +16,7 @@ async function interaction(client, Discord, prefix, interaction) {
   const isBlacklisted = await blacklist(interaction, Discord);
   if (isBlacklisted) return interaction.reply({embeds: [isBlacklisted], ephemeral: true}).catch(console.error);
   
-  const hasCooldown = cooldown(interaction, Discord, cmd);
+  const hasCooldown = await cooldown(interaction, Discord, cmd);
   if (hasCooldown) return interaction.reply({content: hasCooldown, ephemeral: true}).catch(console.error);
 
   // switch statement for commands which we have to run another command
@@ -77,14 +78,18 @@ async function blacklist(interaction, Discord) {
   }
 }
 
-function cooldown(interaction, Discord, cmd) {
+async function cooldown(interaction, Discord, cmd) {
   if (!cooldowns.has(cmd)) cooldowns.set(cmd, new Discord.Collection());
 
-  // third const: if the cooldown amount exists, set it to cooldown amount * 1000 ms, otherwise set it to 3 * 1000 ms
   const currentTime = Date.now();
   const timestamps = cooldowns.get(cmd);
-  const file = JSON.parse(fs.readFileSync('./info/data.json')).find(val => val.name === cmd);
-  const amount = (file.cooldown || 3) * 1000;
+  const fileNames = await fg('./commands/**/*.js', {dot: true});
+  const file = fileNames.reduce((acc, curr) => {
+    const file2 = require(`../../${curr}`);
+    acc.push(file2);
+    return acc;
+  }, []).find(val => val.data.name === cmd);
+  const amount = (file.data.cooldown || 3) * 1000;
   const key = interaction.guild ? interaction.user.id + interaction.guildId : interaction.user.id;
 
   if (timestamps.has(key)) {

@@ -125,6 +125,7 @@ class Guild {
     return new Promise(async (resolve, reject) => {
       try {
         const [rows] = await connection.execute('SELECT Cash, Bank FROM EconomyGuilds WHERE ID = ?', [id]);
+        const rows2 = await User.userInfo(interaction.user.id);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
         .setAuthor(interaction.user.tag, interaction.user.avatarURL())
@@ -137,7 +138,8 @@ class Guild {
           name: 'Bank',
           value: '💵 ' + rows[0]['Bank'].toLocaleString()
         })
-        .setTimestamp();
+        .setTimestamp()
+        .setFooter(`First Usage Date: ${dateFormat(rows2['CreationDate'], 'yyyy-mm-dd HH:MM:ss Z')}`);
 
         resolve({embeds: [embed]});
       } catch(err) {
