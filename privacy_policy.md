@@ -29,10 +29,10 @@ As of right now, NodeBot collects the following Discord Data on success and if i
 As of right now, NodeBot collects/creates the following data on success:
 
 - Economy Commands:
-  * Time of first command usage (technically not Discord Data, since it just takes the current time)
+  * Time of first command usage (this is not Discord Data, since the bot just takes the current time)
   * Cash & Bank Money (the bot automatically creates these for you, obviously it's not your cash or bank amount in real life)
 - Blacklisting Commands:
-  * Time of blacklist (again, technically not Discord Data, since it just takes the current time)
+  * Time of blacklist (again, this is not Discord Data, since the bot just takes the current time)
 
 ## Why do you need the data?
 
