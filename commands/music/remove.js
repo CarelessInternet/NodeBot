@@ -14,7 +14,7 @@ function remove(interaction, constructor) {
   .setColor('RANDOM')
   .setTitle('Removing the following video:')
   .setDescription(`${constructor.queue[num].title} by ${constructor.queue[num].author.name}`)
-  .setImage(constructor.queue[num].image)
+  .setThumbnail(constructor.queue[num].image)
   .setTimestamp();
 
   constructor.queue.splice(num, num);

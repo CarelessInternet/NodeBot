@@ -168,7 +168,7 @@ async function videoPlayer(interaction, constructor) {
       value: songQueue.views.toLocaleString(),
       inline: true
     })
-    .setImage(songQueue.image)
+    .setThumbnail(songQueue.image)
     .setTimestamp()
     .setFooter(`Video ID: ${songQueue.videoId}`);
 

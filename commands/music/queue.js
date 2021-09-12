@@ -8,7 +8,7 @@ function getQueue(interaction, constructor) {
   .setColor('RANDOM')
   .setDescription(`${interaction.guild.name}${interaction.guild.name.toLowerCase().endsWith('s') ? '\'' : '\'s'} Queue`)
   .setTitle('Video Queue')
-  .setImage(constructor.queue[0].image)
+  .setThumbnail(constructor.queue[0].image)
   .setTimestamp();
 
   constructor.queue.forEach((val, index) => {
