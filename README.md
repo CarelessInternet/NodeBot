@@ -1,3 +1,9 @@
+<div align="center">
+  
+  [![Discord Bots](https://top.gg/api/widget/507915396037214208.svg)](https://top.gg/bot/507915396037214208)
+
+</div>
+
 # NodeBot
 
 Welcome to the official GitHub page for NodeBot! You are welcome to look at all of the source code right here!<br>
