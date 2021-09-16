@@ -151,7 +151,9 @@ class Guild {
   static guildList(guildID, limit = 5) {
     return new Promise(async (resolve, reject) => {
       try {
-        const [rows] = await connection.execute('SELECT * FROM EconomyGuilds WHERE GuildID = ? LIMIT ?', [guildID, limit]);
+        // we convert limit to a string because otherwise we get a mysql2 error saying:
+        // "Error: Incorrect arguments to mysqld_stmt_execute"
+        const [rows] = await connection.execute('SELECT * FROM EconomyGuilds WHERE GuildID = ? LIMIT ?', [guildID, limit.toString()]);
         resolve(rows);
       } catch(err) {
         reject(err);
