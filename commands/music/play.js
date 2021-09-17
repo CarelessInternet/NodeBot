@@ -49,6 +49,18 @@ function videoFinder(query) {
     }
   });
 }
+// this is for 410 and other errors, so if an error occurs, reject
+function ytdlHandler(link) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const info = await ytdl.getInfo(link);
+      const video = ytdl.downloadFromInfo(info, {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25});
+      resolve(video);
+    } catch(err) {
+      reject('ytdl handler error: ' + err);
+    }
+  });
+}
 // prepares video before calling the video player function
 async function play(interaction, queue, serverQueue, channel, botArg = '') {
   try {
@@ -118,61 +130,64 @@ async function videoPlayer(interaction, constructor) {
   const connection = constructor.connection;
   if (!songQueue) return connection.destroy();
 
-  // create connection and play it
-  const resource = await createAudioResource(ytdl(songQueue.url, {
-    filter: 'audioonly',
-    quality: 'highestaudio',
-    highWaterMark: 1 << 25
-  }), {inlineVolume: true});
-  const player = createAudioPlayer();
+  try {
+    // create connection and play it
+    const video = await ytdlHandler(songQueue.url);
+    const resource = createAudioResource(video, {inlineVolume: true});
+    const player = createAudioPlayer();
+  
+    resource.volume.setVolume(constructor.volume);
+    player.play(resource);
+    connection.subscribe(player);
+    constructor.resource = resource;
+    constructor.player = player;
+  
+    // equivalent to on finish event
+    player.on(AudioPlayerStatus.Idle, () => {
+      // if there is a loop, replay video, otherwise delete video and move on to next one
+      if (constructor.loop) return videoPlayer(interaction, constructor);
+      constructor.queue.shift();
+      videoPlayer(interaction, constructor);
+    });
+    player.on('error', err => {
+      console.error(err);
+      interaction.followUp({content: 'An unknown error occured whilst creating the audio resource, please try again later'});
+    });
 
-  resource.volume.setVolume(constructor.volume);
-  player.play(resource);
-  connection.subscribe(player);
-  constructor.resource = resource;
-  constructor.player = player;
-
-  // equivalent to on finish event
-  player.on(AudioPlayerStatus.Idle, () => {
-    // if there is a loop, replay video, otherwise delete video and move on to next one
-    if (constructor.loop) return videoPlayer(interaction, constructor);
-    constructor.queue.shift();
-    videoPlayer(interaction, constructor);
-  });
-  player.on('error', err => {
+    if (!constructor.loop) {
+      const embed = new MessageEmbed()
+      .setColor('RANDOM')
+      .setTitle(songQueue.title)
+      .setURL(songQueue.url)
+      .setAuthor(songQueue.author.name)
+      .setDescription(songQueue.description)
+      .addFields({
+        name: '\u200B',
+        value: '\u200B'
+      },
+      {
+        name: 'Link to Channel',
+        value: `[${songQueue.author.name}](${songQueue.author.url})`,
+        inline: true
+      }, {
+        name: 'Timestamp',
+        value: songQueue.duration.timestamp,
+        inline: true
+      }, {
+        name: 'Views',
+        value: songQueue.views.toLocaleString(),
+        inline: true
+      })
+      .setThumbnail(songQueue.image)
+      .setTimestamp()
+      .setFooter(`Video ID: ${songQueue.videoId}`);
+  
+      interaction.followUp({embeds: [embed]}).catch(() => interaction.channel?.send({embeds: [embed]}).catch(console.error));
+    }
+  } catch(err) {
     console.error(err);
-    interaction.followUp({content: 'An unknown error occured whilst creating the audio resource, please try again later'});
-  });
-
-  if (!constructor.loop) {
-    const embed = new MessageEmbed()
-    .setColor('RANDOM')
-    .setTitle(songQueue.title)
-    .setURL(songQueue.url)
-    .setAuthor(songQueue.author.name)
-    .setDescription(songQueue.description)
-    .addFields({
-      name: '\u200B',
-      value: '\u200B'
-    },
-    {
-      name: 'Link to Channel',
-      value: `[${songQueue.author.name}](${songQueue.author.url})`,
-      inline: true
-    }, {
-      name: 'Timestamp',
-      value: songQueue.duration.timestamp,
-      inline: true
-    }, {
-      name: 'Views',
-      value: songQueue.views.toLocaleString(),
-      inline: true
-    })
-    .setThumbnail(songQueue.image)
-    .setTimestamp()
-    .setFooter(`Video ID: ${songQueue.videoId}`);
-
-    interaction.followUp({embeds: [embed]}).catch(console.error);
+    connection.destroy();
+    interaction.followUp({content: 'An error occured whilst downloading the video, please try again later', ephemeral: true}).catch(console.error);
   }
 }
 
