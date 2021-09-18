@@ -83,7 +83,7 @@ module.exports = {
           value: details['category'],
           inline: true
         })
-        .setImage(details['thumbnails'][4]['url'])
+        .setThumbnail(details['thumbnails'][4]['url'])
         .setTimestamp()
         .setFooter(`Youtuber Verified: ${details['author']['verified'] ? 'True' : 'False'}`);
 
