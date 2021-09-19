@@ -57,7 +57,7 @@ function ytdlHandler(link) {
       const video = ytdl.downloadFromInfo(info, {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25});
       resolve(video);
     } catch(err) {
-      reject('ytdl handler error: ' + err);
+      reject('Video downloader error (ytdlHandler): ' + err);
     }
   });
 }
@@ -133,6 +133,10 @@ async function videoPlayer(interaction, constructor) {
   try {
     // create connection and play it
     const video = await ytdlHandler(songQueue.url);
+    video.on('error', err => {
+      throw err;
+    });
+
     const resource = createAudioResource(video, {inlineVolume: true});
     const player = createAudioPlayer();
   
@@ -187,7 +191,7 @@ async function videoPlayer(interaction, constructor) {
   } catch(err) {
     console.error(err);
     connection.destroy();
-    interaction.followUp({content: 'An error occured whilst downloading the video, please try again later', ephemeral: true}).catch(console.error);
+    interaction.followUp({content: 'An error occured whilst downloading the video, please try again later\n' + err, ephemeral: true}).catch(console.error);
   }
 }
 

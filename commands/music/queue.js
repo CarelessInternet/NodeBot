@@ -6,7 +6,7 @@ function getQueue(interaction, constructor) {
   if (!constructor) return;
   const embed = new MessageEmbed()
   .setColor('RANDOM')
-  .setDescription(`${interaction.guild.name}${interaction.guild.name.toLowerCase().endsWith('s') ? '\'' : '\'s'} Queue`)
+  .setDescription(`${interaction.guild.name}${interaction.guild.name.toLowerCase().endsWith('s') ? '\'' : '\'s'} queue`)
   .setTitle('Video Queue')
   .setThumbnail(constructor.queue[0].image)
   .setTimestamp();
