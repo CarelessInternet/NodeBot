@@ -46,7 +46,7 @@ module.exports = {
       if (res.favicon) {
         const img = Buffer.from(res.favicon.split(',')[1], 'base64');
         attachment = new MessageAttachment(img, 'favicon.png');
-        embed.setImage('attachment://favicon.png');
+        embed.setThumbnail('attachment://favicon.png');
       }
 
       interaction.reply({

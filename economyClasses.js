@@ -139,7 +139,7 @@ class Guild {
           value: '💵 ' + rows[0]['Bank'].toLocaleString()
         })
         .setTimestamp()
-        .setFooter(`First Usage Date: ${dateFormat(rows2['CreationDate'], 'yyyy-mm-dd HH:MM:ss Z')}`);
+        .setFooter(`First Usage Date: ${dateFormat(rows2['CreationDate'], 'yyyy-mm-dd HH:MM:ss')}`);
 
         resolve({embeds: [embed]});
       } catch(err) {
@@ -176,6 +176,7 @@ class Commands {
       .setTitle('Not Enough Cash')
       .setDescription(`❌ The amount you specified is more than the amount of cash you currently have, please withdraw some money or earn some.\n\n💵 You have $${user['Cash'].toLocaleString()} in cash`)
       .setTimestamp();
+
       return {embeds: [embed], ephemeral: true};
     } else if (amount < 50) {
       const embed = new MessageEmbed()
@@ -184,6 +185,7 @@ class Commands {
       .setTitle('Too Little Money')
       .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
       .setTimestamp();
+
       return {embeds: [embed], ephemeral: true};
     } else {
       return false;
@@ -199,6 +201,7 @@ class Commands {
       .setTitle('Not Enough Money in Bank')
       .setDescription(`❌ The amount you specified is more than the amount of money you currently have in your bank, please deposit some money.\n\n💵 You have $${user['Bank'].toLocaleString()} in your bank`)
       .setTimestamp();
+
       return {embeds: [embed], ephemeral: true};
     } else if (amount < 50) {
       const embed = new MessageEmbed()
@@ -207,6 +210,7 @@ class Commands {
       .setTitle('Too Little Money')
       .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
       .setTimestamp();
+
       return {embeds: [embed], ephemeral: true};
     } else {
       return false;

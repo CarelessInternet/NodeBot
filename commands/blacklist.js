@@ -38,6 +38,7 @@ function getAllBlacklistedUsers(guildID, page = 0) {
   return new Promise(async (resolve, reject) => {
     // limit 10 results, offset by page amount
     try {
+      if (page !== 0) page -= 1;
       const [rows] = await connection.execute('SELECT * FROM Blacklist WHERE GuildID = ? ORDER BY ID LIMIT 10 OFFSET ?', [guildID, page * 10]);
       resolve(rows);
     } catch(err) {
@@ -138,7 +139,7 @@ module.exports = {
             inline: true
           }, {
             name: 'Blacklist Date',
-            value: `${dateFormat(isBlacklisted['CreationDate'], 'longDate')} at ${dateFormat(isBlacklisted['CreationDate'], 'isoTime')}`,
+            value: `<t:${Math.floor(new Date(isBlacklisted['CreationDate'].getTime() / 1000))}>`,
             inline: true
           }, {
             name: 'Blacklist By',
@@ -301,7 +302,7 @@ module.exports = {
           list.forEach((val, index) => {
             let string = `To: <@${val['TargettedUserID']}>\n`;
             string += `By: <@${val['CreatorUserID']}>\n`
-            string += `Blacklist Date: ${dateFormat(val['CreationDate'], 'longDate')} at ${dateFormat(val['CreationDate'], 'isoTime')}\n`;
+            string += `Blacklist Date: <t:${Math.floor(new Date(val['CreationDate'].getTime() / 1000))}>\n`;
             string += `Reason: ${val['Reason']}`;
   
             embed.addField((index + 1).toLocaleString(), string);

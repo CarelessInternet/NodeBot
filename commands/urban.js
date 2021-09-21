@@ -46,7 +46,7 @@ module.exports = {
         inline: true
       }, {
         name: 'Timestamp',
-        value: dateFormat(list['written_on'], 'yyyy-mm-dd HH:MM:ss p'),
+        value: `<t:${Math.floor(new Date(list['written_on']).getTime() / 1000)}:R>`,
         inline: true
       })
       .setTimestamp();

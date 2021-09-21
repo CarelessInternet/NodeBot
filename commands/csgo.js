@@ -61,7 +61,7 @@ module.exports = {
         getInfo(stats.headshots, true),
         getInfo(stats.damage, true)
       )
-      .setImage(platform.avatarUrl)
+      .setThumbnail(platform.avatarUrl)
       .setTimestamp()
       .setFooter(`Steam User ID: ${platform.platformUserId}`);
 

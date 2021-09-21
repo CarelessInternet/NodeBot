@@ -1,9 +1,9 @@
 const SpotifyWebAPI = require('spotify-web-api-node');
+const {MessageEmbed} = require('discord.js');
 const spotifyAPI = new SpotifyWebAPI({
   clientId: process.env.spotifyClientID,
   clientSecret: process.env.spotifyClientSecret
 });
-const {MessageEmbed} = require('discord.js');
 
 function getAccessToken() {
   return new Promise((resolve, reject) => {
@@ -56,13 +56,12 @@ module.exports = {
       const embed = new MessageEmbed()
       .setColor('RANDOM')
       .setTitle(`${info.album.artists[0].name} - ${info.name}`)
-      .setImage(info.album.images[1].url)
       .addFields({
         name: 'Duration',
         value: `${duration.minutes}:${duration.seconds < 10 ? '0' : ''}${duration.seconds}`
       }, {
         name: 'Release Date',
-        value: info.album.release_date
+        value: `<t:${Math.floor(new Date(info.album.release_date).getTime() / 1000)}:R>`
       }, {
         name: 'Album',
         value: info.album.name
@@ -73,6 +72,7 @@ module.exports = {
         name: 'Link',
         value: info.external_urls.spotify
       })
+      .setThumbnail(info.album.images[1].url)
       .setTimestamp()
       .setFooter('Sometimes the results might return a remix instead of the requested song, it just happens');
 

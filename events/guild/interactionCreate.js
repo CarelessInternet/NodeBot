@@ -62,7 +62,7 @@ async function blacklist(interaction, Discord) {
       inline: true
     }, {
       name: 'Blacklist Date',
-      value: `${dateFormat(blacklist['CreationDate'], 'longDate')} at ${dateFormat(blacklist['CreationDate'], 'isoTime')}`,
+      value: `<t:${Math.floor(new Date(blacklist['CreationDate'].getTime() / 1000))}>`,
       inline: true
     }, {
       name: 'Blacklist By',

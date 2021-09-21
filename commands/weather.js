@@ -37,7 +37,7 @@ module.exports = {
       .setDescription('The weather command shows the current weather in a city. Several day forecasting is unavailable because I can\'t be bothered to do that.')
       .addFields({
         name: 'Last Updated',
-        value: current['last_updated']
+        value: `<t:${Math.floor(new Date(current['last_updated']).getTime() / 1000)}:R>`
       }, {
         name: '\u200B',
         value: '\u200B'

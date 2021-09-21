@@ -64,7 +64,7 @@ module.exports = {
           inline: true
         }, {
           name: 'Upload Date',
-          value: details['uploadDate'],
+          value: `<t:${Math.floor(new Date(details['uploadDate']).getTime() / 1000)}:R>`,
           inline: true
         }, {
           name: 'Subscriber Count',
@@ -83,7 +83,7 @@ module.exports = {
           value: details['category'],
           inline: true
         })
-        .setThumbnail(details['thumbnails'][4]['url'])
+        .setThumbnail(details['thumbnails'][0]['url'])
         .setTimestamp()
         .setFooter(`Youtuber Verified: ${details['author']['verified'] ? 'True' : 'False'}`);
 
