@@ -22,6 +22,9 @@ Get the files by running `git clone https://github.com/CarelessInternet/NodeBot.
 #### Installing MySQL
 MySQL is required to run the bot. However, you can go find a tutorial to install MySQL if you don't have it already, because I don't want to help for this step
 
+#### Installing FFmpeg
+FFmpeg is required for the music commands to work correctly. Install it on linux by running `sudo apt install ffmpeg`. If you are not on linux, please find a tutorial to download FFmpeg
+
 #### Creating `.env` File
 To do anything with the bot, create a file named `.env` and add all necessary environment variables in the list labelled "Environment Variables."<br>
 The Presence Intent needs to be enabled for your bot, don't forget to do that in your discord bot's settings!
