@@ -1,6 +1,7 @@
 const search = require('youtube-search');
 const secondarySearch = require('yt-search');
-const ytdl = require('ytdl-core');
+const {getBasicInfo} = require('ytdl-core');
+const ytdl = require('play-dl');
 const {MessageEmbed} = require('discord.js');
 const {joinVoiceChannel, createAudioPlayer, createAudioResource, entersState, AudioPlayerStatus, VoiceConnectionStatus} = require('@discordjs/voice');
 const check = require('../../musicCheck');
@@ -22,7 +23,7 @@ function videoFinder(query) {
       if (!result.results[0]) reject('No search result found');
     
       const {link, description, title, thumbnails, channelTitle, id} = result.results[0];
-      const {videoDetails} = await ytdl.getBasicInfo(link);
+      const {videoDetails} = await getBasicInfo(link);
 
       resolve({
         title: title,
@@ -46,18 +47,6 @@ function videoFinder(query) {
       if (!result.videos?.[0]) reject('No search result found');
 
       resolve(result.videos[0]);
-    }
-  });
-}
-// this is for 410 and other errors, so if an error occurs, reject
-function ytdlHandler(link) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const info = await ytdl.getInfo(link);
-      const video = ytdl.downloadFromInfo(info, {filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25});
-      resolve(video);
-    } catch(err) {
-      reject('Video downloader error (ytdlHandler): ' + err);
     }
   });
 }
@@ -132,12 +121,11 @@ async function videoPlayer(interaction, constructor) {
 
   try {
     // create connection and play it
-    const video = await ytdlHandler(songQueue.url);
-    video.on('error', err => {
-      throw err;
-    });
-
-    const resource = createAudioResource(video, {inlineVolume: true});
+    const video = await ytdl.stream(songQueue.url);
+    const resource = createAudioResource(video.stream, {
+      inputType: video.type,
+      inlineVolume: true
+    })
     const player = createAudioPlayer();
   
     resource.volume.setVolume(constructor.volume);
