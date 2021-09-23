@@ -27,7 +27,7 @@
     "memer-api": "^4.0.0",
     "minecraft-server-util": "^3.6.0",
     "mysql2": "^2.3.0",
-    "node-fetch": "^2.6.4",
+    "node-fetch": "^2.6.5",
     "play-dl": "^1.0.2",
     "qrcode": "^1.4.4",
     "shuffle-array": "^1.0.1",
