@@ -66,7 +66,6 @@ You can also submit a pull request if you made a new command and want it to be a
 * weatherAPIKey (from weatherapi.com)
 * trackerGGAPIKey (for csgo stats)
 * topGGToken (server and shard count, not required)
-* youtubeAPIKey (for faster youtube searching)
 * dbHost (for database connections)
 * dbUser
 * dbPassword
