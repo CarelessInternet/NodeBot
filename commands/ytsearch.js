@@ -59,7 +59,7 @@ module.exports = {
         .setTitle(details['title'])
         .setURL(details['video_url'])
         .setAuthor(details['author']['name'], details['author']['thumbnails'][0]['url'], details['author']['channel_url'])
-        .setDescription(details['description'])
+        .setDescription(details['description'] ?? '')
         .addFields({
           name: 'Views',
           value: parseInt(details['viewCount']).toLocaleString(),
