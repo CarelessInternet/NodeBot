@@ -1,13 +1,15 @@
-const ytSearch = require('yt-search');
+const ytsr = require('ytsr');
 const {getBasicInfo} = require('ytdl-core');
 const {MessageEmbed} = require('discord.js');
 
 function videoFinder(query) {
   return new Promise(async (resolve, reject) => {
     try {
-      // im gonna keep yt-search instead of using youtube api to limit quota usage
-      const result = await ytSearch(query);
-      resolve(result.videos?.[0]);
+      const filters = await ytsr.getFilters(query);
+      const {url} = filters.get('Type').get('Video');
+      const {items} = await ytsr(url, {pages: 1});
+
+      resolve(items?.[0]);
     } catch(err) {
       reject(err);
     }
