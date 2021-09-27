@@ -15,10 +15,11 @@ function crime(user) {
 
       await Guild.updateCash(user['ID'], user['Cash'] + amount);
       const embed = new MessageEmbed()
-      .setColor(luck == 0 ? 'GREEN' : 'RED')
+      .setColor(luck === 0 ? 'GREEN' : 'RED')
       .setTitle('Crime')
       .setDescription(message)
-      .setTimestamp();
+      .setTimestamp()
+      .setFooter('Obviously, don\'t do any of these stuff in real life, this is just fictional');
 
       resolve({embeds: [embed]});
     } catch(err) {

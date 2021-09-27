@@ -8,7 +8,7 @@
   [
     "You attempted to rob the local strip club and got fined {amount} dollars",
     "You tried to rob the police station... and lost {amount} dollars in the process",
-    "The GameStop employee uno reversed card you when attempting to rob, and lost {amount} dollars",
+    "The GameStop employee uno reversed card you when attempting to rob, and you lost {amount} dollars",
     "You tried to rob a ninja turtle, you dumb loser you lost {amount} dollars"
   ]
 ]
