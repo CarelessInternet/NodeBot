@@ -23,7 +23,7 @@
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
     "fast-glob": "^3.2.7",
-    "lorem-ipsum": "^2.0.3",
+    "lorem-ipsum": "^2.0.4",
     "memer-api": "^4.0.0",
     "minecraft-server-util": "^3.6.0",
     "mysql2": "^2.3.0",
