@@ -10,12 +10,11 @@ function videoFinder(query) {
     try {
       const filters = await ytsr.getFilters(query);
       const {url} = filters.get('Type').get('Video');
+
+      if (!url) reject('No video was found with that query (happens sometimes unfortunately)');
       const results = await ytsr(url, {pages: 1});
 
-      const {items} = results;
-      if (!items[0]) reject('No video was found with that query');
-
-      resolve(items[0]);
+      resolve(results.items[0]);
     } catch(err) {
       reject(err);
     }
