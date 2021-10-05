@@ -53,7 +53,7 @@ async function blacklist(interaction, Discord) {
   
     const embed = new Discord.MessageEmbed()
     .setColor('RED')
-    .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle('You are Blacklisted')
     .setDescription('You are blacklisted from using NodeBot commands, please contact the server mods/admins if you have any questions')
     .addFields({

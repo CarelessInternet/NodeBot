@@ -42,7 +42,7 @@ module.exports = {
     const msg = getRandom8Ball();
     const embed = new MessageEmbed()
     .setColor(msg.color)
-    .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle('Magic 8-Ball')
     .setTimestamp();
 

@@ -10,7 +10,7 @@ async function slotMachine(user, interaction) {
     const file = JSON.parse(readFileSync('./economy/slot-machine.json', 'utf8'));
     const embed = new MessageEmbed()
     .setColor('RANDOM')
-    .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle('Slot Machine')
     .setTimestamp();
     const resultArray = [[], [], []];

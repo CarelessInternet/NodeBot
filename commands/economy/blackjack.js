@@ -145,7 +145,7 @@ class Blackjack {
       }];
       const embed = new MessageEmbed()
       .setColor('RANDOM')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle('Blackjack')
       .setDescription(`Betting for $${amount.toLocaleString()}`)
       .setTimestamp();

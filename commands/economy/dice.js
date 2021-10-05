@@ -16,7 +16,7 @@ async function dice(user, interaction) {
     const random = file[Math.floor(Math.random() * file.length)];
     const embed = new MessageEmbed()
     .setColor('RANDOM')
-    .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+    .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
     .setTitle(`${number2 ? 'Dice' : 'Die'} Roll`)
     .setTimestamp();
 

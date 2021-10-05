@@ -128,7 +128,7 @@ class Guild {
         const rows2 = await User.userInfo(interaction.user.id);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle(`${interaction.user.username}${interaction.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Economy`)
         .setDescription(`💰 The economy of <@${interaction.user.id}>:`)
         .addFields({
@@ -172,7 +172,7 @@ class Commands {
     if (user['Cash'] < amount) {
       const embed = new MessageEmbed()
       .setColor('RED')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle('Not Enough Cash')
       .setDescription(`❌ The amount you specified is more than the amount of cash you currently have, please withdraw some money or earn some.\n\n💵 You have $${user['Cash'].toLocaleString()} in cash`)
       .setTimestamp();
@@ -181,7 +181,7 @@ class Commands {
     } else if (amount < 50) {
       const embed = new MessageEmbed()
       .setColor('RED')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle('Too Little Money')
       .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
       .setTimestamp();
@@ -197,7 +197,7 @@ class Commands {
     if (user['Bank'] < amount) {
       const embed = new MessageEmbed()
       .setColor('RED')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle('Not Enough Money in Bank')
       .setDescription(`❌ The amount you specified is more than the amount of money you currently have in your bank, please deposit some money.\n\n💵 You have $${user['Bank'].toLocaleString()} in your bank`)
       .setTimestamp();
@@ -206,7 +206,7 @@ class Commands {
     } else if (amount < 50) {
       const embed = new MessageEmbed()
       .setColor('RED')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle('Too Little Money')
       .setDescription(`❌ The amount must be more than or equal to 50 dollars`)
       .setTimestamp();

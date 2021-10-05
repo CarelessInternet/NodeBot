@@ -63,7 +63,7 @@ function image(interaction, format) {
 
 async function textImageSend(format, interaction, text) {
   try {
-    const response = await memer[format](interaction.user.avatarURL(), interaction.user.username, text);
+    const response = await memer[format](interaction.user.displayAvatarURL(), interaction.user.username, text);
     const img = new MessageAttachment(response, 'memer.png');
     interaction.followUp({files: [img]});
   } catch(err) {

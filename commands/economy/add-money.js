@@ -7,7 +7,7 @@ function addMoney(interaction) {
       if (!interaction.member.permissions.has('MANAGE_GUILD')) {
         const embed = new MessageEmbed()
         .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('Invalid Permissions')
         .setDescription('You need the manage server permission to run this command')
         .setTimestamp();
@@ -21,7 +21,7 @@ function addMoney(interaction) {
       if (pingedUser.user.bot) {
         const embed = new MessageEmbed()
         .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('The User is a Bot')
         .setDescription(`The requested user (<@${pingedUser.user.id}>) is a bot, please select a valid user`)
         .setTimestamp();
@@ -33,7 +33,7 @@ function addMoney(interaction) {
       const addedAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] + amount);
       const embed = new MessageEmbed()
       .setColor('RANDOM')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle(`Successfully Added Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
       .setDescription(`The new economy of <@${pingedUser.user.id}>:`)
       .addFields({

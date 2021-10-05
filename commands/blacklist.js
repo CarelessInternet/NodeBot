@@ -115,7 +115,7 @@ module.exports = {
       if (member?.user.bot) {
         const embed = new MessageEmbed()
         .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('The Requested User is a Bot')
         .setDescription(`<@${member.id}> is a bot, you cannot blacklist/whitelist them`)
         .setTimestamp();
@@ -130,7 +130,7 @@ module.exports = {
         if (isBlacklisted && !member.permissions.has('MANAGE_CHANNELS')) {
           const embed = new MessageEmbed()
           .setColor('RED')
-          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
           .setTitle('User is Already Blacklisted')
           .setDescription(`The user <@${member.id}> is already blacklisted from using NodeBot commands`)
           .addFields({
@@ -153,7 +153,7 @@ module.exports = {
         if (member.permissions.has('MANAGE_CHANNELS')) {
           const embed = new MessageEmbed()
           .setColor('RED')
-          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
           .setTitle('The User has High Permissions')
           .setDescription(`The user <@${member.id}> has the manage channels permission, meaning that you cannot blacklist them`)
           .setTimestamp();
@@ -163,7 +163,7 @@ module.exports = {
         if (interaction.user.id === member.id) {
           const embed = new MessageEmbed()
           .setColor('RED')
-          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
           .setTitle('You Cannot Blacklist/Whitelist Yourself')
           .setDescription('You are unable to blacklist/whitelist yourself')
           .setTimestamp();
@@ -173,7 +173,7 @@ module.exports = {
         if (reason.length > 255) {
           const embed = new MessageEmbed()
           .setColor('RED')
-          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
           .setTitle('Reason is Too Long')
           .setDescription('The reason must be less than 256 characters long')
           .setTimestamp();
@@ -195,7 +195,7 @@ module.exports = {
         );
         const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('Blacklist Confirmation')
         .setDescription(`Are you sure you want to blacklist <@${member.id}> from using NodeBot commands for the following reason: ${reason}?`)
         .setTimestamp();
@@ -261,7 +261,7 @@ module.exports = {
         if (!isBlacklisted) {
           const embed = new MessageEmbed()
           .setColor('RED')
-          .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+          .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
           .setTitle('User is Not Blacklisted')
           .setDescription(`The user <@${member.id}> is not blacklisted`)
           .setTimestamp();
@@ -271,7 +271,7 @@ module.exports = {
 
         const embed = new MessageEmbed()
         .setColor('GREEN')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('User Successfully Whitelisted')
         .setDescription(`The user <@${member.id}> has successfully been whitelisted, they can now use NodeBot commands again!`)
         .setTimestamp();
@@ -292,7 +292,7 @@ module.exports = {
         const list = await getAllBlacklistedUsers(interaction.guildId, page);
         const embed = new MessageEmbed()
         .setColor('RANDOM')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('Blacklisted Members')
         .setDescription('Shows all of the blacklisted members in this server')
         .setTimestamp()

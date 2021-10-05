@@ -12,7 +12,7 @@ function giveMoney(user, interaction) {
       if (pingedUser.user.bot) {
         const embed = new MessageEmbed()
         .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('The User is a Bot')
         .setDescription(`The requested user (<@${pingedUser.user.id}>) is a bot, please select a valid user`)
         .setTimestamp();
@@ -22,7 +22,7 @@ function giveMoney(user, interaction) {
       if (pingedUser.id === interaction.user.id) {
         const embed = new MessageEmbed()
         .setColor('RED')
-        .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+        .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
         .setTitle('You Cannot Give Money to Yourself')
         .setDescription('Bruh, give it to someone else')
         .setTimestamp();
@@ -35,7 +35,7 @@ function giveMoney(user, interaction) {
       const newAddedAmount = await Guild.updateBank(userGuild['ID'], userGuild['Bank'] + amount);
       const embed = new MessageEmbed()
       .setColor('RANDOM')
-      .setAuthor(interaction.user.tag, interaction.user.avatarURL())
+      .setAuthor(interaction.user.tag, interaction.user.displayAvatarURL())
       .setTitle(`Successfully Gave Money to ${pingedUser.user.username}${pingedUser.user.username.toLowerCase().endsWith('s') ? '\'' : '\'s'} Bank`)
       .setDescription(`The new economy of <@${pingedUser.user.id}>:`)
       .addFields({
