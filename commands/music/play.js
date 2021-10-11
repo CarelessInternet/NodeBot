@@ -88,7 +88,21 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
       });
       connection.on('error', console.error);
 
+      const player = createAudioPlayer();
+
+      // equivalent to an on finish event
+      player.on(AudioPlayerStatus.Idle, () => {
+        // if there is a loop, replay video, else delete video and move on to next one
+        // destructuring loop from constructor doesnt work for some reason
+        if (constructor.loop) return videoPlayer(interaction, constructor);
+
+        constructor.queue.shift();
+        videoPlayer(interaction, constructor);
+      });
+      player.on('error', console.error);
+
       constructor.connection = connection;
+      constructor.player = player;
       videoPlayer(interaction, constructor);
     } else {
       serverQueue.queue.push(video);
@@ -104,7 +118,7 @@ async function play(interaction, queue, serverQueue, channel, botArg = '') {
 // the function that actually plays the video
 function videoPlayer(interaction, constructor) {
   const songQueue = constructor.queue[0];
-  const {connection, channel} = constructor;
+  const {connection, channel, player} = constructor;
   if (!songQueue) return connection.destroy();
 
   try {
@@ -113,24 +127,11 @@ function videoPlayer(interaction, constructor) {
     // more here: https://github.com/fent/node-ytdl-core/issues/994#issuecomment-912891183
     const video = ytdl(songQueue.url, {filter: 'audioonly', quality: 'lowestaudio', highWaterMark: 1 << 25});
     const resource = createAudioResource(video, {inlineVolume: true});
-    const player = createAudioPlayer();
-
-    // equivalent to an on finish event
-    player.on(AudioPlayerStatus.Idle, () => {
-      // if there is a loop, replay video, else delete video and move on to next one
-      // destructuring loop from constructor doesnt work for some reason
-      if (constructor.loop) return videoPlayer(interaction, constructor);
-
-      constructor.queue.shift();
-      videoPlayer(interaction, constructor);
-    });
-    player.on('error', console.error);
 
     resource.volume.setVolume(constructor.volume);
     player.play(resource);
     connection.subscribe(player);
     constructor.resource = resource;
-    constructor.player = player;
 
     if (!constructor.loop) {
       const embed = returnVideoInformation(songQueue);
