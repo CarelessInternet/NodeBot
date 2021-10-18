@@ -26,8 +26,7 @@ MySQL is required to run the bot. However, you can go find a tutorial to install
 FFmpeg is required for the music commands to work correctly. Install it on linux by running `sudo apt install ffmpeg`. If you are not on linux, please find a tutorial to download FFmpeg
 
 #### Creating `.env` File
-To do anything with the bot, create a file named `.env` and add all necessary environment variables in the list labelled "Environment Variables."<br>
-The Presence Intent needs to be enabled for your bot, don't forget to do that in your discord bot's settings!
+To do anything with the bot, create a file named `.env` and add all necessary environment variables in the list labelled "Environment Variables."
 
 #### Installing Dependencies
 Run the command `npm i` to install all dependencies. This is only needed once
@@ -38,10 +37,6 @@ Run the command `npm run mysql` to create all necessary tables. This is only nee
 #### Deploying Commands
 Run the command `npm run deploy` to deploy all commands. This is only needed once if you're not adding new commands.<br>
 If you are, please run this command when you have done so
-
-#### Changing Emojis
-Some commands may use custom emojis, so you will have to manually change them yourselves.<br>
-I don't know which commands have custom emojis, so good luck trying to find them
 
 #### Running the Bot
 Run the command `npm start` to run the bot in a development environment (recommended)<br>
