@@ -24,7 +24,7 @@
 		"dotenv": "^10.0.0",
 		"fast-glob": "^3.2.7",
 		"lorem-ipsum": "^2.0.4",
-		"memer-api": "^4.0.0",
+		"memer-api": "^4.0.1",
 		"minecraft-server-util": "^3.6.1",
 		"mysql2": "^2.3.0",
 		"node-fetch": "^2.6.5",
