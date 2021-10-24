@@ -143,7 +143,7 @@ function videoPlayer(interaction, constructor) {
     console.error(err);
     connection.destroy();
 
-    channel.send({content: 'An unknown error occured while doing something with the music\n' + err}).catch(console.error);
+    channel.send({content: 'An unknown error occured while doing something with the music\n' + err.message}).catch(console.error);
   }
 }
 
