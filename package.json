@@ -14,7 +14,7 @@
 	"dependencies": {
 		"@discordjs/opus": "^0.6.0",
 		"@discordjs/rest": "^0.1.0-canary.0",
-		"@discordjs/voice": "^0.6.0",
+		"@discordjs/voice": "^0.7.1",
 		"@vitalets/google-translate-api": "^7.0.0",
 		"bufferutil": "^4.0.5",
 		"dateformat": "^4.6.3",
