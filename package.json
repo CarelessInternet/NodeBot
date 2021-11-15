@@ -12,7 +12,7 @@
 	"author": "CarelessInternet",
 	"license": "GPL-3.0",
 	"dependencies": {
-		"@discordjs/opus": "^0.6.0",
+		"@discordjs/opus": "^0.7.0",
 		"@discordjs/rest": "^0.1.0-canary.0",
 		"@discordjs/voice": "^0.7.2",
 		"@vitalets/google-translate-api": "^7.0.0",
