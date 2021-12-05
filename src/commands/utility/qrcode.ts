@@ -26,7 +26,8 @@ export const execute: Command['execute'] = async ({ interaction }) => {
 		const input =
 			(interaction as CommandInteraction).options.getString('input') ??
 			(interaction as ContextMenuInteraction).options.getMessage('message')!
-				.content;
+				.content ??
+			'Missing input';
 		const buffer = await qrcode.toBuffer(input);
 
 		const attachment = new MessageAttachment(buffer, 'qrcode.png');
