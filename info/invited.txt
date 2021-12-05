@@ -1,5 +1,0 @@
-Thanks for inviting me into the server!
-To view all of the commands, use `{prefix}help`
-Example of commands: `{prefix}help`, `{prefix}blackjack 100`, `{prefix}meme`, `{prefix}mc hypixel.net 25565`
-
-- NodeBot
