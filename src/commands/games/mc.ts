@@ -1,4 +1,4 @@
-import minecraft from 'minecraft-server-util';
+import { status } from 'minecraft-server-util';
 import { MessageAttachment, MessageEmbed } from 'discord.js';
 import { inlineCode, SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from '../../types';
@@ -21,15 +21,16 @@ export const data: Command['data'] = new SlashCommandBuilder()
 			.setRequired(false)
 	);
 
-export const execute: Command['execute'] = ({ interaction }) => {
+export const execute: Command['execute'] = async ({ interaction }) => {
 	if (interaction.isCommand()) {
 		const [ip, port] = [
 			interaction.options.getString('ip')!,
 			interaction.options.getInteger('port') ?? 25565
 		];
 
-		minecraft
-			.status(ip, { port, timeout: 1_000 })
+		await interaction.deferReply();
+
+		status(ip, port, { timeout: 5_000 })
 			.then((server) => {
 				const embed = new MessageEmbed()
 					.setColor('RANDOM')
@@ -38,29 +39,23 @@ export const execute: Command['execute'] = ({ interaction }) => {
 						interaction.user.displayAvatarURL({ dynamic: true })
 					)
 					.setTitle('Minecraft Server Info')
-					.addField('Server IP', inlineCode(server.host))
-					.addField(
-						'Current Online',
-						server.onlinePlayers?.toLocaleString() ?? 'Unknown'
-					)
-					.addField(
-						'Maximum Players',
-						server.maxPlayers?.toLocaleString() ?? 'Unknown'
-					)
-					.addField('Version', server.version ?? 'Unknown')
+					.addField('Server IP', inlineCode(server.srvRecord!.host))
+					.addField('Current Online', server.players.online.toLocaleString())
+					.addField('Maximum Players', server.players.max.toLocaleString())
+					.addField('Version', server.version.name)
 					.setTimestamp();
 
-				let attachment = null;
+				let attachment: MessageAttachment | null = null;
 
 				if (server.favicon) {
 					attachment = new MessageAttachment(
-						server.favicon.toBuffer(),
+						Buffer.from(server.favicon.split(',')[1], 'base64'),
 						'favicon.png'
 					);
 					embed.setThumbnail('attachment://favicon.png');
 				}
 
-				interaction.reply({
+				interaction.editReply({
 					embeds: [embed],
 					...(attachment && { files: [attachment] })
 				});
@@ -82,9 +77,7 @@ export const execute: Command['execute'] = ({ interaction }) => {
 					reason = 'An unknown error occured, please try again later';
 				}
 
-				interaction
-					.reply({ content: reason, ephemeral: true })
-					.catch(console.error);
+				interaction.editReply({ content: reason }).catch(console.error);
 			});
 	}
 };
