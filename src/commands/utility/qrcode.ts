@@ -1,11 +1,5 @@
 import qrcode from 'qrcode';
-import {
-	CommandInteraction,
-	ContextMenuInteraction,
-	Message,
-	MessageAttachment,
-	MessageEmbed
-} from 'discord.js';
+import { Message, MessageAttachment, MessageEmbed } from 'discord.js';
 import { hyperlink, SlashCommandBuilder } from '@discordjs/builders';
 import { Command } from '../../types';
 
@@ -23,14 +17,19 @@ export const data: Command['data'] = new SlashCommandBuilder()
 
 export const execute: Command['execute'] = async ({ interaction }) => {
 	try {
-		const input =
-			(interaction as CommandInteraction).options.getString('input') ??
-			(interaction as ContextMenuInteraction).options.getMessage('message')
-				?.content ??
-			'Missing input';
-		const buffer = await qrcode.toBuffer(input);
+		let input = '';
 
+		if (interaction.isCommand()) {
+			input = interaction.options.getString('input')!;
+		} else if (interaction.isContextMenu()) {
+			input = interaction.options.getMessage('message')!.content;
+		} else {
+			input = 'Missing input';
+		}
+
+		const buffer = await qrcode.toBuffer(input);
 		const attachment = new MessageAttachment(buffer, 'qrcode.png');
+
 		const embed = new MessageEmbed()
 			.setColor('RANDOM')
 			.setAuthor(
