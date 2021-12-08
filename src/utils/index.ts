@@ -1,5 +1,5 @@
 export { capitalize } from './capitalize';
-export { default as connection } from './db';
+export { default as execute } from './db';
 export * as economyFunctions from './economyFunctions';
 export { fetchCommands } from './fetchCommands';
 export { fetchCommandsData } from './fetchCommandsData';

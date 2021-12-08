@@ -8,11 +8,11 @@ import {
 } from 'discord.js';
 import { memberNicknameMention } from '@discordjs/builders';
 import { Tables } from '../types';
-import { connection } from './index';
+import { execute } from './index';
 
 export class Users {
 	public static async userInfo(id: Snowflake) {
-		const [rows] = await connection.execute(
+		const [rows] = await execute(
 			'SELECT * FROM EconomyUsers WHERE UserID = ?',
 			[id]
 		);
@@ -21,7 +21,7 @@ export class Users {
 	}
 
 	public static async createUser(id: Snowflake, creationDate: Date) {
-		await connection.execute(
+		await execute(
 			'INSERT INTO EconomyUsers (UserID, CreationDate) VALUES (?, ?)',
 			[id, creationDate]
 		);
@@ -43,7 +43,7 @@ export class Guild {
 	}
 
 	public static async userInfo(userId: Snowflake, guildId: Snowflake) {
-		const [rows] = await connection.execute(
+		const [rows] = await execute(
 			'SELECT * FROM EconomyGuilds WHERE UserID = ? AND GuildID = ?',
 			[userId, guildId]
 		);
@@ -52,7 +52,7 @@ export class Guild {
 	}
 
 	public static async createGuildUser(userId: Snowflake, guildId: Snowflake) {
-		await connection.execute(
+		await execute(
 			'INSERT INTO EconomyGuilds (UserID, GuildID, Cash, Bank) VALUES (?, ?, 1000, 0)',
 			[userId, guildId]
 		);
@@ -82,7 +82,7 @@ export class Guild {
 
 	public static async updateCash(id: number, amount: number) {
 		amount = this._preventLimit(amount);
-		await connection.execute('UPDATE EconomyGuilds SET Cash = ? WHERE ID = ?', [
+		await execute('UPDATE EconomyGuilds SET Cash = ? WHERE ID = ?', [
 			amount,
 			id
 		]);
@@ -92,7 +92,7 @@ export class Guild {
 
 	public static async updateBank(id: number, amount: number) {
 		amount = this._preventLimit(amount);
-		await connection.execute('UPDATE EconomyGuilds SET Bank = ? WHERE ID = ?', [
+		await execute('UPDATE EconomyGuilds SET Bank = ? WHERE ID = ?', [
 			amount,
 			id
 		]);
@@ -121,7 +121,7 @@ export class Guild {
 	}
 
 	public static async guildList(guildId: Snowflake) {
-		const [rows] = await connection.execute(
+		const [rows] = await execute(
 			'SELECT * FROM EconomyGuilds WHERE GuildID = ? LIMIT 5',
 			[guildId]
 		);

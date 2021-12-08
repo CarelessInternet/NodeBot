@@ -1,17 +1,13 @@
 import { config } from 'dotenv';
+import { greenBright, magenta } from 'chalk';
+import { fetchCommands } from '../utils';
+
 config();
 
-import fg from 'fast-glob';
-import { greenBright, magenta } from 'chalk';
-import { resolve } from 'path';
-import { Command } from '../types';
-
 (async () => {
-	const commands = await fg(resolve(__dirname, '../commands/**/*.js'));
+	const commands = await fetchCommands();
 
-	for await (const [i, file] of commands.entries()) {
-		const command: Command = await import(file);
-
+	for (const [i, command] of commands.entries()) {
 		if (!command.data?.name) {
 			throw new SyntaxError(
 				`Missing a name property for the command file: ${commands[i]}.ts`

@@ -1,8 +1,8 @@
-import { green } from 'chalk';
 import { config } from 'dotenv';
 config();
 
-import { connection } from '../utils';
+import { green } from 'chalk';
+import { execute } from '../utils';
 
 // types for tables are available in the types folder
 
@@ -28,8 +28,8 @@ CREATE TABLE IF NOT EXISTS EconomyGuilds (
 
 (async () => {
 	try {
-		await connection.execute(createEconomyUsers);
-		await connection.execute(createEconomyGuilds);
+		await execute(createEconomyUsers);
+		await execute(createEconomyGuilds);
 
 		console.log(green('Successfully created/added all required MySQL tables!'));
 		process.exit(0);

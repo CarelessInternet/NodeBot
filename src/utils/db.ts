@@ -1,9 +1,6 @@
-import { createConnection } from 'mysql2';
+import { createPool } from 'mysql2/promise';
 
-/**
- * Creates a connection to mysql
- */
-const connection = createConnection({
+const pool = createPool({
 	host: process.env.DB_HOST,
 	user: process.env.DB_USER,
 	password: process.env.DB_PASSWORD,
@@ -12,6 +9,16 @@ const connection = createConnection({
 	connectionLimit: 100,
 	supportBigNumbers: true,
 	bigNumberStrings: true
-}).promise();
+});
 
-export default connection;
+/**
+ * Gets a connection to mysql
+ */
+const execute = async (query: string, parameters?: any[]) => {
+	const conn = await pool.getConnection();
+	const results = await conn.execute(query, parameters);
+
+	return results;
+};
+
+export default execute;

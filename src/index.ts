@@ -26,7 +26,6 @@ manager.on('shardCreate', (shard) => {
 
 if (process.env.NODE_ENV === 'production') {
 	const poster = AutoPoster(TOP_GG_TOKEN, manager);
-
 	poster.on('error', console.error);
 }
 

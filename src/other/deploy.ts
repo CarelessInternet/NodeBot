@@ -1,10 +1,10 @@
 import { config } from 'dotenv';
-config();
-
 import { green, red } from 'chalk';
 import { Routes } from 'discord-api-types/v9';
 import { REST } from '@discordjs/rest';
 import { fetchCommandsData } from '../utils';
+
+config();
 
 const [token, clientId, guildId] = [
 	process.env.DISCORD_BOT_TOKEN,
