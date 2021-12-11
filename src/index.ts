@@ -1,5 +1,5 @@
 /**
- * Console log color definitions:
+ * Console log/error color definitions:
  * [Green] - Sharding Manager
  * [Blue] - Client
  * [Red] - Shard Error

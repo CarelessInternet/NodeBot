@@ -6,5 +6,5 @@ export const execute: Handler['execute'] = (
 	error: Error,
 	id: number
 ) => {
-	console.log(red(`[Shard ${id}]`), error);
+	console.error(red(`[Shard ${id}]`), error);
 };
