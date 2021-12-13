@@ -17,6 +17,7 @@ const pool = createPool({
 const execute = async (query: string, parameters?: any[]) => {
 	const conn = await pool.getConnection();
 	const results = await conn.execute(query, parameters);
+	conn.release();
 
 	return results;
 };
