@@ -39,10 +39,10 @@ export const execute: Command['execute'] = async ({ interaction }) => {
 		const shardsInfo = await shardClient.broadcastEval((c) => {
 			const { ping, status } = c.ws;
 			const uptime = c.uptime as number;
-			const users = c.users.cache.size;
 			const servers = c.guilds.cache.size;
+			const users = c.guilds.cache.reduce((a, b) => a + b.memberCount, 0);
 
-			return { status, ping, uptime, users, servers };
+			return { status, ping, uptime, servers, users };
 		});
 
 		const [
