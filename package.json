@@ -28,7 +28,7 @@
 		"dotenv": "^10.0.0",
 		"fast-glob": "^3.2.7",
 		"lorem-ipsum": "^2.0.4",
-		"minecraft-server-util": "^5.1.2",
+		"minecraft-server-util": "^5.2.2",
 		"mysql2": "^2.3.3",
 		"node-fetch": "^2.6.6",
 		"qrcode": "^1.5.0",
