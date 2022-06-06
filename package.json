@@ -21,7 +21,7 @@
 		"@discordjs/rest": "^0.2.0-canary.0",
 		"@vitalets/google-translate-api": "^7.0.0",
 		"chalk": "^4.1.2",
-		"discord-api-types": "^0.24.0",
+		"discord-api-types": "^0.33.3",
 		"discord-tictactoe": "^2.1.1",
 		"discord.js": "^13.3.1",
 		"discord.js-games": "^1.1.0",
